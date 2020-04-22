@@ -4,7 +4,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
-#include "Player.h"
+#include "player.h"
 #include "ball.h"
 
 
