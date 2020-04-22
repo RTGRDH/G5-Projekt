@@ -11,7 +11,7 @@
 
 #define PUBLIC
 #define PRIVATE static
-#define M_PI acos(-1.0)
+//#define M_PI acos(-1.0)
 
 PRIVATE int PLAYER_WIDTH = 30;
 PRIVATE int PLAYER_HEIGTH = 30;
