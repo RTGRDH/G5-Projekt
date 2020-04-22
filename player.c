@@ -7,7 +7,7 @@
 //
 #include <stdlib.h>
 #include <math.h>
-#include "Player.h"
+#include "player.h"
 
 #define PUBLIC
 #define PRIVATE static
