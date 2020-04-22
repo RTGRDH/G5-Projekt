@@ -60,7 +60,6 @@ SDL_Rect gGoal_Right;
 
 int main(int argc, char * argv[])
 {
-    printf("Hello World!");
     /**
      Implement into player object?
      Not done yet.
