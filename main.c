@@ -206,6 +206,7 @@ int main(int argc, char * argv[])
         if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 + getPlayerHeight()/2, 2) + pow (getBallWidth()/2 + getPlayerWidth()/2, 2))))
         {
             //setBallDirection(b, angleBallPlayer(b, player));
+            //above is the intended function but it doesnt work
             setBallDirection(b, getPlayerDirection(player));
             setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
         }
@@ -246,7 +247,8 @@ int main(int argc, char * argv[])
         SDL_Delay(1000/50);
         if (clock == 100)
         {
-            printf("Direction: %1.1f degrees\t",getPlayerDirection(player));
+            printf("\nBall coordinates: %.0f, %.0f\n",getBallPositionX(b), getBallPositionY(b));
+            printf("Player coordinates: %.0f, %.0f\n",getPlayerPositionX(player), getPlayerPositionY(player));
             clock = 0;
         }
         clock++;
