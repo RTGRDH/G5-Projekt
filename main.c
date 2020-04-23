@@ -61,7 +61,7 @@ SDL_Rect gGoal_Right;
 
 #define SPEED (150); //75 is optimal, 300 for dev.
 #define MAX_SPEED_REVERSE -1
-#define MAX_SPEED_FORWARD 8
+#define MAX_SPEED_FORWARD 4
 #define TURNING_SPEED 10
 #define ACCELERATION 0.1
 
@@ -206,16 +206,20 @@ int main(int argc, char * argv[])
         if(distanceBallPlayer(b, player) < 30)
         {
             setBallDirection(b, angleBallPlayer(b, player));
-            setBallSpeed(b, getBallSpeed(b) + 10);
+            setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
         }
         updateBallPosition(b, 1);
-
+        if(distanceBallPlayer(b, player) < 1)
+        {
+            setBallPositionX(b, (float)WINDOW_WIDTH/2);
+            setBallPositionY(b, (float)WINDOW_WIDTH/2);
+        } 
         // set the positions in the structs
         gPlayer.y = getPlayerPositionY(player);
         gPlayer.x = getPlayerPositionX(player);
         gBall.y = getBallPositionY(b);
         gBall.x = getBallPositionX(b);
-
+/*
         if(PlayerBallCollision(&gPlayer, &gBall)){
             if(up)
             {
@@ -229,7 +233,7 @@ int main(int argc, char * argv[])
                 gBall.x = BallcollisionDetectionXpos(gBall.x -200);
             }
         }
-        
+*/
         SDL_RenderClear(renderer);
         renderBackground();
      
@@ -385,7 +389,7 @@ float angleBallPlayer(Ball b, Player p)
     }
     else
     {
-        direction = atan(y_distance/x_distance)+90;
+        direction = atan(y_distance/x_distance)*180/M_PI;
         printf("\n\nBall direction: %.0f degrees\n", direction);
         return direction;
     }
