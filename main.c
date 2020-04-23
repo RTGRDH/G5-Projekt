@@ -27,6 +27,7 @@ int determineVelocityX(bool left, bool right, float startingSpeed);
 int determineVelocityY(bool up, bool down, float startingSpeed);
 void speedLimit(Player p);
 void colissionDetectionPlayerArena(Player p);
+void colissionDetectionBallArena(Ball b);
 float xInvertDirection(float direction);
 float yInvertDirection(float direction);
 
@@ -199,11 +200,14 @@ int main(int argc, char * argv[])
         //Update position of the struct
         updatePlayerPosition(player, 1);
         colissionDetectionPlayerArena(player);
+        colissionDetectionBallArena(b);
         updateBallPosition(b, 1);
 
-        // set the positions in the struct
+        // set the positions in the structs
         gPlayer.y = getPlayerPositionY(player);
         gPlayer.x = getPlayerPositionX(player);
+        gBall.y = getBallPositionY(b);
+        gBall.x = getBallPositionX(b);
 
         if(PlayerBallCollision(&gPlayer, &gBall)){
             if(up)
