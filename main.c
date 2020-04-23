@@ -27,6 +27,9 @@ int determineVelocityX(bool left, bool right, float startingSpeed);
 int determineVelocityY(bool up, bool down, float startingSpeed);
 void speedLimit(Player p);
 void colissionDetectionPlayerArena(Player p);
+float xInvertDirection(float direction);
+float yInvertDirection(float direction);
+
 
 
 
@@ -284,76 +287,26 @@ void colissionDetectionBallArena(Ball b)
     {
         setBallPositionX(b, 0);
         setBallSpeed(b, getBallSpeed(b)*slow);
+        setBallDirection(b, xInvertDirection(getBallDirection(b)));
     }
     if (getBallPositionY(b) < 0)
     {
         setBallPositionY(b, 0);
         setBallSpeed(b, getBallSpeed(b)*slow);
+        setBallDirection(b, yInvertDirection(getBallDirection(b)));
     }
     if (getBallPositionX(b) > WINDOW_WIDTH - getBallHeight())
     {
         setBallPositionX(b, WINDOW_WIDTH - getBallWidth());
         setBallSpeed(b, getBallSpeed(b)*slow);
+        setBallDirection(b, xInvertDirection(getBallDirection(b)));
     }
     if (getBallPositionY(b) > WINDOW_HEIGTH - getBallHeight())
     {
         setBallPositionY(b, WINDOW_HEIGTH - getBallHeight());
         setBallSpeed(b, getBallSpeed(b)*slow);
+        setBallDirection(b, yInvertDirection(getBallDirection(b)));
     }
-}
-
-/*
- Determines the velocity on y-axis.
- */
-int determineVelocityY(bool up, bool down, float startingSpeed)
-{
-    if (up && !down)
-    {
-        startingSpeed =- SPEED;
-    }
-    if (down && !up)
-    {
-        startingSpeed =+ SPEED;
-    }
-    return startingSpeed;
-}
-/*
-Determines the velocity on x-axis.
-*/
-int determineVelocityX(bool left, bool right, float startingSpeed)
-{
-    if (left && !right)
-    {
-        startingSpeed =- SPEED;
-    }
-    if (right && !left)
-    {
-        startingSpeed =+ SPEED;
-    }
-    return startingSpeed;
-}
-
-
-/**
- Collisiondetection for moving object on X-axis. Makes sure that the objec stays within the window
- Code taken from Jonas Willén, SDL_net.zip
- */
-int collisionDetectionXpos(int x_pos)
-{
-    if (x_pos <= 0) x_pos = 0;
-    if (x_pos >= WINDOW_WIDTH - gPlayer.w) x_pos = WINDOW_WIDTH - gPlayer.w;
-    return x_pos;
-}
-/**
-Collisiondetection for moving object on Y-axis. Makes sure that the objec stays within the window
-Code taken from Jonas Willén, SDL_net.zip
-*/
-int collisionDetectionYpos(int y_pos)
-{
-
-    if (y_pos <= 0) y_pos = 0;
-    if (y_pos >= WINDOW_HEIGTH - gPlayer.h) y_pos = WINDOW_HEIGTH - gPlayer.h;
-    return y_pos;
 }
 
 int BallcollisionDetectionYpos(int y_pos)
@@ -370,7 +323,6 @@ int BallcollisionDetectionXpos(int x_pos)
     if (x_pos >= WINDOW_WIDTH - gBall.h) x_pos = WINDOW_WIDTH - gBall.h;
     return x_pos;
 }
-
 
 bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall){
     if(gPlayer ->y >= gBall ->y  + gBall ->h)
