@@ -205,7 +205,8 @@ int main(int argc, char * argv[])
         colissionDetectionBallArena(b);
         if(distanceBallPlayer(b, player) < 30)
         {
-            setBallDirection(b, angleBallPlayer(b, player));
+            //setBallDirection(b, angleBallPlayer(b, player));
+            setBallDirection(b, getPlayerDirection(player));
             setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
         }
         updateBallPosition(b, 1);
@@ -354,8 +355,8 @@ float distanceBallPlayer(Ball b, Player p)
 {
     float squared_X_distance, squared_Y_distance, squared_hypotenuse, distance;
 
-    squared_X_distance = pow(getBallPositionX(b) - getPlayerPositionX(p), 2);
-    squared_Y_distance = pow(getBallPositionY(b) - getPlayerPositionY(p), 2);
+    squared_X_distance = pow((getBallPositionX(b) + getBallWidth()/2) - (getPlayerPositionX(p) + getPlayerWidth()/2), 2);
+    squared_Y_distance = pow((getBallPositionY(b) + getBallHeight()/2) - (getPlayerPositionY(p) + getPlayerHeight()/2), 2);
     
     squared_hypotenuse = squared_X_distance + squared_Y_distance;
     //hypotenuse IS the distance
@@ -373,12 +374,12 @@ float xInvertDirection(float direction)
     direction = -direction;
     return direction;
 }
-float angleBallPlayer(Ball b, Player p)
+float angleBallPlayer(Ball b, Player p) //this function doesnt currently work
 {
     float x_distance, y_distance, direction;
 
-    x_distance = getBallPositionX(b) - getPlayerPositionX(p);
-    y_distance = getBallPositionY(b) - getPlayerPositionY(p);
+    x_distance = (getBallPositionX(b) + getBallWidth()/2) - (getPlayerPositionX(p) + getPlayerWidth()/2);
+    y_distance = (getBallPositionY(b) + getBallHeight()/2) - (getPlayerPositionY(p) + getPlayerHeight()/2);
 
     if (x_distance = 0)
     {
