@@ -30,6 +30,8 @@ void colissionDetectionPlayerArena(Player p);
 void colissionDetectionBallArena(Ball b);
 float xInvertDirection(float direction);
 float yInvertDirection(float direction);
+float angleBallPlayer(Ball b, Player p);
+float distanceBallPlayer(Ball b, Player p);
 
 
 
@@ -201,6 +203,11 @@ int main(int argc, char * argv[])
         updatePlayerPosition(player, 1);
         colissionDetectionPlayerArena(player);
         colissionDetectionBallArena(b);
+        if(distanceBallPlayer(b, player) < 30)
+        {
+            setBallDirection(b, angleBallPlayer(b, player));
+            setBallSpeed(b, getBallSpeed(b) + 10);
+        }
         updateBallPosition(b, 1);
 
         // set the positions in the structs
@@ -364,21 +371,23 @@ float xInvertDirection(float direction)
 }
 float angleBallPlayer(Ball b, Player p)
 {
-    float x_distance, y_distance;
+    float x_distance, y_distance, direction;
 
     x_distance = getBallPositionX(b) - getPlayerPositionX(p);
-    y_distance = getBallPositionX(b) - getPlayerPositionX(p);
+    y_distance = getBallPositionY(b) - getPlayerPositionY(p);
 
     if (x_distance = 0)
     {
         if (y_distance > 0)
             return 0;
-        if (y_distance < 0)
+        else
             return 180;
     }
     else
     {
-        return atan(y_distance/x_distance);
+        direction = atan(y_distance/x_distance)+90;
+        printf("\n\nBall direction: %.0f degrees\n", direction);
+        return direction;
     }
 }
 /**
