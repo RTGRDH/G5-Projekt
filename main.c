@@ -203,7 +203,7 @@ int main(int argc, char * argv[])
         updatePlayerPosition(player, 1);
         colissionDetectionPlayerArena(player);
         colissionDetectionBallArena(b);
-        if(distanceBallPlayer(b, player) < 30)
+        if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 + getPlayerHeight()/2, 2) + pow (getBallWidth()/2 + getPlayerWidth()/2, 2))))
         {
             //setBallDirection(b, angleBallPlayer(b, player));
             setBallDirection(b, getPlayerDirection(player));
