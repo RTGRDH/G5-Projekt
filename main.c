@@ -195,21 +195,11 @@ int main(int argc, char * argv[])
         //Update position of the struct
         updatePlayerPosition(player, 1);
         colissionDetectionPlayerArena(player);
-
-        //Update positions of the struct
-        float x_pos = getPlayerPositionX(player);
-        float y_pos = getPlayerPositionY(player);
+        updateBallPosition(b, 1);
 
         // set the positions in the struct
-        gPlayer.y = collisionDetectionYpos(y_pos);
-        gPlayer.x = collisionDetectionXpos(x_pos);
-
-        if (clock == 100)
-        {
-            printf("Direction: %1.1f degrees\t",getPlayerDirection(player));
-            clock = 0;
-        }
-        clock++;
+        gPlayer.y = getPlayerPositionY(player);
+        gPlayer.x = getPlayerPositionX(player);
 
         if(PlayerBallCollision(&gPlayer, &gBall)){
             if(up)
@@ -223,8 +213,6 @@ int main(int argc, char * argv[])
             }else if(left){
                 gBall.x = BallcollisionDetectionXpos(gBall.x -200);
             }
-
-
         }
         
         SDL_RenderClear(renderer);
@@ -236,6 +224,12 @@ int main(int argc, char * argv[])
         
         
         SDL_Delay(1000/50);
+        if (clock == 100)
+        {
+            printf("Direction: %1.1f degrees\t",getPlayerDirection(player));
+            clock = 0;
+        }
+        clock++;
     }
     SDL_FreeSurface(imageSurface);
     imageSurface = NULL;
@@ -284,7 +278,7 @@ void colissionDetectionPlayerArena(Player p)    //keeping the abstract version o
 }
 void colissionDetectionBallArena(Ball b)
 {
-    float slow = 0.5;
+    float slow = 0.8;
     if (getBallPositionX(b) < 0)
     {
         setBallPositionX(b, 0);
@@ -387,7 +381,48 @@ bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall){
     if(gPlayer ->x + gPlayer->w <= gBall->x)
         return 0;
     return 1;
+}
+float distanceBallPlayer(Ball b, Player p)
+{
+    float squared_X_distance, squared_Y_distance, squared_hypotenuse, distance;
 
+    squared_X_distance = pow(getBallPositionX(b) - getPlayerPositionX(p), 2);
+    squared_Y_distance = pow(getBallPositionY(b) - getPlayerPositionY(p), 2);
+    
+    squared_hypotenuse = squared_X_distance + squared_Y_distance;
+    //hypotenuse IS the distance
+    distance = sqrt(squared_hypotenuse);
+    
+    return distance;
+}
+float yInvertDirection(float direction)
+{
+    direction = -direction + 180;
+    return direction;
+}
+float xInvertDirection(float direction)
+{
+    direction = -direction;
+    return direction;
+}
+float angleBallPlayer(Ball b, Player p)
+{
+    float x_distance, y_distance;
+
+    x_distance = getBallPositionX(b) - getPlayerPositionX(p);
+    y_distance = getBallPositionX(b) - getPlayerPositionX(p);
+
+    if (x_distance = 0)
+    {
+        if (y_distance > 0)
+            return 0;
+        if (y_distance < 0)
+            return 180;
+    }
+    else
+    {
+        return atan(y_distance/x_distance);
+    }
 }
 /**
  Init other media
@@ -416,7 +451,7 @@ bool initMedia()
     gPlayer.x = getPlayerPositionX(player);
     gPlayer.y = getPlayerPositionY(player);
     gPlayer.h = getPlayerHeight();
-    gPlayer.w =getPlayerWidth();
+    gPlayer.w = getPlayerWidth();
 
     gBall.x = getBallPositionX(b);
     gBall.y = getBallPositionY(b);

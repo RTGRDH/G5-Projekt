@@ -71,7 +71,7 @@ PUBLIC void updateBallPosition(Ball b, float GAMESPEED)
 {
     b->BALL_POSITION_X = b->BALL_POSITION_X + sin(b->direction * M_PI / 180) * b->speed * GAMESPEED;
     b->BALL_POSITION_Y = b->BALL_POSITION_Y + cos(b->direction * M_PI / 180) * b->speed * GAMESPEED;
-    b->speed = b->speed * 0.9;
+    b->speed = b->speed * 0.975;
 }
 
 PUBLIC int getBallWidth(){
