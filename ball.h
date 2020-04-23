@@ -13,9 +13,13 @@
 typedef struct Ball_type *Ball;
 float getBallPositionX(Ball b);
 float getBallPositionY(Ball b);
+float getBallDirection(Ball b);
+float getBallSpeed(Ball b);
 Ball createBall(float x, float y);
 void setBallPositionY(Ball b, float y);
 void setBallPositionX(Ball b, float x);
+void setBallDirection(Ball b, float d);
+void setBallSpeed(Ball b, float s);
 int getBallWidth();
 int getBallHeight();
 

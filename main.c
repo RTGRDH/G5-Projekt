@@ -117,7 +117,7 @@ int main(int argc, char * argv[])
     bool left = false;
     bool right = false;
         
-    
+    int clock = 0;      //Debugging: Just for printing testing info at a slower pace
     while(running)
     {
     /**
@@ -204,7 +204,12 @@ int main(int argc, char * argv[])
         gPlayer.y = collisionDetectionYpos(y_pos);
         gPlayer.x = collisionDetectionXpos(x_pos);
 
-        printf("%f",getPlayerDirection(player));
+        if (clock == 100)
+        {
+            printf("Direction: %1.1f degrees\t",getPlayerDirection(player));
+            clock = 0;
+        }
+        clock++;
 
         if(PlayerBallCollision(&gPlayer, &gBall)){
             if(up)

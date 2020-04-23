@@ -18,7 +18,8 @@ struct Ball_type
 {
     float BALL_POSITION_X;
     float BALL_POSITION_Y;
-    int speed;
+    float speed;
+    float direction;
 };
 
 PUBLIC Ball createBall(float x, float y)
@@ -26,7 +27,8 @@ PUBLIC Ball createBall(float x, float y)
     Ball b = malloc(sizeof(struct Ball_type));
     b->BALL_POSITION_Y = y;
     b->BALL_POSITION_X = x;
-    b->speed = 1;
+    b->speed = 0;
+    b->direction = 0;
     return b;
 }
 PUBLIC void setBallPositionX(Ball b, float x){
@@ -37,13 +39,28 @@ PUBLIC void setBallPositionY(Ball b, float y){
     b->BALL_POSITION_Y = y;
 }
 
+PUBLIC void setBallSpeed(Ball b, float s){
+    b->speed = s;
+}
+
+PUBLIC void setBallDirection(Ball b, float d){
+    b->direction = d;
+}
+
 PUBLIC float getBallPositionX(Ball b){
     return b->BALL_POSITION_X;
 }
 
-
 PUBLIC float getBallPositionY(Ball b){
     return b->BALL_POSITION_Y;
+}
+
+PUBLIC float getBallDirection(Ball b){
+    return b->direction;
+}
+
+PUBLIC float getBallSpeed(Ball b){
+    return b->speed;
 }
 
 PUBLIC int getBallWidth(){
