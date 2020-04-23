@@ -6,6 +6,7 @@
 #include <SDL2/SDL_net.h>
 #include "player.h"
 #include "ball.h"
+#include <math.h>
 
 
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
