@@ -20,6 +20,7 @@ void setBallPositionY(Ball b, float y);
 void setBallPositionX(Ball b, float x);
 void setBallDirection(Ball b, float d);
 void setBallSpeed(Ball b, float s);
+void updateBallPosition(Ball b, float GAMESPEED);
 int getBallWidth();
 int getBallHeight();
 

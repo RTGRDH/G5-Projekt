@@ -264,22 +264,46 @@ void colissionDetectionPlayerArena(Player p)    //keeping the abstract version o
     if (getPlayerPositionX(p) < 0)
     {
         setPlayerPositionX(p, 0);
-        setPlayerSpeed(player, getPlayerSpeed(player)*slow);
+        setPlayerSpeed(p, getPlayerSpeed(p)*slow);
     }
     if (getPlayerPositionY(p) < 0)
     {
         setPlayerPositionY(p, 0);
-        setPlayerSpeed(player, getPlayerSpeed(player)*slow);
+        setPlayerSpeed(p, getPlayerSpeed(p)*slow);
     }
     if (getPlayerPositionX(p) > WINDOW_WIDTH - getPlayerHeight())
     {
         setPlayerPositionX(p, WINDOW_WIDTH - getPlayerWidth());
-        setPlayerSpeed(player, getPlayerSpeed(player)*slow);
+        setPlayerSpeed(p, getPlayerSpeed(p)*slow);
     }
     if (getPlayerPositionY(p) > WINDOW_HEIGTH - getPlayerHeight())
     {
         setPlayerPositionY(p, WINDOW_HEIGTH - getPlayerHeight());
-        setPlayerSpeed(player, getPlayerSpeed(player)*slow);
+        setPlayerSpeed(p, getPlayerSpeed(p)*slow);
+    }
+}
+void colissionDetectionBallArena(Ball b)
+{
+    float slow = 0.5;
+    if (getBallPositionX(b) < 0)
+    {
+        setBallPositionX(b, 0);
+        setBallSpeed(b, getBallSpeed(b)*slow);
+    }
+    if (getBallPositionY(b) < 0)
+    {
+        setBallPositionY(b, 0);
+        setBallSpeed(b, getBallSpeed(b)*slow);
+    }
+    if (getBallPositionX(b) > WINDOW_WIDTH - getBallHeight())
+    {
+        setBallPositionX(b, WINDOW_WIDTH - getBallWidth());
+        setBallSpeed(b, getBallSpeed(b)*slow);
+    }
+    if (getBallPositionY(b) > WINDOW_HEIGTH - getBallHeight())
+    {
+        setBallPositionY(b, WINDOW_HEIGTH - getBallHeight());
+        setBallSpeed(b, getBallSpeed(b)*slow);
     }
 }
 

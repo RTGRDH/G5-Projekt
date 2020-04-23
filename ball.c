@@ -6,10 +6,14 @@
 //  Copyright © 2020 Ernst. All rights reserved.
 //
 #include <stdlib.h>
+#include <math.h>
 #include "ball.h"
 
 #define PUBLIC
 #define PRIVATE static
+#ifndef M_PI
+#define M_PI acos(-1.0)
+#endif
 
 PRIVATE int BALL_WIDTH = 20;
 PRIVATE int BALL_HEIGTH = 20;
@@ -61,6 +65,13 @@ PUBLIC float getBallDirection(Ball b){
 
 PUBLIC float getBallSpeed(Ball b){
     return b->speed;
+}
+
+PUBLIC void updateBallPosition(Ball b, float GAMESPEED)
+{
+    b->BALL_POSITION_X = b->BALL_POSITION_X + sin(b->direction * M_PI / 180) * b->speed * GAMESPEED;
+    b->BALL_POSITION_Y = b->BALL_POSITION_Y + cos(b->direction * M_PI / 180) * b->speed * GAMESPEED;
+    b->speed = b->speed * 0.9;
 }
 
 PUBLIC int getBallWidth(){
