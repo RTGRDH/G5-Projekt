@@ -79,7 +79,7 @@ int main(int argc, char **argv)
 				{
 						for(int j=0; j<*pClientCount;j++)
 					{
-						if (client[j].port != 0)
+						if (client[j].port != 0)// && client[j].port != client[i].port
 						{
 							printf("Send to Client %d \n", j+1);
 							pSent->address.host = client[j].IP;	/* Set the destination host */
