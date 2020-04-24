@@ -28,6 +28,7 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball b, Player p);
 float distanceBallPlayer(Ball b, Player p);
 
+printf("Hello");
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
