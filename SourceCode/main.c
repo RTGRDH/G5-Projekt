@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdlib.h>                                         //Netw
+#include <string.h>                                         //Net
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
@@ -27,6 +29,8 @@ float xInvertDirection(float direction);
 float yInvertDirection(float direction);
 float angleBallPlayer(Ball b, Player p);
 float distanceBallPlayer(Ball b, Player p);
+
+void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
 
 
 SDL_Window *window = NULL;
@@ -74,9 +78,42 @@ int main(int argc, char * argv[])
      Implement into player object?
      Not done yet.
      */
+
+    UDPsocket s;                                                //Net
+	IPaddress saddr;                                            //Net
+	UDPpacket *pSend;                                           //Net
+    UDPpacket *pRecive;                                         //Net
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
+
+    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
+    if (SDLNet_Init() < 0)            
+	{
+		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     //Net
+    if (!(s = SDLNet_UDP_Open(0)))      //Net
+	{
+		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c                //Net
+	if (SDLNet_ResolveHost(&saddr, "127.0.0.1", 2000) == -1) 
+	{
+		fprintf(stderr, "SDLNet_ResolveHost(127.0.0.1 2000): %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
+
+    //Check if it's possible to allocate memory for send and recive packetsJonas Willén movingTwoMenWithUDP.c //Net
+    if (!((pSend = SDLNet_AllocPacket(512))&& (pRecive = SDLNet_AllocPacket(512)))) 
+	{                                                                               
+		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+		exit(EXIT_FAILURE);
+	}
 
     if(init())
     {
@@ -157,18 +194,22 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = true;
+                        sendPacket(1, saddr, pSend, s );                        //Net
                         break;
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = true;
+                        sendPacket(2, saddr, pSend, s ); 
                         break;
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = true;
+                        sendPacket(3, saddr, pSend, s ); 
                         break;
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = true;
+                        sendPacket(4, saddr, pSend, s ); 
                         break;
                     default:
                         break;
@@ -220,7 +261,15 @@ int main(int argc, char * argv[])
         if (left == true)
             changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
         if (right == true)
-            changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));         
+            changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));    
+
+        
+        //Recive packet, for now just recive mirroring from server                  //Net
+        if (SDLNet_UDP_Recv(s, pRecive)){
+            int a; 
+            sscanf((char * )pRecive->data, "%d\n", &a);
+            printf("Incoming movement: %d\n", a);
+        }     
       
         //Update position of the struct
         updatePlayerPosition(player, 1);
@@ -584,4 +633,14 @@ bool init()
         test = false;
     }
     return test;
+}
+
+void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
+{
+    printf("Player move: %d\n", (int) movement);
+    sprintf((char *)packet->data, "%d\n", (int) movement);    
+    packet->address.host = svr.host;	/* Set the destination host */
+	packet->address.port = svr.port;	/* And destination port */
+	packet->len = strlen((char *)packet->data) + 1;
+    SDLNet_UDP_Send(s, -1, packet);
 }
