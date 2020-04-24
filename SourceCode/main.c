@@ -278,7 +278,7 @@ int main(int argc, char * argv[])
 
         updatePlayerPosition(player2, 1);
         colissionDetectionPlayerArena(player2);
-        colissionDetectionBallArena(b);
+       // colissionDetectionBallArena(b);
 
          if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 - getPlayerHeight()/2, 2) + pow (getBallWidth()/2 - getPlayerWidth()/2, 2))))
         {
@@ -302,8 +302,8 @@ int main(int argc, char * argv[])
         gBall.x = getBallPositionX(b);
 
         
-        gPlayer.y = getPlayerPositionY(player2);
-        gPlayer.x = getPlayerPositionX(player2);
+        gPlayer2.y = getPlayerPositionY(player2);
+        gPlayer2.x = getPlayerPositionX(player2);
 
         
         if(ballRightGoalCollision(&gBall))
