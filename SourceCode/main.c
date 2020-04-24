@@ -29,11 +29,11 @@ float angleBallPlayer(Ball b, Player p);
 float distanceBallPlayer(Ball b, Player p);
 
 
-
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Surface *imageSurface =  NULL;
 SDL_Surface *sPlayer = NULL;
+SDL_Surface *sPlayer2 = NULL;
 SDL_Surface *sBall = NULL;
 SDL_Surface *sGoal_Left = NULL;
 SDL_Surface *sGoal_Right = NULL;
@@ -42,15 +42,18 @@ SDL_Surface *surface = NULL;
 SDL_Texture *mField;
 SDL_Texture *mBall = NULL;
 SDL_Texture *mPlayer = NULL;
+SDL_Texture *mPlayer2 = NULL;
 SDL_Texture *mGoal_Left = NULL;
 SDL_Texture *mGoal_Right = NULL;
 SDL_Texture *texture = NULL;
 
 Player player = NULL;
+Player player2 = NULL;
 Ball b = NULL;
 SDL_Rect gField;
 // struct to hold the position and size of the sprite
 SDL_Rect gPlayer;
+SDL_Rect gPlayer2;
 SDL_Rect gBall;
 SDL_Rect gGoal_Left;
 SDL_Rect gGoal_Right;
@@ -115,6 +118,12 @@ int main(int argc, char * argv[])
     setPlayerPositionX(player, 0);
     setPlayerDirection(player, 90);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
+
+    //setPlayerPositionX(player2, 800);
+    setPlayerDirection(player2, 90);
+  //  setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
+
+
     float x_pos = getPlayerPositionX(player);
     float y_pos = getPlayerPositionY(player);
 
@@ -201,21 +210,36 @@ int main(int argc, char * argv[])
             changePlayerDirection(player, TURNING_SPEED - getPlayerSpeed(player));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
         if (right == true)
             changePlayerDirection(player, -TURNING_SPEED + getPlayerSpeed(player));     //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
+
+
+        if (up == true)
+            changePlayerSpeed(player2, ACCELERATION);
+        if (down == true)
+            changePlayerSpeed(player2, -ACCELERATION);
+            speedLimit(player2);
+        if (left == true)
+            changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
+        if (right == true)
+            changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));         
       
         //Update position of the struct
         updatePlayerPosition(player, 1);
         colissionDetectionPlayerArena(player);
         colissionDetectionBallArena(b);
 
-         if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 + getPlayerHeight()/2, 2) + pow (getBallWidth()/2 + getPlayerWidth()/2, 2))))
+        updatePlayerPosition(player2, 1);
+        colissionDetectionPlayerArena(player2);
+        colissionDetectionBallArena(b);
+
+         if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 - getPlayerHeight()/2, 2) + pow (getBallWidth()/2 - getPlayerWidth()/2, 2))))
         {
-            //setBallDirection(b, angleBallPlayer(b, player));
+            setBallDirection(b, angleBallPlayer(b, player));
             setBallDirection(b, getPlayerDirection(player));
             setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
         }
 
         updateBallPosition(b, 1);
-
+  
         if(distanceBallPlayer(b, player) < 1)
         {
             setBallPositionX(b, (float)WINDOW_WIDTH/2);
@@ -227,6 +251,10 @@ int main(int argc, char * argv[])
 
         gBall.y = getBallPositionY(b);
         gBall.x = getBallPositionX(b);
+
+        
+        gPlayer.y = getPlayerPositionY(player2);
+        gPlayer.x = getPlayerPositionX(player2);
 
         
         if(ballRightGoalCollision(&gBall))
@@ -253,6 +281,8 @@ int main(int argc, char * argv[])
      
         SDL_RenderCopy(renderer,mBall,NULL,&gBall);
         SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, -getPlayerDirection(player), NULL, SDL_FLIP_NONE);
+
+        SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, -getPlayerDirection(player2), NULL, SDL_FLIP_NONE);
         SDL_RenderPresent(renderer);
      //  SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
@@ -316,14 +346,14 @@ float distanceBallPlayer(Ball b, Player p)
     return distance;
 }
 
-float angleBallPlayer(Ball b, Player p) //this function doesnt currently work
+float angleBallPlayer(Ball b, Player p)
 {
     float x_distance, y_distance, direction;
 
-    x_distance = (getBallPositionX(b) + getBallWidth()/2) - (getPlayerPositionX(p) + getPlayerWidth()/2);
+    x_distance = (getBallPositionX(b) - getBallWidth()/2) - (getPlayerPositionX(p) - getPlayerWidth()/2);
     y_distance = (getBallPositionY(b) + getBallHeight()/2) - (getPlayerPositionY(p) + getPlayerHeight()/2);
 
-    if (x_distance = 0)
+    if (x_distance == 0)
     {
         if (y_distance > 0)
             return 0;
@@ -332,8 +362,16 @@ float angleBallPlayer(Ball b, Player p) //this function doesnt currently work
     }
     else
     {
-        direction = atan(y_distance/x_distance)*180/M_PI;
-        return direction;
+    if (x_distance >= 0)
+        {
+            direction = -atan(y_distance/x_distance)*180/M_PI+90;
+            return direction;
+        }
+        else
+        {
+            direction = atan(y_distance/x_distance)*180/M_PI + 270;
+            return direction;
+        }
     }
 }
 
@@ -415,14 +453,19 @@ bool initMedia()
         flag = false;
     }
     sPlayer = IMG_Load("images/Car.png");
+    sPlayer2 = IMG_Load("images/Car2.png");
     sBall = IMG_Load("images/SoccerBall.png");
  
     
     mPlayer = SDL_CreateTextureFromSurface(renderer, sPlayer);
+
+    mPlayer2 = SDL_CreateTextureFromSurface(renderer,sPlayer2);
+
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
 
 
     player = createPlayer(100, 455);
+    player2 = createPlayer(810, 455);
 
     b = createBall(470,260);
 
@@ -430,6 +473,11 @@ bool initMedia()
     gPlayer.y = getPlayerPositionY(player);
     gPlayer.h = getPlayerHeight();
     gPlayer.w =getPlayerWidth();
+
+    gPlayer2.x = getPlayerPositionX(player2);
+    gPlayer2.y = getPlayerPositionY(player2);
+    gPlayer2.h = getPlayerHeight();
+    gPlayer2.w =getPlayerWidth();
 
     gBall.x = getBallPositionX(b);
     gBall.y = getBallPositionY(b);
