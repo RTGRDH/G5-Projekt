@@ -21,6 +21,7 @@ bool initMedia();
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
 
+bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall);
 
 void speedLimit(Player p);
 void colissionDetectionPlayerArena(Player p);
@@ -156,9 +157,9 @@ int main(int argc, char * argv[])
     setPlayerDirection(player, 90);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
 
-    //setPlayerPositionX(player2, 800);
-    setPlayerDirection(player2, 90);
-  //  setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
+    setPlayerPositionX(player2, 800);
+    setPlayerDirection(player2, -90);
+    setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
 
 
     float x_pos = getPlayerPositionX(player);
@@ -173,7 +174,11 @@ int main(int argc, char * argv[])
     bool left = false;
     bool right = false;
         
-    
+    bool upP2 = false;
+    bool downP2 = false;
+    bool leftP2 = false;
+    bool rightP2 = false;
+
     while(running)
     {
     /**
@@ -192,54 +197,97 @@ int main(int argc, char * argv[])
                 switch (event.key.keysym.scancode)
                 {
                     case SDL_SCANCODE_W:
-                    case SDL_SCANCODE_UP:
                         up = true;
                         sendPacket(1, saddr, pSend, s );                        //Net
                         break;
+
+                    case SDL_SCANCODE_UP:
+                        upP2 = true;
+                        sendPacket(1, saddr, pSend, s );                        //Net
+                        break;
+
                     case SDL_SCANCODE_A:
-                    case SDL_SCANCODE_LEFT:
                         left = true;
                         sendPacket(2, saddr, pSend, s ); 
                         break;
+
+                    case SDL_SCANCODE_LEFT:
+                        leftP2 = true;
+                        sendPacket(2, saddr, pSend, s ); 
+                        break;
+
                     case SDL_SCANCODE_S:
-                    case SDL_SCANCODE_DOWN:
                         down = true;
                         sendPacket(3, saddr, pSend, s ); 
                         break;
+
+                      case SDL_SCANCODE_DOWN:
+                        downP2 = true;
+                        sendPacket(3, saddr, pSend, s ); 
+                        break;
+
                     case SDL_SCANCODE_D:
-                    case SDL_SCANCODE_RIGHT:
                         right = true;
                         sendPacket(4, saddr, pSend, s ); 
                         break;
-                    default:
+
+                    case SDL_SCANCODE_RIGHT:
+                        rightP2 = true;
+                        sendPacket(4, saddr, pSend, s ); 
                         break;
+
+                   default:
+                       break;
                 }
                 break;
                 case SDL_KEYUP:
                 switch (event.key.keysym.scancode)
                 {
                     case SDL_SCANCODE_W:
-                    case SDL_SCANCODE_UP:
                         up = false;
                         break;
+
+                    case SDL_SCANCODE_UP:
+                        upP2 = false;
+                   //     sendPacket(1, saddr, pSend, s );                        //Net
+                        break;
+
                     case SDL_SCANCODE_A:
-                    case SDL_SCANCODE_LEFT:
                         left = false;
                         break;
+
+                    case SDL_SCANCODE_LEFT:
+                        leftP2 = false;
+                    //    sendPacket(2, saddr, pSend, s ); 
+                        break;
+
                     case SDL_SCANCODE_S:
-                    case SDL_SCANCODE_DOWN:
                         down = false;
                         break;
+
+                    case SDL_SCANCODE_DOWN:
+                        downP2 = false;
+                    //    sendPacket(3, saddr, pSend, s ); 
+                        break;
+
                     case SDL_SCANCODE_D:
-                    case SDL_SCANCODE_RIGHT:
                         right = false;
                         break;
+
+                    case SDL_SCANCODE_RIGHT:
+                        rightP2 = false;
+               //         sendPacket(4, saddr, pSend, s ); 
+                        break;
+
                     default:
                         break;
                 }
                 break;
             }
+             
+           
         }
+
 
          //Update attributes of the struct
         if (up == true)
@@ -253,15 +301,15 @@ int main(int argc, char * argv[])
             changePlayerDirection(player, -TURNING_SPEED + getPlayerSpeed(player));     //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
 
 
-        if (up == true)
-            changePlayerSpeed(player2, ACCELERATION);
-        if (down == true)
-            changePlayerSpeed(player2, -ACCELERATION);
-            speedLimit(player2);
-        if (left == true)
-            changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
-        if (right == true)
-            changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));    
+         if (upP2 == true)
+             changePlayerSpeed(player2, ACCELERATION);
+         if (downP2 == true)
+             changePlayerSpeed(player2, -ACCELERATION);
+             speedLimit(player2);
+         if (leftP2 == true)
+             changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
+         if (rightP2 == true)
+            changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));     
 
         
         //Recive packet, for now just recive mirroring from server                  //Net
@@ -278,13 +326,27 @@ int main(int argc, char * argv[])
 
         updatePlayerPosition(player2, 1);
         colissionDetectionPlayerArena(player2);
-       // colissionDetectionBallArena(b);
+        colissionDetectionBallArena(b);
 
-         if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 - getPlayerHeight()/2, 2) + pow (getBallWidth()/2 - getPlayerWidth()/2, 2))))
+        //  if(distanceBallPlayer(b, player) < sqrt( (pow (getBallHeight()/2 - getPlayerHeight()/2, 2) + pow (getBallWidth()/2 - getPlayerWidth()/2, 2))))
+        // {
+        //     setBallDirection(b, angleBallPlayer(b, player));
+        //     setBallDirection(b, getPlayerDirection(player));
+        //     setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
+        // }
+
+         if(PlayerBallCollision(&gPlayer,&gBall))
         {
             setBallDirection(b, angleBallPlayer(b, player));
             setBallDirection(b, getPlayerDirection(player));
             setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
+        }
+
+          if(PlayerBallCollision(&gPlayer2,&gBall))
+        {
+            setBallDirection(b, angleBallPlayer(b, player2));
+            setBallDirection(b, getPlayerDirection(player2));
+            setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player2)+2);
         }
 
         updateBallPosition(b, 1);
@@ -348,6 +410,21 @@ int main(int argc, char * argv[])
    // TTF_Quit();
     SDL_Quit();
     return 0;
+}
+
+
+
+bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall){
+    if(gPlayer ->y >= gBall ->y  + gBall ->h)
+        return 0;
+    if(gPlayer->x >= gBall ->x + gBall->w)
+        return 0;
+    if(gPlayer->y + gPlayer->h <= gBall->y)
+        return 0;
+    if(gPlayer ->x + gPlayer->w <= gBall->x)
+        return 0;
+    return 1;
+
 }
 
 
@@ -637,7 +714,7 @@ bool init()
 
 void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
 {
-    printf("Player move: %d\n", (int) movement);
+   // printf("Player move: %d\n", (int) movement);
     sprintf((char *)packet->data, "%d\n", (int) movement);    
     packet->address.host = svr.host;	/* Set the destination host */
 	packet->address.port = svr.port;	/* And destination port */
