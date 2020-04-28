@@ -71,17 +71,18 @@ int main(int argc, char **argv)
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				if(recive->address.port == c[i].port)
+				if(pRecive->address.port == clients[i].port)
 				{
 					x=client_send(client, pRecive, pSent, sd, i, pClientCount, a);
 				}
+				
 				if(x==0)
 				{
 					client_create(client, pRecive, i, pClientCount);
 					break;
 				}
-
 			}
+			
 			/* Quit if packet contains "quit" */
 			if (strcmp((char *)pSent->data, "quit") == 0)
 				quit = 1;
