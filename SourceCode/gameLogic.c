@@ -5,10 +5,7 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <string.h>                                         //Net
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_timer.h>
-#include <SDL2/SDL_net.h>
+#include <string.h>
 
 #define PUBLIC
 #define PRIVATE static
@@ -166,4 +163,4 @@ float xInvertDirection(float direction)
 {
     direction = -direction;
     return direction;
-}
+}<
