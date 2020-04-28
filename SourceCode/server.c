@@ -8,7 +8,6 @@ exit
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
- 
 #include "SDL2/SDL_net.h"
 
 struct clients {
@@ -17,21 +16,19 @@ struct clients {
 }; 
 typedef struct clients Clients;
  
+
+void clients_null(Clients c[]);
+void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
+int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
+
+
 int main(int argc, char **argv)
 {
 	UDPsocket sd;       /* Socket descriptor */
 	UDPpacket *pRecive;       /* Pointer to packet memory */
 	UDPpacket *pSent;
     Clients client[4];
-	client[0].IP=0;
-	client[0].port=0;
-	client[1].IP=0;
-	client[1].port=0;
-	client[2].IP=0;
-	client[2].port=0;
-	client[3].IP=0;
-	client[3].port=0;
-	
+	clients_null(client);
 
     int quit, a, b, x; 
 	int clientCount=0;
@@ -74,41 +71,12 @@ int main(int argc, char **argv)
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				
-				if(pRecive->address.port == client[i].port)
-				{
-						for(int j=0; j<*pClientCount;j++)
-					{
-						if (client[j].port != 0)// && client[j].port != client[i].port
-						{
-							printf("Send to Client %d \n", j+1);
-							pSent->address.host = client[j].IP;	/* Set the destination host */
-							pSent->address.port = client[j].port;
-							sscanf((char * )pRecive->data, "%d\n", &a);
-							printf("%d\n", a);
-							sprintf((char *)pSent->data, "%d\n", a);
-							pSent->len = strlen((char *)pSent->data) + 1;
-							SDLNet_UDP_Send(sd, -1, pSent);
-						
-							}
-						}
-					x=1;
+				x=client_send(client, pRecive, pSent, sd, i, pClientCount, a);
 					
-				}
 				if(x==0)
 				{
-					if(client[i].IP == 0 && client[i].port == 0)
-					{
-						printf("Client %d\n", *pClientCount+1);
-                		client[i].IP = pRecive->address.host;
-                		client[i].port = pRecive->address.port;
-						(*pClientCount)++;
-						//printf("for1 c%d ip: %d port: %d \n", clientCount, &client[i].IP, &client[i].port);
-						break;
-					}
-				
-					
-					
+					client_create(client, pRecive, i, pClientCount);
+					break;
 				}
 
 			}
@@ -124,3 +92,53 @@ int main(int argc, char **argv)
 	SDLNet_Quit();
 	return EXIT_SUCCESS;
 } 
+
+
+void clients_null(Clients c[])
+{
+	for(int i=0; i<=4; i++)
+	{
+		c[i].IP=0;
+		c[i].port=0;
+	}
+}
+
+void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
+{
+	if(c[i].IP == 0 && c[i].port == 0)
+	{
+		printf("Client %d\n", *pClientCount+1);
+        c[i].IP = recive->address.host;
+		c[i].port = recive->address.port;
+		(*pClientCount)++;
+		//printf("for1 c%d ip: %d port: %d \n", clientCount, &client[i].IP, &client[i].port);
+		
+	}
+}
+
+int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a)
+{
+	int xReturn=0;
+
+	if(recive->address.port == c[i].port)
+	{
+		for(int j=0; j<*pClientCount;j++)
+		{
+			if (c[j].port != 0)// && client[j].port != client[i].port
+			{
+				printf("Send to Client %d \n", j+1);
+				sent->address.host = c[j].IP;	/* Set the destination host */
+				sent->address.port = c[j].port;
+				sscanf((char * )recive->data, "%d\n", &a);
+				printf("%d\n", a);
+				sprintf((char *)sent->data, "%d\n", a);
+				sent->len = strlen((char *)sent->data) + 1;
+				SDLNet_UDP_Send(sd2, -1, sent);			
+			}
+		}
+		
+		xReturn=1;		
+	}
+	return xReturn;
+
+}
