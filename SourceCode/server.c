@@ -71,8 +71,10 @@ int main(int argc, char **argv)
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				x=client_send(client, pRecive, pSent, sd, i, pClientCount, a);
-					
+				if(recive->address.port == c[i].port)
+				{
+					x=client_send(client, pRecive, pSent, sd, i, pClientCount, a);
+				}
 				if(x==0)
 				{
 					client_create(client, pRecive, i, pClientCount);
@@ -120,8 +122,6 @@ int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, 
 {
 	int xReturn=0;
 
-	if(recive->address.port == c[i].port)
-	{
 		for(int j=0; j<*pClientCount;j++)
 		{
 			if (c[j].port != 0)// && client[j].port != client[i].port
@@ -136,9 +136,7 @@ int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, 
 				SDLNet_UDP_Send(sd2, -1, sent);			
 			}
 		}
-		
 		xReturn=1;		
-	}
 	return xReturn;
 
 }
