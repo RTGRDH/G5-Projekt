@@ -6,9 +6,16 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <string.h>
+#include "gameLogic.h"
 
 #define PUBLIC
 #define PRIVATE static
+#define MAX_SPEED_REVERSE -1
+#define MAX_SPEED_FORWARD 8
+#define WINDOW_WIDTH 960
+#define WINDOW_HEIGTH 540
+
+
 #ifndef M_PI
 #define M_PI acos(-1.0)
 #endif
@@ -163,4 +170,4 @@ float xInvertDirection(float direction)
 {
     direction = -direction;
     return direction;
-}<
+}

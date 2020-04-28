@@ -1,6 +1,11 @@
 #ifndef GameLogic_h
 #define GameLogic_h
 #include <stdio.h>
+#include "ball.h"
+#include "player.h"
+#include <SDL2/SDL.h>
+
+
 
 bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall);
 bool ballRightGoalCollision(SDL_Rect* gBall);
@@ -12,3 +17,5 @@ void colissionDetectionPlayerArena(Player p);
 void colissionDetectionBallArena(Ball b);
 float yInvertDirection(float direction);
 float xInvertDirection(float direction);
+
+#endif
