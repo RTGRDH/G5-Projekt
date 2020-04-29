@@ -9,15 +9,22 @@
 #include "menu.h"
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+SDL_Rect playButton;
+SDL_Rect exitButton;
 void initMenu(SDL_Renderer* renderer)
 {
+    playButton.h = 50; playButton.w = 100;
+    playButton.x = 300; playButton.y = 300;
+    
+    exitButton.h = 50; exitButton.w = 100;
+    exitButton.x = 500; exitButton.y = 300;
     menu(renderer);
 }
 void menu(SDL_Renderer* renderer)
 {
     SDL_Event event;
-    bool runningMenu = true;
-    while(runningMenu)
+    bool running = true;
+    while(running)
     {
        displayMenu(renderer);
        
@@ -26,9 +33,10 @@ void menu(SDL_Renderer* renderer)
            switch (event.type)
            {
                case SDL_QUIT:
-                   runningMenu = false;
+                   running = false;
                    break;
                case SDL_MOUSEBUTTONDOWN:
+                   running = false;
                    break;
            }
         }
@@ -36,7 +44,13 @@ void menu(SDL_Renderer* renderer)
 }
 void displayMenu(SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); //Set background to white
+    SDL_RenderDrawRect(renderer, &playButton); //Draw playButton
+    SDL_RenderDrawRect(renderer, &exitButton);
+    SDL_RenderClear(renderer); //Clear renderer
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);//Draw playerButton black
+    SDL_RenderFillRect(renderer, &playButton);//Fill the playerButton
+    SDL_SetRenderDrawColor(renderer, 12, 233, 123, 213);
+    SDL_RenderFillRect(renderer, &exitButton);
     SDL_RenderPresent(renderer);
 }

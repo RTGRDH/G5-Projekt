@@ -10,8 +10,9 @@
 #define menu_h
 
 #include <stdio.h>
+#include <stdbool.h>
 #include <SDL2/SDL.h>
 void initMenu(SDL_Renderer* renderer);
-void menu();
-void displayMenu();
+void menu(SDL_Renderer* renderer);
+void displayMenu(SDL_Renderer* renderer);
 #endif /* menu_h */

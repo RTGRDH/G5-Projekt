@@ -35,8 +35,6 @@ float distanceBallPlayer(Ball b, Player p);
 
 void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
 
-void menu();
-
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
 SDL_Surface *imageSurface =  NULL;
