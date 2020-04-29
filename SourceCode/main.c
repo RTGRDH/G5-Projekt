@@ -179,7 +179,7 @@ int main(int argc, char * argv[])
     bool downP2 = false;
     bool leftP2 = false;
     bool rightP2 = false;
-
+//------------------------------------------------------SCAN KEYBOARD--------------------------------------------------------------------------
     while(running)
     {
     /**
@@ -288,7 +288,7 @@ int main(int argc, char * argv[])
              
            
         }
-
+//------------------------------------------------------UPDATE LOGICAL OBJECTS--------------------------------------------------------------------------
 
          //Update attributes of the struct
         if (up == true)
@@ -357,7 +357,7 @@ int main(int argc, char * argv[])
             setBallPositionX(b, (float)WINDOW_WIDTH/2);
             setBallPositionY(b, (float)WINDOW_WIDTH/2);
         } 
-
+//------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
         gPlayer.y = getPlayerPositionY(player);
         gPlayer.x = getPlayerPositionX(player);
 
@@ -413,7 +413,7 @@ int main(int argc, char * argv[])
     return 0;
 }
 
-
+//------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
 /**
  Init other media
  */
