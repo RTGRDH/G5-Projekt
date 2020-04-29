@@ -11,6 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
+#include "menu.h"
 
 
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
@@ -34,6 +35,7 @@ float distanceBallPlayer(Ball b, Player p);
 
 void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
 
+void menu();
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -120,7 +122,10 @@ int main(int argc, char * argv[])
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
+        //Init menu
+        initMenu(renderer);
     }
+    
     //Init backround here
     if(!initPlayField())
     {
@@ -153,7 +158,7 @@ int main(int argc, char * argv[])
     {
         printf("Initialize media successful.\n");
     }
-           
+    
     setPlayerPositionX(player, 0);
     setPlayerDirection(player, 90);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
@@ -531,7 +536,6 @@ bool init()
     SDL_Init(SDL_INIT_VIDEO);
 //    TTF_Init();
     window = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
-      
     if(window == NULL)
     {
         printf("Could not create window. Error: %s ",SDL_GetError());
@@ -569,3 +573,4 @@ void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
 	packet->len = strlen((char *)packet->data) + 1;
     SDLNet_UDP_Send(s, -1, packet);
 }
+
