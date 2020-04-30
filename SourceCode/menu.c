@@ -18,29 +18,35 @@ void initMenu(SDL_Renderer* renderer)
     
     exitButton.h = 50; exitButton.w = 100;
     exitButton.x = 500; exitButton.y = 300;
-    menu(renderer);
+    //menu(renderer);
 }
-void menu(SDL_Renderer* renderer)
+bool menu(SDL_Renderer* renderer)
 {
+    initMenu(renderer);
     SDL_Event event;
     bool running = true;
+    bool flag = false;
     while(running)
     {
        displayMenu(renderer);
-       
        while (SDL_PollEvent(&event))
        {
            switch (event.type)
            {
                case SDL_QUIT:
                    running = false;
+                   flag = false;
                    break;
                case SDL_MOUSEBUTTONDOWN:
                    running = false;
+                   flag = true;
+                   break;
+               default:
                    break;
            }
         }
     }
+    return flag;
 }
 void displayMenu(SDL_Renderer* renderer)
 {

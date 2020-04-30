@@ -13,6 +13,6 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 void initMenu(SDL_Renderer* renderer);
-void menu(SDL_Renderer* renderer);
+bool menu(SDL_Renderer* renderer);
 void displayMenu(SDL_Renderer* renderer);
 #endif /* menu_h */

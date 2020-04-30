@@ -33,7 +33,8 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball b, Player p);
 float distanceBallPlayer(Ball b, Player p);
 
-void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
+void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);//Net
+void cleanUp();
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -121,7 +122,11 @@ int main(int argc, char * argv[])
     {
         printf("Initialize window and renderer successful.\n");
         //Init menu
-        initMenu(renderer);
+        if(!menu(renderer))
+        {
+            running = false;
+            cleanUp(0);
+        }
     }
     
     //Init backround here
@@ -288,8 +293,6 @@ int main(int argc, char * argv[])
                 }
                 break;
             }
-             
-           
         }
 //------------------------------------------------------UPDATE LOGICAL OBJECTS--------------------------------------------------------------------------
 
@@ -404,18 +407,33 @@ int main(int argc, char * argv[])
         
         SDL_Delay(1000/50);
     }
-    SDL_FreeSurface(imageSurface);
-    imageSurface = NULL;
-    SDL_DestroyWindow(window);
-    SDL_DestroyTexture(mField);
-    SDL_DestroyTexture(mPlayer);
-    SDL_DestroyTexture(mBall);
-    SDL_DestroyRenderer(renderer);
-   // TTF_Quit();
-    SDL_Quit();
+    cleanUp(1);
     return 0;
 }
-
+void cleanUp(int param)
+{
+    //If param is 0 - Cleaning up renderer and window from menu
+    if(param == 0)
+    {
+        SDL_DestroyWindow(window);
+        SDL_DestroyRenderer(renderer);
+        SDL_Quit();
+    }
+    //If param is 1 - Cleaning up everything that is game related
+    if(param == 1)
+    {
+        SDL_FreeSurface(imageSurface);
+        imageSurface = NULL;
+        SDL_DestroyWindow(window);
+        SDL_DestroyTexture(mField);
+        SDL_DestroyTexture(mPlayer);
+        SDL_DestroyTexture(mBall);
+        SDL_DestroyRenderer(renderer);
+        // TTF_Quit();
+        SDL_Quit();
+    }
+    
+}
 //------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
 /**
  Init other media
