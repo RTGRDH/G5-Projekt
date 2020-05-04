@@ -6,7 +6,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
- //#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #include "Player.h"
 #include <math.h>
 #include "ball.h"
@@ -88,6 +89,8 @@ int main(int argc, char * argv[])
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
 
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
     if (SDLNet_Init() < 0)            
@@ -153,7 +156,8 @@ int main(int argc, char * argv[])
     {
         printf("Initialize media successful.\n");
     }
-           
+
+    Mix_PlayMusic(backgroundSound, -1);       
     setPlayerPositionX(player, 0);
     setPlayerDirection(player, 90);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
@@ -179,7 +183,7 @@ int main(int argc, char * argv[])
     bool downP2 = false;
     bool leftP2 = false;
     bool rightP2 = false;
-//------------------------------------------------------SCAN KEYBOARD--------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------SCAN KEYBOARD--------------------------------------------------------------------------
     while(running)
     {
     /**
@@ -288,7 +292,7 @@ int main(int argc, char * argv[])
              
            
         }
-//------------------------------------------------------UPDATE LOGICAL OBJECTS--------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------------UPDATE LOGICAL OBJECTS--------------------------------------------------------------------------
 
          //Update attributes of the struct
         if (up == true)
@@ -357,7 +361,7 @@ int main(int argc, char * argv[])
             setBallPositionX(b, (float)WINDOW_WIDTH/2);
             setBallPositionY(b, (float)WINDOW_WIDTH/2);
         } 
-//------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
+//-----------------------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
         gPlayer.y = getPlayerPositionY(player);
         gPlayer.x = getPlayerPositionX(player);
 
@@ -408,12 +412,14 @@ int main(int argc, char * argv[])
     SDL_DestroyTexture(mPlayer);
     SDL_DestroyTexture(mBall);
     SDL_DestroyRenderer(renderer);
+    Mix_FreeMusic(backgroundSound);
+    Mix_CloseAudio();
    // TTF_Quit();
     SDL_Quit();
     return 0;
 }
 
-//------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
+//-------------------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
 /**
  Init other media
  */
@@ -528,7 +534,7 @@ void renderBackground()
 bool init()
 {
     bool test = true;
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 //    TTF_Init();
     window = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
