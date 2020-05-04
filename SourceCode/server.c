@@ -19,7 +19,7 @@ typedef struct clients Clients;
 
 void clients_null(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
-int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
+void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
 
 
 int main(int argc, char **argv)
@@ -71,17 +71,23 @@ int main(int argc, char **argv)
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				if(recive->address.port == c[i].port)
+				if(pRecive->address.port == client[i].port)
 				{
-					x=client_send(client, pRecive, pSent, sd, i, pClientCount, a);
+					client_send(client, pRecive, pSent, sd, i, pClientCount, a);
+					x=1;
 				}
+				
 				if(x==0)
-				{
-					client_create(client, pRecive, i, pClientCount);
-					break;
-				}
 
+				{
+					if(client[i].IP == 0 && client[i].port == 0)
+					{	
+						client_create(client, pRecive, i, pClientCount);
+						break;
+					}
+				}
 			}
+			
 			/* Quit if packet contains "quit" */
 			if (strcmp((char *)pSent->data, "quit") == 0)
 				quit = 1;
@@ -107,20 +113,16 @@ void clients_null(Clients c[])
 
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
 {
-	if(c[i].IP == 0 && c[i].port == 0)
-	{
 		printf("Client %d\n", *pClientCount+1);
         c[i].IP = recive->address.host;
 		c[i].port = recive->address.port;
 		(*pClientCount)++;
+		printf("createfunktion\n");
 		//printf("for1 c%d ip: %d port: %d \n", clientCount, &client[i].IP, &client[i].port);
-		
-	}
 }
 
-int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a)
+void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a)
 {
-	int xReturn=0;
 
 		for(int j=0; j<*pClientCount;j++)
 		{
@@ -133,10 +135,8 @@ int client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, 
 				printf("%d\n", a);
 				sprintf((char *)sent->data, "%d\n", a);
 				sent->len = strlen((char *)sent->data) + 1;
-				SDLNet_UDP_Send(sd2, -1, sent);			
+				SDLNet_UDP_Send(sd2, -1, sent);		
 			}
-		}
-		xReturn=1;		
-	return xReturn;
+		}		
 
 }
