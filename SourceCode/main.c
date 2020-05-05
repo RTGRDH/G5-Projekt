@@ -73,7 +73,7 @@ SDL_Rect gGoal_Right;
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 8
 #define TURNING_SPEED 10
-#define ACCELERATION 0.1
+#define ACCELERATION 0.2
 
 int main(int argc, char * argv[])
 {
@@ -159,11 +159,11 @@ int main(int argc, char * argv[])
 
     Mix_PlayMusic(backgroundSound, -1);       
     setPlayerPositionX(player, 0);
-    setPlayerDirection(player, 90);
+    setPlayerDirection(player, 0);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
 
     setPlayerPositionX(player2, 800);
-    setPlayerDirection(player2, -90);
+    setPlayerDirection(player2, 180);
     setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
 
 
@@ -306,16 +306,17 @@ int main(int argc, char * argv[])
             changePlayerDirection(player, -TURNING_SPEED + getPlayerSpeed(player));     //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
 
 
-         if (upP2 == true)
-             changePlayerSpeed(player2, ACCELERATION);
-         if (downP2 == true)
-             changePlayerSpeed(player2, -ACCELERATION);
-             speedLimit(player2);
-         if (leftP2 == true)
-             changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
-         if (rightP2 == true)
+        if (upP2 == true)
+            changePlayerSpeed(player2, ACCELERATION);
+        if (downP2 == true)
+            changePlayerSpeed(player2, -ACCELERATION);
+            speedLimit(player2);
+        if (leftP2 == true)
+            changePlayerDirection(player2, TURNING_SPEED - getPlayerSpeed(player2));      //while it's fun to always turn fast, the game feels more realistic if you cant turn as fast on high speeds
+        if (rightP2 == true)
             changePlayerDirection(player2, -TURNING_SPEED + getPlayerSpeed(player2));     
 
+        setPlayerDirection(player, angleBallPlayer(b, player));
         
         //Recive packet, for now just recive mirroring from server                  //Net
         if (SDLNet_UDP_Recv(s, pRecive)){
@@ -340,7 +341,7 @@ int main(int argc, char * argv[])
         //     setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
         // }
 
-         if(PlayerBallCollision(&gPlayer,&gBall))
+        /*if(PlayerBallCollision(&gPlayer,&gBall))
         {
             setBallDirection(b, angleBallPlayer(b, player));
             setBallDirection(b, getPlayerDirection(player));
@@ -352,15 +353,22 @@ int main(int argc, char * argv[])
             setBallDirection(b, angleBallPlayer(b, player2));
             setBallDirection(b, getPlayerDirection(player2));
             setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player2)+2);
-        }
+        }*/
 
         updateBallPosition(b, 1);
   
-        if(distanceBallPlayer(b, player) < 1)
+        if(distanceBallPlayer(b, player) < 27)
         {
-            setBallPositionX(b, (float)WINDOW_WIDTH/2);
-            setBallPositionY(b, (float)WINDOW_WIDTH/2);
-        } 
+            setBallDirection(b, angleBallPlayer(b, player));
+            //setBallDirection(b, getPlayerDirection(player));
+            setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player)+2);
+        }
+        if(distanceBallPlayer(b, player2) < 25)
+        {
+            setBallDirection(b, angleBallPlayer(b, player2));
+            //setBallDirection(b, getPlayerDirection(player2));
+            setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(player2)+2);
+        }
 //-----------------------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
         gPlayer.y = getPlayerPositionY(player);
         gPlayer.x = getPlayerPositionX(player);
@@ -396,9 +404,9 @@ int main(int argc, char * argv[])
         renderBackground();
      
         SDL_RenderCopy(renderer,mBall,NULL,&gBall);
-        SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, -getPlayerDirection(player), NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, getPlayerDirection(player)-90, NULL, SDL_FLIP_NONE);
 
-        SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, -getPlayerDirection(player2), NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, getPlayerDirection(player2)-90, NULL, SDL_FLIP_NONE);
         SDL_RenderPresent(renderer);
      //  SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
