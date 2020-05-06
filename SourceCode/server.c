@@ -188,7 +188,17 @@ void clients_null(Clients c[])
 		c[i].IP=0;
 		c[i].port=0;
 		c[i].player=NULL;
-		//switch(i)
+		switch(i)
+		{
+			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); 
+			break;
+			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); 
+			break;
+			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); 
+			break;
+			case '4': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); 
+			break;
+		}
 	}
 }
 
