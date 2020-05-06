@@ -154,13 +154,13 @@ int main(int argc, char * argv[])
         printf("Initialize media successful.\n");
     }
            
-    setPlayerPositionX(player, 0);
-    setPlayerDirection(player, 90);
-    setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
+    setPlayerPositionX(player, 100);
+    setPlayerDirection(player, 45+90);
+    setPlayerPositionY(player, 100+300);
 
     setPlayerPositionX(player2, 800);
-    setPlayerDirection(player2, -90);
-    setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
+    setPlayerDirection(player2, 45-90);
+    setPlayerPositionY(player2, 100);
 
 
     float x_pos = getPlayerPositionX(player);
