@@ -156,16 +156,6 @@ int main(int argc, char * argv[])
     {
         printf("Initialize media successful.\n");
     }
-<<<<<<< HEAD
-           
-    setPlayerPositionX(player, 100);
-    setPlayerDirection(player, 45+90);
-    setPlayerPositionY(player, 100+300);
-
-    setPlayerPositionX(player2, 800);
-    setPlayerDirection(player2, 45-90);
-    setPlayerPositionY(player2, 100);
-=======
 
     Mix_PlayMusic(backgroundSound, -1);       
     setPlayerPositionX(player, 0);
@@ -175,7 +165,6 @@ int main(int argc, char * argv[])
     setPlayerPositionX(player2, 800);
     setPlayerDirection(player2, 180);
     setPlayerPositionY(player2, (WINDOW_HEIGTH - gPlayer.h) / 2);
->>>>>>> 9bb6bd60efa226048ecffb50304d5bdd215dc457
 
 
     float x_pos = getPlayerPositionX(player);
