@@ -67,12 +67,19 @@ PUBLIC void changePlayerSpeed(Player p, float change){
     p->speed = p->speed + change;
 }
 PUBLIC void changePlayerDirection(Player p, float change){
-    p->direction = p-> direction + change;
+    p->direction = p-> direction - change;
+    while (p->direction >= 360)
+        p->direction = p->direction - 360;
+    while (p-> direction < 0 )
+        p->direction = p->direction +360;
 }
 PUBLIC void updatePlayerPosition(Player p, float GAMESPEED)
 {
-    p->PLAYER_POSITION_X = p->PLAYER_POSITION_X + sin(p->direction*M_PI/180)*p->speed*GAMESPEED;
-    p->PLAYER_POSITION_Y = p->PLAYER_POSITION_Y + cos(p->direction*M_PI/180)*p->speed*GAMESPEED;
+    p->PLAYER_POSITION_X = p->PLAYER_POSITION_X + cos(p->direction*M_PI/180)*p->speed*GAMESPEED;
+    p->PLAYER_POSITION_Y = p->PLAYER_POSITION_Y + sin(p->direction*M_PI/180)*p->speed*GAMESPEED;
+    p->speed = p->speed *0.995;
+    if(p->speed < 0.1 && p-> speed > -0.1)
+        p->speed = 0;
 }
 
 

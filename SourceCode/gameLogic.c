@@ -35,7 +35,7 @@ bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall){
 
 
 bool ballRightGoalCollision(SDL_Rect* gBall){
-    if(gBall->x >910){
+    if(gBall->x > 920 ){
         if(gBall ->y > 120 && gBall->y < 395){
              return 1;
         }
@@ -45,7 +45,7 @@ bool ballRightGoalCollision(SDL_Rect* gBall){
 }
 
 bool ballLeftGoalCollision(SDL_Rect* gBall){
-    if(gBall->x <5){
+    if(gBall->x < 20 ){
         if(gBall ->y > 120 && gBall->y < 395){
              return 1;
         }
@@ -78,32 +78,78 @@ float distanceBallPlayer(Ball b, Player p)
     return distance;
 }
 
+float distancePlayerPlayer(Player p1, Player p2)
+{
+    float squared_X_distance, squared_Y_distance, squared_hypotenuse, distance;
+
+    squared_X_distance = pow((getPlayerPositionX(p1) + getPlayerWidth()/2) - (getPlayerPositionX(p2) + getPlayerWidth()/2), 2);
+    squared_Y_distance = pow((getPlayerPositionY(p1) + getPlayerHeight()/2) - (getPlayerPositionY(p2) + getPlayerHeight()/2), 2);
+    
+    squared_hypotenuse = squared_X_distance + squared_Y_distance;
+    //hypotenuse IS the distance
+    distance = sqrt(squared_hypotenuse);
+    
+    return distance;
+}
+
 float angleBallPlayer(Ball b, Player p)
 {
     float x_distance, y_distance, direction;
 
-    x_distance = (getBallPositionX(b) - getBallWidth()/2) - (getPlayerPositionX(p) - getPlayerWidth()/2);
+    x_distance = (getBallPositionX(b) + getBallWidth()/2) - (getPlayerPositionX(p) + getPlayerWidth()/2);
     y_distance = (getBallPositionY(b) + getBallHeight()/2) - (getPlayerPositionY(p) + getPlayerHeight()/2);
 
     if (x_distance == 0)
     {
         if (y_distance > 0)
-            return 0;
+            return 90;
         else
-            return 180;
+            return -90;
     }
     else
     {
-    if (x_distance >= 0)
+    if (x_distance > 0)
         {
-            direction = -atan(y_distance/x_distance)*180/M_PI+90;
+            direction = atan(y_distance/x_distance)*180/M_PI;
             return direction;
         }
         else
         {
-            direction = atan(y_distance/x_distance)*180/M_PI + 270;
+            direction = atan(y_distance/x_distance)*180/M_PI +180;
             return direction;
         }
+        direction = atan(y_distance/x_distance)*180/M_PI;
+        return direction;
+    }
+}
+
+float anglePlayerPoint(Player p, float x_coordinate, float y_coordinate)
+{
+    float x_distance, y_distance, direction;
+    x_distance = getPlayerPositionX(p) + getPlayerWidth()/2 - x_coordinate;
+    y_distance = getPlayerPositionY(p) + getPlayerHeight()/2 - y_coordinate;
+
+    if (x_distance == 0)
+    {
+        if (y_distance > 0)
+            return 90;
+        else
+            return -90;
+    }
+    else
+    {
+    if (x_distance > 0)
+        {
+            direction = atan(y_distance/x_distance)*180/M_PI;
+            return direction;
+        }
+        else
+        {
+            direction = atan(y_distance/x_distance)*180/M_PI +180;
+            return direction;
+        }
+        direction = atan(y_distance/x_distance)*180/M_PI;
+        return direction;
     }
 }
 
@@ -163,11 +209,11 @@ void colissionDetectionBallArena(Ball b)
 
 float yInvertDirection(float direction)
 {
-    direction = -direction + 180;
+    direction = -direction;
     return direction;
 }
 float xInvertDirection(float direction)
 {
-    direction = -direction;
+    direction = -direction + 180;
     return direction;
 }
