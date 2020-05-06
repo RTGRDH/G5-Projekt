@@ -46,7 +46,7 @@ SDL_Surface *sGoal_Left = NULL;
 SDL_Surface *sGoal_Right = NULL;
 SDL_Surface *surface = NULL;
 
-SDL_Texture *mField;
+SDL_Texture *mField = NULL;
 SDL_Texture *mBall = NULL;
 SDL_Texture *mPlayer = NULL;
 SDL_Texture *mPlayer2 = NULL;
@@ -122,7 +122,7 @@ int main(int argc, char * argv[])
     {
         printf("Initialize window and renderer successful.\n");
         //Init menu
-        if(!menu(renderer))
+        if(!menu(renderer,WINDOW_WIDTH,WINDOW_HEIGTH))
         {
             running = false;
             cleanUp(0);

@@ -12,7 +12,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
-void initMenu(SDL_Renderer* renderer);
-bool menu(SDL_Renderer* renderer);
+void initMenu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void displayMenu(SDL_Renderer* renderer);
+void cleanUpInit();
 #endif /* menu_h */
