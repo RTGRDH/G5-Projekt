@@ -16,4 +16,6 @@ void initMenu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HE
 bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void displayMenu(SDL_Renderer* renderer);
 void cleanUpInit();
+void connection();
+void temp();
 #endif /* menu_h */

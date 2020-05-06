@@ -20,6 +20,8 @@ SDL_Surface *sMenuBackground = NULL;
 SDL_Texture *mPlayButton = NULL;
 SDL_Texture *mExitButton = NULL;
 SDL_Texture *mMenuBackground = NULL;
+
+SDL_Window* connectWindow = NULL;
 void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     gPlayButton.h = 100; gPlayButton.w = 300;
@@ -44,6 +46,8 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
         mPlayButton = SDL_CreateTextureFromSurface(renderer, sPlayButton);
         mExitButton = SDL_CreateTextureFromSurface(renderer, sExitButton);
         mMenuBackground = SDL_CreateTextureFromSurface(renderer, sMenuBackground);
+        //Background link:
+       // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
 }
 bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
@@ -71,6 +75,7 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
                    {
                        running = false;
                        cleanUpInit();
+                       connection();
                        flag = true;
                    }
                    else if(mouseX >= gExitButton.x && mouseX <= gExitButton.x+gPlayButton.w && mouseY >= gExitButton.y && mouseY <= gExitButton.y + gExitButton.h) //Checks if mouse pointer coordination is within the button
@@ -109,4 +114,38 @@ void cleanUpInit()
     SDL_DestroyTexture(mExitButton);
     SDL_DestroyTexture(mMenuBackground);
 }
+void connection()
+{
+    /*
+    connectWindow = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 500, 200, SDL_WINDOW_SHOWN);
+    if(connectWindow == NULL)
+    {
+        printf("Could not create window. Error: %s ",SDL_GetError());
+        printf("\n");
+    }
+    temp();
+     */
+}
 
+void temp()
+{
+    /*
+    SDL_Event event;
+     bool running = true;
+     while(running)
+     {
+        //SDL_GetMouseState(&mouseX, &mouseY);
+        //displayMenu(renderer);
+        while (SDL_PollEvent(&event))
+        {
+           switch (event.type)
+           {
+               case SDL_QUIT:
+                   printf("Testtttt");
+                   running = false;
+                   break;
+           }
+        }
+    }
+     */
+}
