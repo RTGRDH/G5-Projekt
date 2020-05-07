@@ -1,25 +1,57 @@
-#if 0
-#!/bin/sh
-gcc -Wall `sdl-config --cflags` udps.c -o udps `sdl-config --libs` -lSDL_net
- 
-exit
-#endif
- 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "SDL2/SDL_net.h"
+#include <stdbool.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_timer.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_net.h>
+#include <math.h>
+#include "ball.h"
+#include "player.h"
+#include "gameLogic.h"
 
 struct clients {
 	Uint32 IP;
 	Uint32 port;
+	Player player;
+	SDL_Rect gPlayer;
 }; 
 typedef struct clients Clients;
  
-
+const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
+//server funktioner
 void clients_null(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
+//main funktioner
+bool ballRightGoalCollision(SDL_Rect* gBall);
+bool ballLeftGoalCollision(SDL_Rect* gBall);
+bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall);
+void speedLimit(Player p);
+void colissionDetectionPlayerArena(Player p);
+void colissionDetectionBallArena(Ball boll);
+float xInvertDirection(float direction);
+float yInvertDirection(float direction);
+float angleBallPlayer(Ball boll, Player p);
+float distanceBallPlayer(Ball boll, Player p);
+
+Ball boll = NULL;
+SDL_Rect gField;
+// struct to hold the position and size of the sprite
+SDL_Rect gBall;
+SDL_Rect gGoal_Left;
+SDL_Rect gGoal_Right;
+//SDL_Rect dstrect;
+
+//TTF_Font * font = NULL;
+
+
+#define SPEED (75); //75 is optimal, 300 for dev.
+#define MAX_SPEED_REVERSE -1
+#define MAX_SPEED_FORWARD 8
+#define TURNING_SPEED 10
+#define ACCELERATION 0.1
 
 
 int main(int argc, char **argv)
@@ -57,6 +89,7 @@ int main(int argc, char **argv)
 		exit(EXIT_FAILURE);
 	}
  
+	//bil start positioner
 	/* Main loop */
 	quit = 0;
 	while (!quit)
@@ -67,11 +100,57 @@ int main(int argc, char **argv)
 			//printf("UDP Packet incoming\n");
 			//printf("\tData:    %s\n", (char *)pRecive->data);
 			//printf("\tAddress: %x %x\n", pRecive->address.host, pRecive->address.port);
+			int tmpClient;
+
+			if((*pClientCount)==4)
+			{
+				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
+				speedLimit(client[tmpClient].player);
+				changePlayerDirection(client[tmpClient].player, TURNING_SPEED-getPlayerSpeed(client[tmpClient].player));
+
+				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
+				{
+					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
+					setBallDirection(boll, getPlayerDirection(client[tmpClient].player));
+					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
+				}
+
+				updateBallPosition(boll,1);
+
+				if(distanceBallPlayer(boll,client[tmpClient].player)<1)
+				{
+					setBallPositionX(boll,(float)WINDOW_WIDTH/2);
+					setBallPositionY(boll,(float)WINDOW_WIDTH/2);
+				}
+				
+				client[tmpClient].gPlayer.y=getPlayerPositionY(client[tmpClient].player);
+				client[tmpClient].gPlayer.x=getPlayerPositionX(client[tmpClient].player);
+
+				if(ballRightGoalCollision(&gBall))
+				{
+
+					setBallPositionX(boll,470);
+					setBallPositionY(boll,260);
+					setBallSpeed(boll,0);
+				//   P1Score++;	
+				}
+
+				if(ballLeftGoalCollision(&gBall))
+				{
+					setBallPositionX(boll,470);
+					setBallPositionY(boll,260);
+					setBallSpeed(boll,0);
+				}
+				
+				gBall.y = getBallPositionY(boll);
+       			gBall.x = getBallPositionX(boll);
+
+			}
 			x=0;
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				if(pRecive->address.port == client[i].port)
+				if(pRecive->address.port == client[i].port) //&& *pClintcount==4
 				{
 					client_send(client, pRecive, pSent, sd, i, pClientCount, a);
 					x=1;
@@ -104,10 +183,22 @@ int main(int argc, char **argv)
 
 void clients_null(Clients c[])
 {
-	for(int i=0; i<=4; i++)
+	for(int i=1; i<=4; i++)
 	{
 		c[i].IP=0;
 		c[i].port=0;
+		c[i].player=NULL;
+		switch(i)
+		{
+			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); 
+			break;
+			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); 
+			break;
+			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); 
+			break;
+			case '4': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); 
+			break;
+		}
 	}
 }
 
