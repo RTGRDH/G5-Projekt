@@ -48,7 +48,17 @@ PUBLIC void setPlayerDirection(Player p, float d){
 PUBLIC void setPlayerSpeed(Player p, float s){
     p->speed = s;
 }
+PUBLIC void setPlayerPosition_X_and_Y(Player p, float new_x, float new_y){
+    p->PLAYER_POSITION_X = new_x;
+    p->PLAYER_POSITION_Y = new_y;
+}
+PUBLIC void setPlayerEverything(Player p, float new_position_on_X_axis, float new_position_on_Y_axis, float new_direction, float new_speed){
+    p->PLAYER_POSITION_X = new_position_on_X_axis;
+    p->PLAYER_POSITION_Y = new_position_on_Y_axis;
+    p->direction = new_direction;
+    p->speed = new_speed;
 
+}
 
 PUBLIC float getPlayerPositionX(Player p){
     return p->PLAYER_POSITION_X;

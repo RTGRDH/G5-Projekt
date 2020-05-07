@@ -50,6 +50,16 @@ PUBLIC void setBallSpeed(Ball b, float s){
 PUBLIC void setBallDirection(Ball b, float d){
     b->direction = d;
 }
+PUBLIC void setBallPosition_X_and_Y(Ball b, float new_x, float new_y){
+    b->BALL_POSITION_X = new_x;
+    b->BALL_POSITION_Y = new_y;
+}
+PUBLIC void setBallEverything(Ball b, float new_position_on_X_axis, float new_position_on_Y_axis, float new_direction, float new_speed){
+    b->BALL_POSITION_X = new_position_on_X_axis;
+    b->BALL_POSITION_Y = new_position_on_Y_axis;
+    b->direction = new_direction;
+    b->speed = new_speed;
+}
 
 PUBLIC float getBallPositionX(Ball b){
     return b->BALL_POSITION_X;
