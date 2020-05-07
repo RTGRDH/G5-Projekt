@@ -197,25 +197,25 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = true;
-                        sendPacket( player, 1, saddr, pSend, s );                        //Net
+                        //sendPacket( player, 1, saddr, pSend, s );                        //Net
                         break;
 
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = true;
-                        sendPacket( player, 2, saddr, pSend, s ); 
+                        //sendPacket( player, 2, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = true;
-                        sendPacket(player, 3, saddr, pSend, s ); 
+                        //sendPacket(player, 3, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = true;
-                        sendPacket(player,  4, saddr, pSend, s ); 
+                        //sendPacket(player,  4, saddr, pSend, s ); 
                         break;
 
                    default:
@@ -292,6 +292,8 @@ int main(int argc, char * argv[])
             movementCodedInOneVariable = 8;
         if (accelerate == -1 && turn == -1)
             movementCodedInOneVariable = 9;
+
+        sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
         
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
 
