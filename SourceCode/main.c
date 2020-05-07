@@ -6,13 +6,12 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+//#include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_ttf.h>
 #include "Player.h"
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
-#include "menu.h"
 
 
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
@@ -34,8 +33,8 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball b, Player p);
 float distanceBallPlayer(Ball b, Player p);
 
-void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);//Net
-void cleanUp();
+void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
+
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -47,7 +46,7 @@ SDL_Surface *sGoal_Left = NULL;
 SDL_Surface *sGoal_Right = NULL;
 SDL_Surface *surface = NULL;
 
-SDL_Texture *mField = NULL;
+SDL_Texture *mField;
 SDL_Texture *mBall = NULL;
 SDL_Texture *mPlayer = NULL;
 SDL_Texture *mPlayer2 = NULL;
@@ -90,8 +89,8 @@ int main(int argc, char * argv[])
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
+    //Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    //Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
 
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
     if (SDLNet_Init() < 0)            
@@ -124,14 +123,7 @@ int main(int argc, char * argv[])
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
-        //Init menu
-        if(!menu(renderer,WINDOW_WIDTH,WINDOW_HEIGTH))
-        {
-            running = false;
-            cleanUp(0);
-        }
     }
-    
     //Init backround here
     if(!initPlayField())
     {
@@ -165,7 +157,7 @@ int main(int argc, char * argv[])
         printf("Initialize media successful.\n");
     }
 
-    Mix_PlayMusic(backgroundSound, -1);       
+//    Mix_PlayMusic(backgroundSound, -1);       
     setPlayerPositionX(player, 0);
     setPlayerDirection(player, 0);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
@@ -297,6 +289,8 @@ int main(int argc, char * argv[])
                 }
                 break;
             }
+             
+           
         }
 //----------------------------------------------------------------------------------------------UPDATE LOGICAL OBJECTS--------------------------------------------------------------------------
 
@@ -417,34 +411,21 @@ int main(int argc, char * argv[])
         
         SDL_Delay(1000/50);
     }
-    cleanUp(1);
+    SDL_FreeSurface(imageSurface);
+    imageSurface = NULL;
+    SDL_DestroyWindow(window);
+    SDL_DestroyTexture(mField);
+    SDL_DestroyTexture(mPlayer);
+    SDL_DestroyTexture(mBall);
+    SDL_DestroyRenderer(renderer);
+//    Mix_FreeMusic(backgroundSound);
+//    Mix_CloseAudio();
+   // TTF_Quit();
+    SDL_Quit();
     return 0;
 }
-void cleanUp(int param)
-{
-    //If param is 0 - Cleaning up renderer and window from menu
-    if(param == 0)
-    {
-        SDL_DestroyWindow(window);
-        SDL_DestroyRenderer(renderer);
-        SDL_Quit();
-    }
-    //If param is 1 - Cleaning up everything that is game related
-    if(param == 1)
-    {
-        SDL_FreeSurface(imageSurface);
-        imageSurface = NULL;
-        SDL_DestroyWindow(window);
-        SDL_DestroyTexture(mField);
-        SDL_DestroyTexture(mPlayer);
-        SDL_DestroyTexture(mBall);
-        SDL_DestroyRenderer(renderer);
-        // TTF_Quit();
-        SDL_Quit();
-    }
-    
-}
-//------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
+
+//-------------------------------------------------------------------FUNCTIONS: INITIALIZING WINDOW, SURFACE, RENDERER & GRAPHICAL OBJECTS--------------------------------------------------------------------------
 /**
  Init other media
  */
@@ -559,9 +540,10 @@ void renderBackground()
 bool init()
 {
     bool test = true;
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO /*| SDL_INIT_AUDIO */);
 //    TTF_Init();
     window = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+      
     if(window == NULL)
     {
         printf("Could not create window. Error: %s ",SDL_GetError());
@@ -599,4 +581,3 @@ void sendPacket(int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
 	packet->len = strlen((char *)packet->data) + 1;
     SDLNet_UDP_Send(s, -1, packet);
 }
-
