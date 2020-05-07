@@ -228,25 +228,25 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = false;
-                        //sendPacket(player, 5, saddr, pSend, s ); 
+                        sendPacket(player, 5, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = false;
-                        //sendPacket( player, 6, saddr, pSend, s );
+                        sendPacket( player, 6, saddr, pSend, s );
                         break;
 
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = false;
-                        //sendPacket(player, 7, saddr, pSend, s );
+                        sendPacket(player, 7, saddr, pSend, s );
                         break;
 
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = false;
-                        //sendPacket(player, 8, saddr, pSend, s );
+                        sendPacket(player, 8, saddr, pSend, s );
                         break;
 
                     default:

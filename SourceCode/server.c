@@ -36,7 +36,7 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 
-Ball boll=createBall(470,260);
+Ball boll=NULL;
 SDL_Rect gField;
 // struct to hold the position and size of the sprite
 SDL_Rect gBall;
@@ -101,38 +101,39 @@ int main(int argc, char **argv)
 			//printf("\tData:    %s\n", (char *)pRecive->data);
 			//printf("\tAddress: %x %x\n", pRecive->address.host, pRecive->address.port);
 			int tmpClient;
-			int x,y,dir, speed, movement;
-            sscanf((char * )pRecive->data, "%d %d %d %d %d\n", &x, &y, & dir, &speed, &movement);
+			int i,x,y,dir, speed, movement;
+            sscanf((char * )pRecive->data, "%d \n", &movement);
     		printf("%d\n",movement);
 
 			if((*pClientCount)==4)
 			{
-				for(int i=1; i<=4; i++)
+				for(i=1; i<=4; i++)
 				{
-					if(pRecive->address.ip==client[i].IP)
+					if(pRecive->address.host==client[i].IP)
 					{
 						tmpClient=i;
 					}
 				}
 
 				if(pRecive->address.port == client[tmpClient].port)
-                	{
-                    switch(movement){
+                {
+                    switch(movement)
+					{
                 	    case 1:printf("Move:1\n");
-                            changePlayerSpeed(client[i].player, ACCELERATION);
+                            changePlayerSpeed(client[tmpClient].player, ACCELERATION);
                             break;
                         case 2:printf("Move:2\n");
-                            changePlayerSpeed(client[i].player, -ACCELERATION);
-                            speedLimit(player);
+                            changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
+                            speedLimit(client[tmpClient].player);
                             break;
                         case 3: printf("Move:3\n");
-                            changePlayerDirection(client[i].player, TURNING_SPEED - getPlayerSpeed(client[i].player));
+                            changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
                             break;
                         case 4: printf("Move:4\n");
-                            changePlayerDirection(client[i].player, -TURNING_SPEED + getPlayerSpeed(client[i].player));
+                            changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
   	                    	break;
 					}
-				
+				}
 				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 				speedLimit(client[tmpClient].player);
 				changePlayerDirection(client[tmpClient].player, TURNING_SPEED-getPlayerSpeed(client[tmpClient].player));
@@ -244,42 +245,18 @@ void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a)
 {
 
-		for(int j=0; j<*pClientCount;j++)
+	for(int j=0; j<*pClientCount;j++)
+	{
+		if (c[j].port != 0)// && client[j].port != client[i].port
 		{
-			if (c[j].port != 0)// && client[j].port != client[i].port
-			{
-				printf("Send to Client %d \n", j+1);
-				sent->address.host = c[j].IP;	/* Set the destination host */
-				sent->address.port = c[j].port;
-				sscanf((char * )recive->data, "%d\n", &a);
-				printf("%d\n", a);
-				sprintf((char *)sent->data, "%d\n", a);
-				sent->len = strlen((char *)sent->data) + 1;
-				SDLNet_UDP_Send(sd2, -1, sent);		
-			}
-		}		
-
+			printf("Send to Client %d \n", j+1);
+			sent->address.host = c[j].IP;	/* Set the destination host */	
+			sent->address.port = c[j].port;
+			sscanf((char * )recive->data, "%d\n", &a);
+			printf("%d\n", a);
+			sprintf((char *)sent->data, "%d\n", a);
+			sent->len = strlen((char *)sent->data) + 1;
+			SDLNet_UDP_Send(sd2, -1, sent);		
+		}
+	}
 }
-
-
-
-                 if(pRecive->address.port == client[i].port)
-                 {
-                     int x,y,dir, speed, movement;
-                     sscanf((char * )pRecive->data, "%d %d %d %d %d\n", &x, &y, & dir, &speed, &movement);
-                     printf("%d\n",movement);
-                     
-                     switch(movement){
-                         case 1:printf("Move:1\n");
-                             changePlayerSpeed(client[i].player, ACCELERATION);
-                             break;
-                         case 2:printf("Move:2\n");
-                             changePlayerSpeed(client[i].player, -ACCELERATION);
-                             speedLimit(player);
-                             break;
-                         case 3: printf("Move:3\n");
-                             changePlayerDirection(client[i].player, TURNING_SPEED - getPlayerSpeed(client[i].player));
-                             break;
-                         case 4: printf("Move:4\n");
-                             changePlayerDirection(client[i].player, -TURNING_SPEED + getPlayerSpeed(client[i].player));
-  	                    	 break;
