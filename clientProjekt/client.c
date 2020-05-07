@@ -483,12 +483,12 @@ void sendPacket(Player p, int movement, IPaddress svr, UDPpacket *packet, UDPsoc
 {
    // printf("Player move: %d\n", (int) movement);
     float positionX, positionY, direction, speed;
-    positionX=getPlayerPositionX(p);
-    positionY=getPlayerPositionY(p);
-    direction=getPlayerDirection(p);
-    speed=getPlayerSpeed(p);
-    printf("%d %d %d %d %d\n", (int)positionX, (int) positionY, (int)direction, (int) speed, movement);
-    sprintf((char *)packet->data, "%d %d %d %d %d\n", (int)positionX, (int)positionY, (int)direction, (int)speed, (int)movement);    
+   // positionX=getPlayerPositionX(p);
+    //positionY=getPlayerPositionY(p);
+    //direction=getPlayerDirection(p);
+    //speed=getPlayerSpeed(p);
+    printf("%d \n",movement);//(int)positionX, (int) positionY, (int)direction, (int) speed, movement);
+    sprintf((char *)packet->data, "%d\n",movement);// (int)positionX, (int)positionY, (int)direction, (int)speed, (int)movement);    
     packet->address.host = svr.host;	/* Set the destination host */
 	packet->address.port = svr.port;	/* And destination port */
 	packet->len = strlen((char *)packet->data) + 1;
