@@ -144,9 +144,9 @@ int main(int argc, char **argv)
 					if 7: left + brake	||	if 7: brake		||	if 9: right + brake
 					hypotetisk kod:
 					if (movement == 1 || movement == 4 || movement == 7)
-            			changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(player));
+            			changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
 					if (movement == 3 || movement == 6 || movement == 9)
-            			changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(player));
+            			changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
 					if (1 <= movement && movement <= 3)
 						changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 					if (7 <= movement && movement <= 9)
