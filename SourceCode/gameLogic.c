@@ -53,9 +53,6 @@ bool ballLeftGoalCollision(SDL_Rect* gBall){
     }
     return 0;
 }
-
-
-
 void speedLimit(Player p)   //how fast do the cars go forward and in reverse? if a player goes beyond the cars limits, this sets the car back to it's limits
 {
     if (getPlayerSpeed(p)>MAX_SPEED_FORWARD)

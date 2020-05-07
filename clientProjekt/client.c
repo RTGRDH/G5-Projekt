@@ -257,6 +257,42 @@ int main(int argc, char * argv[])
             
            
         }
+        int turn, accelerate;
+        
+        if (up && !down)
+            accelerate = 1;
+        if (up && down || !up && !down)
+            accelerate = 0;
+        if (!up && down)
+            accelerate = -1;
+
+        if(left && !right)
+            turn = 1;
+        if(left && right || !left && !right)
+            turn = 0;
+        if (!left && right)
+            turn = -1;
+
+        int movementCodedInOneVariable;
+        if (accelerate == 1 && turn == 1)
+            movementCodedInOneVariable = 1;
+        if (accelerate == 1 && turn == 0)
+            movementCodedInOneVariable = 2;
+        if (accelerate == 1 && turn == -1)
+            movementCodedInOneVariable = 3;
+        if (accelerate == 0 && turn == 1)
+            movementCodedInOneVariable =4;
+        if (accelerate == 0 && turn == 0)
+            movementCodedInOneVariable = 5;
+        if (accelerate == 0 && turn == -1)
+            movementCodedInOneVariable = 6;
+        if (accelerate == -1 && turn == 1)
+            movementCodedInOneVariable = 7;
+        if (accelerate == -1 && turn == 0)
+            movementCodedInOneVariable = 8;
+        if (accelerate == -1 && turn == -1)
+            movementCodedInOneVariable = 9;
+        
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
 
         //Recive packet, for now just recive mirroring from server                  //Net
