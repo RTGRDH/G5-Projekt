@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <stdlib.h>                                         //Netw
-#include <string.h>                                         //Net
+#include <stdlib.h>                                      
+#include <string.h>                                         
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
@@ -19,7 +19,7 @@ bool init();
 void renderBackground();
 bool initPlayField();
 bool initMedia();
-void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
+void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);   
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -59,18 +59,12 @@ SDL_Rect gBall;
 SDL_Rect gGoal_Left;
 SDL_Rect gGoal_Right;
 
-/*#define SPEED (75); //75 is optimal, 300 for dev.
-#define MAX_SPEED_REVERSE -1
-#define MAX_SPEED_FORWARD 8
-#define TURNING_SPEED 10
-#define ACCELERATION 0.1*/
-
 int main(int argc, char * argv[])
 {
-    UDPsocket s;                                                //Net
-	IPaddress saddr;                                            //Net
-	UDPpacket *pSend;                                           //Net
-    UDPpacket *pRecive;                                         //Net
+    UDPsocket s;                                                
+	IPaddress saddr;                                            
+	UDPpacket *pSend;                                           
+    UDPpacket *pRecive;                                        
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
@@ -78,21 +72,21 @@ int main(int argc, char * argv[])
     //Player players[SIZE]={0};
     //int nrOfPlayers=0;
 
-    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
+    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     //Net
-    if (!(s = SDLNet_UDP_Open(0)))                                           //Net
+    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     
+    if (!(s = SDLNet_UDP_Open(0)))                                          
 	{
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c                //Net
+    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
 	if (SDLNet_ResolveHost(&saddr, "127.0.0.1", 2000) == -1) 
 	{
 		fprintf(stderr, "SDLNet_ResolveHost(127.0.0.1 2000): %s\n", SDLNet_GetError());
@@ -197,7 +191,7 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = true;
-                        //sendPacket( player, 1, saddr, pSend, s );                        //Net
+                        //sendPacket( player, 1, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_A:
