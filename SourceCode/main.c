@@ -6,8 +6,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
-#include <SDL2/SDL_mixer.h>
-#include <SDL2/SDL_ttf.h>
+//#include <SDL2/SDL_mixer.h>
+//#include <SDL2/SDL_ttf.h>
 #include "Player.h"
 #include <math.h>
 #include "ball.h"
@@ -89,8 +89,8 @@ int main(int argc, char * argv[])
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
-    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
+    //Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    //Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
 
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
     if (SDLNet_Init() < 0)            
@@ -157,7 +157,7 @@ int main(int argc, char * argv[])
         printf("Initialize media successful.\n");
     }
 
-    Mix_PlayMusic(backgroundSound, -1);       
+//    Mix_PlayMusic(backgroundSound, -1);       
     setPlayerPositionX(player, 0);
     setPlayerDirection(player, 0);
     setPlayerPositionY(player, (WINDOW_HEIGTH - gPlayer.h) / 2);
@@ -418,8 +418,8 @@ int main(int argc, char * argv[])
     SDL_DestroyTexture(mPlayer);
     SDL_DestroyTexture(mBall);
     SDL_DestroyRenderer(renderer);
-    Mix_FreeMusic(backgroundSound);
-    Mix_CloseAudio();
+//    Mix_FreeMusic(backgroundSound);
+//    Mix_CloseAudio();
    // TTF_Quit();
     SDL_Quit();
     return 0;
@@ -540,7 +540,7 @@ void renderBackground()
 bool init()
 {
     bool test = true;
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO /*| SDL_INIT_AUDIO */);
 //    TTF_Init();
     window = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
