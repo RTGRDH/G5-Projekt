@@ -292,9 +292,9 @@ int main(int argc, char * argv[])
             movementCodedInOneVariable = 8;
         if (accelerate == -1 && turn == -1)
             movementCodedInOneVariable = 9;
-
-        sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
-        
+        if(movementCodedInOneVariable!=5){
+            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
+        }
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
 
         //Recive packet, for now just recive mirroring from server                  //Net
