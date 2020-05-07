@@ -20,8 +20,6 @@ void setPlayerPositionX(Player p, float x);
 void setPlayerPositionY(Player p, float y);
 void setPlayerDirection(Player p, float x);
 void setPlayerSpeed(Player p, float x);
-void setPlayerPosition_X_and_Y(Player p, float new_x, float new_y);
-void setPlayerEverything(Player p, float new_position_on_X_axis, float new_position_on_Y_axis, float new_direction, float new_speed);
 void changePlayerDirection(Player p, float c);
 void changePlayerSpeed(Player p, float c);
 void updatePlayerPosition(Player p, float S);

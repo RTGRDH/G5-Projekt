@@ -53,6 +53,9 @@ bool ballLeftGoalCollision(SDL_Rect* gBall){
     }
     return 0;
 }
+
+
+
 void speedLimit(Player p)   //how fast do the cars go forward and in reverse? if a player goes beyond the cars limits, this sets the car back to it's limits
 {
     if (getPlayerSpeed(p)>MAX_SPEED_FORWARD)
@@ -119,40 +122,12 @@ float angleBallPlayer(Ball b, Player p)
         return direction;
     }
 }
+
 float anglePlayerPoint(Player p, float x_coordinate, float y_coordinate)
 {
     float x_distance, y_distance, direction;
     x_distance = getPlayerPositionX(p) + getPlayerWidth()/2 - x_coordinate;
     y_distance = getPlayerPositionY(p) + getPlayerHeight()/2 - y_coordinate;
-
-    if (x_distance == 0)
-    {
-        if (y_distance > 0)
-            return 90;
-        else
-            return -90;
-    }
-    else
-    {
-    if (x_distance > 0)
-        {
-            direction = atan(y_distance/x_distance)*180/M_PI;
-            return direction;
-        }
-        else
-        {
-            direction = atan(y_distance/x_distance)*180/M_PI +180;
-            return direction;
-        }
-        direction = atan(y_distance/x_distance)*180/M_PI;
-        return direction;
-    }
-}
-float anglePlayerPlayer(Player p1, Player p2) //p1 will be in a direction from p2. Giving this direction to p2 will make p2 aim at p1. Giving this direction to p1 will make p1 aim away from p2.
-{
-    float x_distance, y_distance, direction;
-    x_distance = getPlayerPositionX(p1) - getPlayerPositionX(p2);
-    y_distance = getPlayerPositionY(p1) - getPlayerPositionY(p2);
 
     if (x_distance == 0)
     {
