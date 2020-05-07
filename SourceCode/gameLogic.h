@@ -14,6 +14,7 @@ void speedLimit(Player p);
 float distanceBallPlayer(Ball b, Player p);
 float distancePlayerPlayer(Player p1, Player p2);
 float angleBallPlayer(Ball b, Player p);
+float anglePlayerPlayer(Player p1, Player p2);
 float anglePlayerPoint(Player p, float x_coordinate, float y_coordinate);
 void colissionDetectionPlayerArena(Player p);
 void colissionDetectionBallArena(Ball b);
