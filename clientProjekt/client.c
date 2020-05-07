@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <stdlib.h>                                      
-#include <string.h>                                         
+#include <stdlib.h>                                         //Netw
+#include <string.h>                                         //Net
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
@@ -19,7 +19,7 @@ bool init();
 void renderBackground();
 bool initPlayField();
 bool initMedia();
-void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);   
+void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);            //Net
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
@@ -59,12 +59,18 @@ SDL_Rect gBall;
 SDL_Rect gGoal_Left;
 SDL_Rect gGoal_Right;
 
+/*#define SPEED (75); //75 is optimal, 300 for dev.
+#define MAX_SPEED_REVERSE -1
+#define MAX_SPEED_FORWARD 8
+#define TURNING_SPEED 10
+#define ACCELERATION 0.1*/
+
 int main(int argc, char * argv[])
 {
-    UDPsocket s;                                                
-	IPaddress saddr;                                            
-	UDPpacket *pSend;                                           
-    UDPpacket *pRecive;                                        
+    UDPsocket s;                                                //Net
+	IPaddress saddr;                                            //Net
+	UDPpacket *pSend;                                           //Net
+    UDPpacket *pRecive;                                         //Net
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
@@ -72,21 +78,21 @@ int main(int argc, char * argv[])
     //Player players[SIZE]={0};
     //int nrOfPlayers=0;
 
-    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
+    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c    //Net
     if (SDLNet_Init() < 0)            
 	{
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     
-    if (!(s = SDLNet_UDP_Open(0)))                                          
+    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     //Net
+    if (!(s = SDLNet_UDP_Open(0)))                                           //Net
 	{
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
+    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c                //Net
 	if (SDLNet_ResolveHost(&saddr, "127.0.0.1", 2000) == -1) 
 	{
 		fprintf(stderr, "SDLNet_ResolveHost(127.0.0.1 2000): %s\n", SDLNet_GetError());
@@ -191,25 +197,25 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = true;
-                        //sendPacket( player, 1, saddr, pSend, s ); 
+                        sendPacket( player, 1, saddr, pSend, s );                        //Net
                         break;
 
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = true;
-                        //sendPacket( player, 2, saddr, pSend, s ); 
+                        sendPacket( player, 2, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = true;
-                        //sendPacket(player, 3, saddr, pSend, s ); 
+                        sendPacket(player, 3, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = true;
-                        //sendPacket(player,  4, saddr, pSend, s ); 
+                        sendPacket(player,  4, saddr, pSend, s ); 
                         break;
 
                    default:
@@ -250,44 +256,6 @@ int main(int argc, char * argv[])
             }
             
            
-        }
-        int turn, accelerate;
-        
-        if (up && !down)
-            accelerate = 1;
-        if (up && down || !up && !down)
-            accelerate = 0;
-        if (!up && down)
-            accelerate = -1;
-
-        if(left && !right)
-            turn = 1;
-        if(left && right || !left && !right)
-            turn = 0;
-        if (!left && right)
-            turn = -1;
-
-        int movementCodedInOneVariable;
-        if (accelerate == 1 && turn == 1)
-            movementCodedInOneVariable = 1;
-        if (accelerate == 1 && turn == 0)
-            movementCodedInOneVariable = 2;
-        if (accelerate == 1 && turn == -1)
-            movementCodedInOneVariable = 3;
-        if (accelerate == 0 && turn == 1)
-            movementCodedInOneVariable =4;
-        if (accelerate == 0 && turn == 0)
-            movementCodedInOneVariable = 5;
-        if (accelerate == 0 && turn == -1)
-            movementCodedInOneVariable = 6;
-        if (accelerate == -1 && turn == 1)
-            movementCodedInOneVariable = 7;
-        if (accelerate == -1 && turn == 0)
-            movementCodedInOneVariable = 8;
-        if (accelerate == -1 && turn == -1)
-            movementCodedInOneVariable = 9;
-        if(movementCodedInOneVariable!=5){
-            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
         }
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
 
