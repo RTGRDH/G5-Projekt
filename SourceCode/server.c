@@ -119,7 +119,12 @@ int main(int argc, char **argv)
 				}
 				if(pRecive->address.port == client[tmpClient].port)
                 {
-                    switch(movement)
+                    if(movement==1)
+					{
+						
+					}
+
+
 					{
                 	    case 1:printf("Move:1\n");
                             changePlayerSpeed(client[tmpClient].player, ACCELERATION);
@@ -137,8 +142,8 @@ int main(int argc, char **argv)
 						default: printf("vi ar har");
 						//break;
 					}
-/*-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
-					//skelettkod:
+					/*-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
+				//skelettkod:
 					//if 1: left + gas		||	if 2: gas		||	if 3: right + gas
 					//if 4: left			||	if 5: no send	||	if 6: right
 					//if 7: left + brake	||	if 7: brake		||	if 9: right + brake
