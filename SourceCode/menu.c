@@ -28,7 +28,7 @@ SDL_Texture *mExitButton = NULL;
 SDL_Texture *mMenuBackground = NULL;
 SDL_Texture *mIpLabel = NULL;
 
-SDL_Window* connectWindow = NULL;
+SDL_Window *connectWindow = NULL;
 TTF_Font *font = NULL;
 
 void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
@@ -85,7 +85,7 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
                        running = false;
                        cleanUpInit();
                        //flag = temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
-                       if(!temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+                       if(!connectionScene(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
                        {
                            initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                            running = true;
@@ -148,9 +148,10 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
     ipLabel.x = WINDOW_WIDTH/2-ipLabel.w/2; ipLabel.y = WINDOW_HEIGTH/2;
     char inputtext[30] = "Enter IP-address:";
     sInputLabel=TTF_RenderText_Shaded(font,inputtext,color,bgcolor);
+
     mIpLabel=SDL_CreateTextureFromSurface(renderer, sInputLabel);
 }
-void connectionScene(SDL_Renderer* renderer)
+void DisplayConnectionScene(SDL_Renderer* renderer)
 {
     
     SDL_RenderClear(renderer);
@@ -167,7 +168,7 @@ void connectionScene(SDL_Renderer* renderer)
     SDL_RenderPresent(renderer);
 }
 
-bool temp(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initConnectionScene(renderer,WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
@@ -179,7 +180,7 @@ bool temp(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGT
         SDL_GetMouseState(&mouseX, &mouseY);
         while(SDL_PollEvent(&event))
         {
-            connectionScene(renderer);
+            DisplayConnectionScene(renderer);
             switch (event.type)
             {
                 case SDL_QUIT:

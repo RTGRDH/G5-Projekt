@@ -16,7 +16,7 @@ void initMenu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HE
 bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void displayMenu(SDL_Renderer* renderer);
 void cleanUpInit();
-void connectionScene(SDL_Renderer* renderer);
+void DisplayConnectionScene(SDL_Renderer* renderer);
 void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
-bool temp(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 #endif /* menu_h */
