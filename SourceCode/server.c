@@ -154,15 +154,18 @@ int main(int argc, char **argv)
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
 					movement = 5; //reset the movement variable to base case
 					speedLimit(client[tmpClient].player);
-					updatePlayerPosition(client[tmpClient].player);
-					if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
-					{
-						setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
-						setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
-					}
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 				}
 /*-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
+				//below should be looped over all players
+				updatePlayerPosition(client[tmpClient].player);
+				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
+				{
+					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
+					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
+				}
+				//end loop
+				
 				//collision detection between players and players
 				updateBallPosition(boll,1);
 				//check if someone scores a goal
