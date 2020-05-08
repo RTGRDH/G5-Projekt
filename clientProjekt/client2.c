@@ -293,25 +293,25 @@ int main(int argc, char * argv[])
 
         //Recive packet, for now just recive mirroring from server                  //Net
         if (SDLNet_UDP_Recv(s, pRecive)){
-            int x,y, i, ballx, bally; 
-            sscanf((char * )pRecive->data, "%d %d %d\n",&i, &x, &y, &ballx, &bally);
+            int x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4 ballx, bally; 
+            sscanf((char * )pRecive->data, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d\n",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4 &ballx, &bally);
 
             gBall.x=ballx;
             gBall.y=bally;
 
-            gPlayer.y = y;
-            gPlayer.x = x;
+            gPlayer.y = y1;
+            gPlayer.x = x1;
 
-            gPlayer2.y = y;
-            gPlayer2.x = x;
+            gPlayer2.y = y2;
+            gPlayer2.x = x2;
 
-            gPlayer3.y = y;
-            gPlayer3.x = x;
+            gPlayer3.y = y3;
+            gPlayer3.x = x3;
 
-            gPlayer4.y = y;
-            gPlayer4.x = x;
+            gPlayer4.y = y4;
+            gPlayer4.x = x4;
 
-            printf("Incoming car: %d spelarx: %d spelarey: %d bollx: %d bolly: %d\n",i ,x ,y ,ballx , bally);
+            printf("Incoming x1: %d, y1: %d d1:%d \n x2: %d y2: %d d2: %d \n x3: %d, y3: %d d3:%d \n x4: %d y4: %d d4: %d \n bollx: %d bolly: %d\n",x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4 ballx, bally);
         }
         
         
