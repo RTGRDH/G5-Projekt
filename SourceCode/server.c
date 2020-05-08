@@ -170,6 +170,7 @@ int main(int argc, char **argv)
 				updateBallPosition(boll,1);
 				//check if someone scores a goal
 ----------------------------------------------------------------------------------------------------------------------------------------*/
+//Testkommentar
 
 				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 				speedLimit(client[tmpClient].player);
