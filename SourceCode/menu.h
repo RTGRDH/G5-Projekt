@@ -13,10 +13,10 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 void initMenu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
-bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void displayMenu(SDL_Renderer* renderer);
 void cleanUpInit();
 void DisplayConnectionScene(SDL_Renderer* renderer);
 void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
-bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 #endif /* menu_h */

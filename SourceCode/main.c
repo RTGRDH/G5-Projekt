@@ -124,7 +124,7 @@ int main(int argc, char * argv[])
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
-        if(!menu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
         {
             running = false;
         }

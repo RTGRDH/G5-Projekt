@@ -16,21 +16,29 @@ SDL_Rect gExitButton;
 SDL_Rect gMenuBackground;
 SDL_Rect gCancelButton;
 SDL_Rect gContinueButton;
-SDL_Rect ipLabel;
+SDL_Rect ipLabelRect;
+SDL_Rect ipInputRect;
 
 SDL_Surface *sPlayButton = NULL;
 SDL_Surface *sExitButton = NULL;
 SDL_Surface *sMenuBackground = NULL;
-SDL_Surface *sInputLabel = NULL;
+SDL_Surface *sIpLabel = NULL;
+SDL_Surface *sInputField = NULL;
 
 SDL_Texture *mPlayButton = NULL;
 SDL_Texture *mExitButton = NULL;
 SDL_Texture *mMenuBackground = NULL;
 SDL_Texture *mIpLabel = NULL;
+SDL_Texture *mInputField = NULL;
 
 SDL_Window *connectWindow = NULL;
 TTF_Font *font = NULL;
+char inputText[16] = "";
+SDL_Color fontColor={0,0,0}, backgroundColor={255,255,255};
 
+/*
+ Init method for menu such as buttons and background image.
+ */
 void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     gPlayButton.h = 100; gPlayButton.w = 300;
@@ -59,7 +67,11 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
        // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
 }
-bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+/*
+ Eventhandler for the menu. Calls display menu-method and returns true if player wants to play.
+ The flag is sent back to main.
+ */
+bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
@@ -85,7 +97,7 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
                        running = false;
                        cleanUpInit();
                        //flag = temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
-                       if(!connectionScene(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+                       if(!connectionScene(window,renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
                        {
                            initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                            running = true;
@@ -111,6 +123,9 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
     }
     return flag;
 }
+/*
+ Displays menu content such as buttons and background.
+ */
 void displayMenu(SDL_Renderer* renderer)
 {
     SDL_RenderClear(renderer); //Clear renderer
@@ -120,7 +135,9 @@ void displayMenu(SDL_Renderer* renderer)
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderPresent(renderer);
 }
-
+/*
+ Clean up-method for menu init.
+ */
 void cleanUpInit()
 {
     SDL_FreeSurface(sPlayButton);
@@ -133,27 +150,52 @@ void cleanUpInit()
     SDL_DestroyTexture(mExitButton);
     SDL_DestroyTexture(mMenuBackground);
     TTF_Quit();
+    //TTF_CloseFont(font);
 }
+/*
+ Inits content to be shown such as buttons, texts and background image.
+ */
 void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
-    TTF_Init();
-    font = TTF_OpenFont("arial.ttf", 25);
-    SDL_Color color={0,0,0}, bgcolor={255,255,255};
+    if(TTF_Init() == false)
+    {
+        printf("%s",TTF_GetError());
+    }
+    font = TTF_OpenFont("/Fonts/Arial.ttf", 25);
     gCancelButton.h = 100; gCancelButton.w = 300;
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
     gContinueButton.h = 100; gContinueButton.w = 300;
     gContinueButton.x = WINDOW_WIDTH/2+gContinueButton.w/4; gContinueButton.y = WINDOW_HEIGTH-130;
     
-    ipLabel.h = 100; ipLabel.w = 300;
-    ipLabel.x = WINDOW_WIDTH/2-ipLabel.w/2; ipLabel.y = WINDOW_HEIGTH/2;
-    char inputtext[30] = "Enter IP-address:";
-    sInputLabel=TTF_RenderText_Shaded(font,inputtext,color,bgcolor);
-
-    mIpLabel=SDL_CreateTextureFromSurface(renderer, sInputLabel);
+    char labelText[30] = "Enter IP-address:";
+    sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
+    sInputField =TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
+    
+    mIpLabel = SDL_CreateTextureFromSurface(renderer, sIpLabel);
+    mInputField = SDL_CreateTextureFromSurface(renderer, sInputField);
+    
+    SDL_QueryTexture(mIpLabel, NULL, NULL, &ipLabelRect.w, &ipLabelRect.h);
+    SDL_QueryTexture(mInputField, NULL, NULL, &ipInputRect.w, &ipInputRect.h);
+    
+    ipLabelRect.h = ipLabelRect.h; ipLabelRect.w = ipLabelRect.w;
+    ipLabelRect.x = WINDOW_WIDTH/2-ipLabelRect.w/2; ipLabelRect.y = WINDOW_HEIGTH/4;
+    
+    ipInputRect.h = ipInputRect.h; ipInputRect.w = ipInputRect.w;
+    ipInputRect.x = WINDOW_WIDTH/2-ipInputRect.w/2; ipInputRect.y = WINDOW_HEIGTH/3;
+    if(mInputField == NULL)
+    {
+        printf("%s",SDL_GetError());
+    }
+    if(mIpLabel == NULL)
+    {
+        printf("%s",SDL_GetError());
+    }
 }
+/*
+ Displays content on the connection scene.
+ */
 void DisplayConnectionScene(SDL_Renderer* renderer)
 {
-    
     SDL_RenderClear(renderer);
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
     SDL_RenderFillRect(renderer, &gCancelButton);
@@ -164,17 +206,21 @@ void DisplayConnectionScene(SDL_Renderer* renderer)
     SDL_RenderDrawRect(renderer, &gContinueButton);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    SDL_RenderCopy(renderer, mIpLabel, NULL, &ipLabel);
+    SDL_RenderCopy(renderer, mIpLabel, NULL, &ipLabelRect);
+    SDL_RenderCopy(renderer, mInputField, NULL, &ipInputRect);
     SDL_RenderPresent(renderer);
 }
-
-bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+/*
+ Eventhandler that takes input to the connection scene. Also calls Display-method.
+ */
+bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initConnectionScene(renderer,WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
     int mouseX, mouseY;
     bool running = true;
     bool flag = false;
+    int ipLength = 0;
     while(running)
     {
         SDL_GetMouseState(&mouseX, &mouseY);
@@ -200,11 +246,65 @@ bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int W
                         running = false;
                         flag = true;
                     }
-                default:
+                    case SDL_KEYDOWN:
+                    switch(event.key.keysym.scancode)
+                    {
+                        case SDL_SCANCODE_0:inputText[ipLength]='0'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_1:inputText[ipLength]='1'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_2:inputText[ipLength]='2'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_3:inputText[ipLength]='3'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_4:inputText[ipLength]='4'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_5:inputText[ipLength]='5'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_6:inputText[ipLength]='6'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_7:inputText[ipLength]='7'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_8:inputText[ipLength]='8'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_9:inputText[ipLength]='9'; ipLength++;
+                            break;
+                        case SDL_SCANCODE_BACKSPACE:
+                            if(ipLength != 0 && ipLength <= 16)
+                            {
+                                inputText[ipLength]=' ';
+                                inputText[ipLength-1]=' ';
+                                ipLength--;
+                            }
+                            break;
+                        case SDL_SCANCODE_PERIOD:
+                            inputText[ipLength]='.';
+                            ipLength++;
+                            break;
+                        case SDL_SCANCODE_RETURN:
+                            break;
+
+                        default:
+                            break;
+                    }
+
+                    if( event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL )
+                    {
+                        strcpy(inputText,SDL_GetClipboardText());
+                        ipLength = strlen(inputText);
+                    }
+                    if(ipLength<16)
+                    {
+                        printf("%s\n",inputText);
+                        printf("%d",ipLength);
+                        sInputField = TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
+                    }
+                    default:
                     break;
-            }
+                }
+                        
         }
-        
     }
-    return flag;
+        return flag;
+    
 }
