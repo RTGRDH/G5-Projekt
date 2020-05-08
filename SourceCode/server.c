@@ -11,11 +11,20 @@
 #include "player.h"
 #include "gameLogic.h"
 
+ /*struct players
+ {
+	 float x;
+	 float y;
+	 float d;
+ };
+ typedef struct players Players*/
+ 
 struct clients {
 	Uint32 IP;
 	Uint32 port;
 	Player player;
 	SDL_Rect gPlayer;
+	
 }; 
 typedef struct clients Clients;
  
@@ -24,6 +33,7 @@ const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 void clients_null(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
+void clientPos_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount,);
 //main funktioner
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
@@ -103,7 +113,6 @@ int main(int argc, char **argv)
 			int tmpClient=0;
 			int i,x=0, movement;
             sscanf((char * )pRecive->data, "%d \n", &movement);
-    		
 
 			if((*pClientCount)==4)
 			{
@@ -260,4 +269,15 @@ void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2,
 			SDLNet_UDP_Send(sd2, -1, sent);		
 		}
 	}
+}
+
+void clientPos_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
+{
+			printf("Send to Client %d \n", j+1);
+			sent->address.host = c[j].IP;	/* Set the destination host */	
+			sent->address.port = c[j].port;
+			printf("%d\n", a);
+			sprintf((char *)sent->data, "%d\n",  c[0].player);
+			sent->len = strlen((char *)sent->data) + 1;
+			SDLNet_UDP_Send(sd2, -1, sent);	
 }
