@@ -299,21 +299,18 @@ int main(int argc, char * argv[])
             gBall.x=ballx;
             gBall.y=bally;
 
-            switch(i)
-            {
-                case 1: gPlayer.y = y;
-                        gPlayer.x = x;
-                        break;
-                case 2: gPlayer2.y = y;
-                        gPlayer2.x = x;
-                        break;
-                case 3: gPlayer3.y = y;
-                        gPlayer3.x = x;
-                        break;
-                case 4: gPlayer4.y = y;
-                        gPlayer4.x = x;
-                        break;
-            }
+            gPlayer.y = y;
+            gPlayer.x = x;
+
+            gPlayer2.y = y;
+            gPlayer2.x = x;
+
+            gPlayer3.y = y;
+            gPlayer3.x = x;
+
+            gPlayer4.y = y;
+            gPlayer4.x = x;
+
             printf("Incoming car: %d spelarx: %d spelarey: %d bollx: %d bolly: %d\n",i ,x ,y ,ballx , bally);
         }
         
