@@ -137,12 +137,13 @@ int main(int argc, char **argv)
 						default: printf("vi ar har");
 						//break;
 					}
-					/*
-					skelettkod:
-					if 1: left + gas	||	if 2: gas		||	if 3: right + gas
-					if 4: left			||	if 5: no send	||	if 6: right
-					if 7: left + brake	||	if 7: brake		||	if 9: right + brake
-					hypotetisk kod:
+/*-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
+					//skelettkod:
+					//if 1: left + gas		||	if 2: gas		||	if 3: right + gas
+					//if 4: left			||	if 5: no send	||	if 6: right
+					//if 7: left + brake	||	if 7: brake		||	if 9: right + brake
+
+					//hypotetisk kod:
 					if (movement == 1 || movement == 4 || movement == 7)
             			changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
 					if (movement == 3 || movement == 6 || movement == 9)
@@ -151,9 +152,23 @@ int main(int argc, char **argv)
 						changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 					if (7 <= movement && movement <= 9)
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
+					speedLimit(client[tmpClient].player);
+					updatePlayerPosition(client[tmpClient].player);
 					movement = 5; //reset the movement variable to base case
-					*/
+----------------------------------------------------------------------------------------------------------------------------------------*/
 				}
+/*-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
+				//collision detection between players and players
+				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
+				{
+					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
+					setBallDirection(boll, getPlayerDirection(client[tmpClient].player));
+					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
+				}
+				updateBallPosition(boll,1);
+				//check if someone scores a goal
+----------------------------------------------------------------------------------------------------------------------------------------*/
+
 				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 				speedLimit(client[tmpClient].player);
 				changePlayerDirection(client[tmpClient].player, TURNING_SPEED-getPlayerSpeed(client[tmpClient].player));
