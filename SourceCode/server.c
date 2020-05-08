@@ -33,7 +33,7 @@ const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 void clients_null(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
-void clientPos_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount,);
+void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount);
 //main funktioner
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
@@ -129,7 +129,7 @@ int main(int argc, char **argv)
 				}
 				if(pRecive->address.port == client[tmpClient].port)
                 {
-                    
+                    printf("crashsite 1");
                        
 //-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
 					//skelettkod:
@@ -147,12 +147,16 @@ int main(int argc, char **argv)
 					if (7 <= movement && movement <= 9)
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
 					movement = 5; 		//reset the movement variable to base case
-					speedLimit(client[tmpClient].player);
+					//printf("crashsite 2.1");
+					//speedLimit(client[tmpClient].player);		//this crashes the server for some reason
+					//printf("crashsite 2.2");
 				}
+				printf("crashsite 2");
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
 				for(i=0; i<4; i++)
 				{
 					updatePlayerPosition(client[i].player,1);
+					printf("crashsite 3");
 					if(distanceBallPlayer(boll,client[i].player)<27)
 					{
 						setBallDirection(boll,angleBallPlayer(boll,client[i].player));
@@ -195,6 +199,7 @@ int main(int argc, char **argv)
 					sscanf((char * )pRecive->data, "%d \n", &movement);
     				printf("incomming %d\n",movement);
 					client_send(client, pRecive, pSent, sd, i, pClientCount, a);
+					//clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
 					x=1;
 				}
 				if(x==0)
@@ -271,13 +276,28 @@ void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2,
 	}
 }
 
-void clientPos_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
+void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
 {
-			printf("Send to Client %d \n", j+1);
-			sent->address.host = c[j].IP;	/* Set the destination host */	
-			sent->address.port = c[j].port;
-			printf("%d\n", a);
-			sprintf((char *)sent->data, "%d\n",  c[0].player);
+			int p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY;
+			p1X = getPlayerPositionX(c[0].player);
+			p1Y = getPlayerPositionY(c[0].player);
+			p1D = getPlayerDirection(c[0].player);
+			p2X = getPlayerPositionX(c[1].player);
+			p2Y = getPlayerPositionY(c[1].player);
+			p2D = getPlayerDirection(c[1].player);
+			p3X = getPlayerPositionX(c[2].player);
+			p3Y = getPlayerPositionY(c[2].player);
+			p3D = getPlayerDirection(c[2].player);
+			p4X = getPlayerPositionX(c[3].player);
+			p4Y = getPlayerPositionY(c[3].player);
+			p4D = getPlayerDirection(c[3].player);
+			bX = getBallPositionX(b);
+			bY = getBallPositionY(b);
+			printf("Send to Client %d \n", i+1);
+			sent->address.host = c[i].IP;	/* Set the destination host */	
+			sent->address.port = c[i].port;
+			//printf("%d\n", a);
+			sprintf((char *)sent->data, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
 			sent->len = strlen((char *)sent->data) + 1;
 			SDLNet_UDP_Send(sd2, -1, sent);	
 }
