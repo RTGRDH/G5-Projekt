@@ -116,39 +116,19 @@ int main(int argc, char **argv)
 						tmpClient=i;
 						printf("inne i if %d, %d \n", i, tmpClient);
 					}
+					//else movement5?
 				}
 				if(pRecive->address.port == client[tmpClient].port)
                 {
-                    if(movement==1)
-					{
-						
-					}
-
-
-					{
-                	    case 1:printf("Move:1\n");
-                            changePlayerSpeed(client[tmpClient].player, ACCELERATION);
-                            //break;
-                        case 2:printf("Move:2\n");
-                            changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
-                            speedLimit(client[tmpClient].player);
-                            break;
-                        case 3: printf("Move:3\n");
-                            changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
-                            break;
-                        case 4: printf("Move:4\n");
-                            changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
-  	                    	break;
-						default: printf("vi ar har");
-						//break;
-					}
-					/*-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
-				//skelettkod:
+                    
+                       
+//-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
+					//skelettkod:
 					//if 1: left + gas		||	if 2: gas		||	if 3: right + gas
 					//if 4: left			||	if 5: no send	||	if 6: right
 					//if 7: left + brake	||	if 7: brake		||	if 9: right + brake
-
 					//hypotetisk kod:
+
 					if (movement == 1 || movement == 4 || movement == 7)
             			changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
 					if (movement == 3 || movement == 6 || movement == 9)
@@ -157,48 +137,22 @@ int main(int argc, char **argv)
 						changePlayerSpeed(client[tmpClient].player, ACCELERATION);
 					if (7 <= movement && movement <= 9)
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
-					movement = 5; //reset the movement variable to base case
+					movement = 5; 		//reset the movement variable to base case
 					speedLimit(client[tmpClient].player);
-----------------------------------------------------------------------------------------------------------------------------------------*/
 				}
-/*-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
-				//below should be looped over all players
-				updatePlayerPosition(client[tmpClient].player);
-				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
+//-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
+				for(i=0; i<4; i++)
 				{
-					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
-					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
+					updatePlayerPosition(client[i].player,1);
+					if(distanceBallPlayer(boll,client[i].player)<27)
+					{
+						setBallDirection(boll,angleBallPlayer(boll,client[i].player));
+						setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[i].player)+2);
+					}
 				}
-				//end loop
-				
 				//collision detection between players and players
 				updateBallPosition(boll,1);
-				//check if someone scores a goal
-----------------------------------------------------------------------------------------------------------------------------------------*/
-//Testkommentar
-
-				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
-				speedLimit(client[tmpClient].player);
-				changePlayerDirection(client[tmpClient].player, TURNING_SPEED-getPlayerSpeed(client[tmpClient].player));
-
-				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
-				{
-					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
-					setBallDirection(boll, getPlayerDirection(client[tmpClient].player));
-					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
-				}
-
-				updateBallPosition(boll,1);
-
-				if(distanceBallPlayer(boll,client[tmpClient].player)<1)
-				{
-					setBallPositionX(boll,(float)WINDOW_WIDTH/2);
-					setBallPositionY(boll,(float)WINDOW_WIDTH/2);
-				}
 				
-				client[tmpClient].gPlayer.y=getPlayerPositionY(client[tmpClient].player);
-				client[tmpClient].gPlayer.x=getPlayerPositionX(client[tmpClient].player);
-
 				if(ballRightGoalCollision(&gBall))
 				{
 					setBallPositionX(boll,470);
@@ -206,14 +160,22 @@ int main(int argc, char **argv)
 					setBallSpeed(boll,0);
 				//   P1Score++;	
 				}
-				if(ballLeftGoalCollision(&gBall))
+				else if(ballLeftGoalCollision(&gBall))
 				{
 					setBallPositionX(boll,470);
 					setBallPositionY(boll,260);
 					setBallSpeed(boll,0);
 				}
+				
 				gBall.y = getBallPositionY(boll);
        			gBall.x = getBallPositionX(boll);
+				
+				for(i=0;i<4;i++)
+				{
+					client[i].gPlayer.y=getPlayerPositionY(client[i].player);
+					client[i].gPlayer.x=getPlayerPositionX(client[i].player);
+				}
+				
 				   printf("har ocksa");
 			}
 
