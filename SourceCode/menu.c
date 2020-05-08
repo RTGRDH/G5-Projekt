@@ -10,18 +10,27 @@
 #include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 SDL_Rect gPlayButton;
 SDL_Rect gExitButton;
 SDL_Rect gMenuBackground;
+SDL_Rect gCancelButton;
+SDL_Rect gContinueButton;
+SDL_Rect ipLabel;
+
 SDL_Surface *sPlayButton = NULL;
 SDL_Surface *sExitButton = NULL;
 SDL_Surface *sMenuBackground = NULL;
+SDL_Surface *sInputLabel = NULL;
 
 SDL_Texture *mPlayButton = NULL;
 SDL_Texture *mExitButton = NULL;
 SDL_Texture *mMenuBackground = NULL;
+SDL_Texture *mIpLabel = NULL;
 
 SDL_Window* connectWindow = NULL;
+TTF_Font *font = NULL;
+
 void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     gPlayButton.h = 100; gPlayButton.w = 300;
@@ -75,8 +84,18 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
                    {
                        running = false;
                        cleanUpInit();
-                       connection();
-                       flag = true;
+                       //flag = temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
+                       if(!temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+                       {
+                           initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
+                           running = true;
+                           flag = false;
+                       }
+                       else
+                       {
+                           running = false;
+                           flag = true;
+                       }
                    }
                    else if(mouseX >= gExitButton.x && mouseX <= gExitButton.x+gPlayButton.w && mouseY >= gExitButton.y && mouseY <= gExitButton.y + gExitButton.h) //Checks if mouse pointer coordination is within the button
                    {
@@ -94,11 +113,11 @@ bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH
 }
 void displayMenu(SDL_Renderer* renderer)
 {
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF); //Set background to white
     SDL_RenderClear(renderer); //Clear renderer
     SDL_RenderCopy(renderer, mMenuBackground, NULL, &gMenuBackground);
     SDL_RenderCopy(renderer, mPlayButton, NULL, &gPlayButton);
     SDL_RenderCopy(renderer, mExitButton, NULL, &gExitButton);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderPresent(renderer);
 }
 
@@ -113,39 +132,78 @@ void cleanUpInit()
     SDL_DestroyTexture(mPlayButton);
     SDL_DestroyTexture(mExitButton);
     SDL_DestroyTexture(mMenuBackground);
+    TTF_Quit();
 }
-void connection()
+void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
-    /*
-    connectWindow = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, 500, 200, SDL_WINDOW_SHOWN);
-    if(connectWindow == NULL)
-    {
-        printf("Could not create window. Error: %s ",SDL_GetError());
-        printf("\n");
-    }
-    temp();
-     */
+    TTF_Init();
+    font = TTF_OpenFont("arial.ttf", 25);
+    SDL_Color color={0,0,0}, bgcolor={255,255,255};
+    gCancelButton.h = 100; gCancelButton.w = 300;
+    gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
+    gContinueButton.h = 100; gContinueButton.w = 300;
+    gContinueButton.x = WINDOW_WIDTH/2+gContinueButton.w/4; gContinueButton.y = WINDOW_HEIGTH-130;
+    
+    ipLabel.h = 100; ipLabel.w = 300;
+    ipLabel.x = WINDOW_WIDTH/2-ipLabel.w/2; ipLabel.y = WINDOW_HEIGTH/2;
+    char inputtext[30] = "Enter IP-address:";
+    sInputLabel=TTF_RenderText_Shaded(font,inputtext,color,bgcolor);
+    mIpLabel=SDL_CreateTextureFromSurface(renderer, sInputLabel);
+}
+void connectionScene(SDL_Renderer* renderer)
+{
+    
+    SDL_RenderClear(renderer);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
+    SDL_RenderFillRect(renderer, &gCancelButton);
+    SDL_RenderDrawRect(renderer, &gCancelButton);
+    
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
+    SDL_RenderFillRect(renderer, &gContinueButton);
+    SDL_RenderDrawRect(renderer, &gContinueButton);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderCopy(renderer, mIpLabel, NULL, &ipLabel);
+    SDL_RenderPresent(renderer);
 }
 
-void temp()
+bool temp(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
-    /*
+    initConnectionScene(renderer,WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
-     bool running = true;
-     while(running)
-     {
-        //SDL_GetMouseState(&mouseX, &mouseY);
-        //displayMenu(renderer);
-        while (SDL_PollEvent(&event))
+    int mouseX, mouseY;
+    bool running = true;
+    bool flag = false;
+    while(running)
+    {
+        SDL_GetMouseState(&mouseX, &mouseY);
+        while(SDL_PollEvent(&event))
         {
-           switch (event.type)
-           {
-               case SDL_QUIT:
-                   printf("Testtttt");
-                   running = false;
-                   break;
-           }
+            connectionScene(renderer);
+            switch (event.type)
+            {
+                case SDL_QUIT:
+                    running = false;
+                    flag = false;
+                    break;
+                case SDL_MOUSEBUTTONDOWN:
+                    if(mouseX >= gCancelButton.x && mouseX <= gCancelButton.x+gCancelButton.w && mouseY >= gCancelButton.y && mouseY <= gCancelButton.y + gCancelButton.h)//Checks if mouse pointer coordination is within the button
+                    {
+                        running = false;
+                        flag = false;
+                        //menu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
+                    }
+                    if(mouseX >= gContinueButton.x && mouseX <= gContinueButton.x+gContinueButton.w && mouseY >= gContinueButton.y && mouseY <= gContinueButton.y + gContinueButton.h)//Checks if mouse pointer coordination is within the button
+                    {
+                        //if(inmatningen är rätt och server finns)
+                        running = false;
+                        flag = true;
+                    }
+                default:
+                    break;
+            }
         }
+        
     }
-     */
+    return flag;
 }
