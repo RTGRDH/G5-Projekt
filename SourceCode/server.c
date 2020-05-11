@@ -46,7 +46,11 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 
-Ball boll=NULL;
+Ball boll;
+/*setBallPositionX(boll,470);
+setBallPositionY(boll,260);
+setBallDirection(boll,0);
+setBallSpeed(boll,0);*/
 SDL_Rect gField;
 // struct to hold the position and size of the sprite
 SDL_Rect gBall;
@@ -98,8 +102,12 @@ int main(int argc, char **argv)
 		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
- 
-	
+	printf("innan boll");
+ 	/*setBallPositionX(boll,470);
+	setBallPositionY(boll,260);
+	setBallDirection(boll,0);
+	setBallSpeed(boll,0);*/
+	printf("edter boll");
 	/* Main loop */
 	quit = 0;
 	while (!quit)
@@ -112,6 +120,7 @@ int main(int argc, char **argv)
 			//printf("\tAddress: %x %x\n", pRecive->address.host, pRecive->address.port);
 			int tmpClient=0;
 			int i,x=0, movement;
+			float tmpMovement;
             sscanf((char * )pRecive->data, "%d \n", &movement);
 
 			if((*pClientCount)==4)
@@ -129,7 +138,7 @@ int main(int argc, char **argv)
 				}
 				if(pRecive->address.port == client[tmpClient].port)
                 {
-                    printf("crashsite 1");
+                    printf("crashsite 1: tmp %d  mov %d", tmpClient, movement);
                        
 //-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
 					//skelettkod:
@@ -138,8 +147,8 @@ int main(int argc, char **argv)
 					//if 7: left + brake	||	if 7: brake		||	if 9: right + brake
 					//hypotetisk kod:
 
-					if (movement == 1 || movement == 4 || movement == 7)
-            			changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
+					if (movement == 1 || movement == 4 || movement==7)
+						changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
 					if (movement == 3 || movement == 6 || movement == 9)
             			changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
 					if (1 <= movement && movement <= 3)
@@ -147,16 +156,16 @@ int main(int argc, char **argv)
 					if (7 <= movement && movement <= 9)
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
 					movement = 5; 		//reset the movement variable to base case
-					//printf("crashsite 2.1");
-					//speedLimit(client[tmpClient].player);		//this crashes the server for some reason
+					updatePlayerPosition(client[tmpClient].player, 0);
+					speedLimit(client[tmpClient].player);		//this crashes the server for some reason
 					//printf("crashsite 2.2");
 				}
-				printf("crashsite 2");
+				printf("crashsite 2\n");
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
-				for(i=0; i<4; i++)
+				for(i=0; i<*pClientCount; i++)
 				{
-					updatePlayerPosition(client[i].player,1);
-					printf("crashsite 3");
+					//updatePlayerPosition(client[i].player, 0);
+					printf("crashsite 3\n");
 					if(distanceBallPlayer(boll,client[i].player)<27)
 					{
 						setBallDirection(boll,angleBallPlayer(boll,client[i].player));
@@ -194,12 +203,15 @@ int main(int argc, char **argv)
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				if(pRecive->address.port == client[i].port) //&& *pClintcount==4
+				if(pRecive->address.port == client[i].port)
 				{
 					sscanf((char * )pRecive->data, "%d \n", &movement);
     				printf("incomming %d\n",movement);
-					client_send(client, pRecive, pSent, sd, i, pClientCount, a);
-					//clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
+					if((*pClientCount)==4)
+					{
+						clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
+					}
+					//client_send(client, pRecive, pSent, sd, i, pClientCount, a);
 					x=1;
 				}
 				if(x==0)
@@ -232,16 +244,16 @@ void clients_null(Clients c[])
 	{
 		c[i].IP=0;
 		c[i].port=0;
-		c[i].player=NULL;
+		//c[i].player=NULL;
 		switch(i)
 		{
-			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); 
+			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); 
+			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); 
+			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '0': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); 
+			case '0': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); setPlayerSpeed(c[i].player, 0);
 			break;
 		}
 	}
