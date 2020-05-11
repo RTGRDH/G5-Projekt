@@ -11,11 +11,20 @@
 #include "player.h"
 #include "gameLogic.h"
 
+ /*struct players
+ {
+	 float x;
+	 float y;
+	 float d;
+ };
+ typedef struct players Players*/
+ 
 struct clients {
 	Uint32 IP;
 	Uint32 port;
 	Player player;
 	SDL_Rect gPlayer;
+	
 }; 
 typedef struct clients Clients;
  
@@ -24,6 +33,7 @@ const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 void clients_null(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
+void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount);
 //main funktioner
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
@@ -36,17 +46,6 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 
-Ball boll = NULL;
-SDL_Rect gField;
-// struct to hold the position and size of the sprite
-SDL_Rect gBall;
-SDL_Rect gGoal_Left;
-SDL_Rect gGoal_Right;
-//SDL_Rect dstrect;
-
-//TTF_Font * font = NULL;
-
-
 #define SPEED (75); //75 is optimal, 300 for dev.
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 8
@@ -56,6 +55,22 @@ SDL_Rect gGoal_Right;
 
 int main(int argc, char **argv)
 {
+	Ball boll;
+	/*setBallPositionX(boll,470);
+	setBallPositionY(boll,260);
+	setBallDirection(boll,0);
+	setBallSpeed(boll,0);*/
+	SDL_Rect gField;
+	// struct to hold the position and size of the sprite
+	SDL_Rect gBall;
+	SDL_Rect gGoal_Left;
+	SDL_Rect gGoal_Right;
+	//SDL_Rect dstrect;
+
+	//TTF_Font * font = NULL;
+
+
+
 	UDPsocket sd;       /* Socket descriptor */
 	UDPpacket *pRecive;       /* Pointer to packet memory */
 	UDPpacket *pSent;
@@ -88,8 +103,12 @@ int main(int argc, char **argv)
 		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
- 
-	//bil start positioner
+	printf("innan boll");
+ 	/*setBallPositionX(boll,470);
+	setBallPositionY(boll,260);
+	setBallDirection(boll,0);
+	setBallSpeed(boll,0);*/
+	printf("edter boll");
 	/* Main loop */
 	quit = 0;
 	while (!quit)
@@ -100,42 +119,71 @@ int main(int argc, char **argv)
 			//printf("UDP Packet incoming\n");
 			//printf("\tData:    %s\n", (char *)pRecive->data);
 			//printf("\tAddress: %x %x\n", pRecive->address.host, pRecive->address.port);
-			int tmpClient;
+			int tmpClient=0;
+			int i,x=0, movement;
+			float tmpMovement;
+            sscanf((char * )pRecive->data, "%d \n", &movement);
 
 			if((*pClientCount)==4)
 			{
-				changePlayerSpeed(client[tmpClient].player, ACCELERATION);
-				speedLimit(client[tmpClient].player);
-				changePlayerDirection(client[tmpClient].player, TURNING_SPEED-getPlayerSpeed(client[tmpClient].player));
-
-				if(PlayerBallCollision(&client[tmpClient].gPlayer, &gBall))
+				printf("movement: %d\n",movement);
+				for(i=0; i<4; i++)
 				{
-					setBallDirection(boll,angleBallPlayer(boll,client[tmpClient].player));
-					setBallDirection(boll, getPlayerDirection(client[tmpClient].player));
-					setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[tmpClient].player)+2);
+					printf("inne i lopen %d, tmp:%d\n", i, tmpClient);
+					if(pRecive->address.port==client[i].port)
+					{
+						tmpClient=i;
+						printf("inne i if %d, %d \n", i, tmpClient);
+					}
+					//else movement5?
 				}
+				if(pRecive->address.port == client[tmpClient].port)
+                {
+                    printf("crashsite 1: tmp %d  mov %d", tmpClient, movement);
+                       
+//-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
+					//skelettkod:
+					//if 1: left + gas		||	if 2: gas		||	if 3: right + gas
+					//if 4: left			||	if 5: no send	||	if 6: right
+					//if 7: left + brake	||	if 7: brake		||	if 9: right + brake
+					//hypotetisk kod:
 
+					if (movement == 1 || movement == 4 || movement==7)
+						changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
+					if (movement == 3 || movement == 6 || movement == 9)
+            			changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
+					if (1 <= movement && movement <= 3)
+						changePlayerSpeed(client[tmpClient].player, ACCELERATION);
+					if (7 <= movement && movement <= 9)
+						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
+					movement = 5; 		//reset the movement variable to base case
+					updatePlayerPosition(client[tmpClient].player, 0);
+					speedLimit(client[tmpClient].player);		//this crashes the server for some reason
+					//printf("crashsite 2.2");
+				}
+				printf("crashsite 2\n");
+//-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
+				for(i=0; i<*pClientCount; i++)
+				{
+					//updatePlayerPosition(client[i].player, 0);
+					printf("crashsite 3\n");
+					if(distanceBallPlayer(boll,client[i].player)<27)
+					{
+						setBallDirection(boll,angleBallPlayer(boll,client[i].player));
+						setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[i].player)+2);
+					}
+				}
+				//collision detection between players and players
 				updateBallPosition(boll,1);
-
-				if(distanceBallPlayer(boll,client[tmpClient].player)<1)
-				{
-					setBallPositionX(boll,(float)WINDOW_WIDTH/2);
-					setBallPositionY(boll,(float)WINDOW_WIDTH/2);
-				}
 				
-				client[tmpClient].gPlayer.y=getPlayerPositionY(client[tmpClient].player);
-				client[tmpClient].gPlayer.x=getPlayerPositionX(client[tmpClient].player);
-
 				if(ballRightGoalCollision(&gBall))
 				{
-
 					setBallPositionX(boll,470);
 					setBallPositionY(boll,260);
 					setBallSpeed(boll,0);
 				//   P1Score++;	
 				}
-
-				if(ballLeftGoalCollision(&gBall))
+				else if(ballLeftGoalCollision(&gBall))
 				{
 					setBallPositionX(boll,470);
 					setBallPositionY(boll,260);
@@ -144,35 +192,46 @@ int main(int argc, char **argv)
 				
 				gBall.y = getBallPositionY(boll);
        			gBall.x = getBallPositionX(boll);
-
+				
+				for(i=0;i<4;i++)
+				{
+					client[i].gPlayer.y=getPlayerPositionY(client[i].player);
+					client[i].gPlayer.x=getPlayerPositionX(client[i].player);
+				}
+				
+				   printf("har ocksa");
 			}
-			x=0;
 
 			for(int i=0; i<=*pClientCount; i++)
 			{
-				if(pRecive->address.port == client[i].port) //&& *pClintcount==4
+				if(pRecive->address.port == client[i].port)
 				{
-					client_send(client, pRecive, pSent, sd, i, pClientCount, a);
+					sscanf((char * )pRecive->data, "%d \n", &movement);
+    				printf("incomming %d\n",movement);
+					if((*pClientCount)==4)
+					{
+						clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
+					}
+					//client_send(client, pRecive, pSent, sd, i, pClientCount, a);
 					x=1;
 				}
-				
 				if(x==0)
-
 				{
 					if(client[i].IP == 0 && client[i].port == 0)
-					{	
+					{
+						sscanf((char * )pRecive->data, "%d \n", &movement);	
 						client_create(client, pRecive, i, pClientCount);
 						break;
 					}
 				}
 			}
-			
 			/* Quit if packet contains "quit" */
 			if (strcmp((char *)pSent->data, "quit") == 0)
 				quit = 1;
 		}		
 	}
  
+	printf("kracha inte");
 	/* Clean and exit */
 	SDLNet_FreePacket(pSent);
     SDLNet_FreePacket(pRecive);
@@ -180,23 +239,22 @@ int main(int argc, char **argv)
 	return EXIT_SUCCESS;
 } 
 
-
 void clients_null(Clients c[])
 {
-	for(int i=1; i<=4; i++)
+	for(int i=0; i<4; i++)
 	{
 		c[i].IP=0;
 		c[i].port=0;
-		c[i].player=NULL;
+		//c[i].player=NULL;
 		switch(i)
 		{
-			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); 
+			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); 
+			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); 
+			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); setPlayerSpeed(c[i].player, 0);
 			break;
-			case '4': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); 
+			case '0': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); setPlayerSpeed(c[i].player, 0);
 			break;
 		}
 	}
@@ -215,19 +273,44 @@ void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a)
 {
 
-		for(int j=0; j<*pClientCount;j++)
+	for(int j=0; j<*pClientCount;j++)
+	{
+		if (c[j].port != 0)// && client[j].port != client[i].port
 		{
-			if (c[j].port != 0)// && client[j].port != client[i].port
-			{
-				printf("Send to Client %d \n", j+1);
-				sent->address.host = c[j].IP;	/* Set the destination host */
-				sent->address.port = c[j].port;
-				sscanf((char * )recive->data, "%d\n", &a);
-				printf("%d\n", a);
-				sprintf((char *)sent->data, "%d\n", a);
-				sent->len = strlen((char *)sent->data) + 1;
-				SDLNet_UDP_Send(sd2, -1, sent);		
-			}
-		}		
+			printf("Send to Client %d \n", j+1);
+			sent->address.host = c[j].IP;	/* Set the destination host */	
+			sent->address.port = c[j].port;
+			sscanf((char * )recive->data, "%d\n", &a);
+			printf("%d\n", a);
+			sprintf((char *)sent->data, "%d\n", a);
+			sent->len = strlen((char *)sent->data) + 1;
+			SDLNet_UDP_Send(sd2, -1, sent);		
+		}
+	}
+}
 
+void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
+{
+			int p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY;
+			p1X = getPlayerPositionX(c[0].player);
+			p1Y = getPlayerPositionY(c[0].player);
+			p1D = getPlayerDirection(c[0].player);
+			p2X = getPlayerPositionX(c[1].player);
+			p2Y = getPlayerPositionY(c[1].player);
+			p2D = getPlayerDirection(c[1].player);
+			p3X = getPlayerPositionX(c[2].player);
+			p3Y = getPlayerPositionY(c[2].player);
+			p3D = getPlayerDirection(c[2].player);
+			p4X = getPlayerPositionX(c[3].player);
+			p4Y = getPlayerPositionY(c[3].player);
+			p4D = getPlayerDirection(c[3].player);
+			bX = getBallPositionX(b);
+			bY = getBallPositionY(b);
+			printf("Send to Client %d \n", i+1);
+			sent->address.host = c[i].IP;	/* Set the destination host */	
+			sent->address.port = c[i].port;
+			//printf("%d\n", a);
+			sprintf((char *)sent->data, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
+			sent->len = strlen((char *)sent->data) + 1;
+			SDLNet_UDP_Send(sd2, -1, sent);	
 }
