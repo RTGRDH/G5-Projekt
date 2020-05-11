@@ -20,9 +20,9 @@
  typedef struct players Players*/
  
 struct clients {
+	Player player;
 	Uint32 IP;
 	Uint32 port;
-	Player player;
 	SDL_Rect gPlayer;
 	
 }; 
@@ -55,7 +55,7 @@ float distanceBallPlayer(Ball boll, Player p);
 
 int main(int argc, char **argv)
 {
-	Ball boll;
+	Ball boll = createBall(0,0);
 	/*setBallPositionX(boll,470);
 	setBallPositionY(boll,260);
 	setBallDirection(boll,0);
@@ -74,7 +74,13 @@ int main(int argc, char **argv)
 	UDPsocket sd;       /* Socket descriptor */
 	UDPpacket *pRecive;       /* Pointer to packet memory */
 	UDPpacket *pSent;
-    Clients client[4];
+    Clients client[4] = 
+	{
+		{malloc(sizeof(Player)),0,0,0},
+		{malloc(sizeof(Player)),0,0,0},
+		{malloc(sizeof(Player)),0,0,0},
+		{malloc(sizeof(Player)),0,0,0}
+	};
 	clients_null(client);
 
     int quit, a, b, x; 
@@ -149,13 +155,42 @@ int main(int argc, char **argv)
 					//hypotetisk kod:
 
 					if (movement == 1 || movement == 4 || movement==7)
-						changePlayerDirection(client[tmpClient].player, TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
+					{
+						printf("\ngonna turn left(1,4,7)");
+						printf("\nmovement: %d,", movement);
+						printf("client[tmpClient].player: %.0f", getPlayerPositionX(client[tmpClient].player));
+						printf("\n\n\nCLIENT[TMPCLIENT] FUNGERAR\n\n\n\n");
+						changePlayerDirection(client[tmpClient].player, (float) TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
+						printf("\nturned left");
+					}
+					printf("\npast left turn");
+
 					if (movement == 3 || movement == 6 || movement == 9)
+					{
+						printf("\ngonna turn right(3,6,9)");
+						printf("\n %d", movement);
             			changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
+					printf("\nturned right");
+					}
+					printf("\npast right turn");
+
 					if (1 <= movement && movement <= 3)
+					{
+						printf("\ngonna accelerate(1,2,3)");
+						printf("\n %d", movement);
 						changePlayerSpeed(client[tmpClient].player, ACCELERATION);
+						printf("\naccelerated");
+					}
+					printf("\npast acceleration");
+
 					if (7 <= movement && movement <= 9)
+					{
+						printf("\ngonna brake(7,8,9)");
+						printf("\n %d", movement);
 						changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
+						printf("\nbraked");
+					}
+					printf("\npast braking");
 					movement = 5; 		//reset the movement variable to base case
 					updatePlayerPosition(client[tmpClient].player, 0);
 					speedLimit(client[tmpClient].player);		//this crashes the server for some reason
