@@ -287,7 +287,7 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         case SDL_SCANCODE_9:inputText[ipLength]='9'; ipLength++;
                             break;
                         case SDL_SCANCODE_BACKSPACE:
-                            if(ipLength != 0 || ipLength == 16)
+                            if(ipLength != 0 && ipLength < 31)
                             {
                                 inputText[ipLength]=' ';
                                 inputText[ipLength-1]=' ';
@@ -311,7 +311,7 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         strcpy(inputText,SDL_GetClipboardText());
                         ipLength = strlen(inputText);
                     }
-                    if(ipLength <= 16)
+                    if(ipLength < 31)
                     {
                         printf("IP: %s\n",inputText);
                         printf("Length: %d\n",ipLength);
