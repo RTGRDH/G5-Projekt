@@ -46,21 +46,6 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 
-Ball boll;
-/*setBallPositionX(boll,470);
-setBallPositionY(boll,260);
-setBallDirection(boll,0);
-setBallSpeed(boll,0);*/
-SDL_Rect gField;
-// struct to hold the position and size of the sprite
-SDL_Rect gBall;
-SDL_Rect gGoal_Left;
-SDL_Rect gGoal_Right;
-//SDL_Rect dstrect;
-
-//TTF_Font * font = NULL;
-
-
 #define SPEED (75); //75 is optimal, 300 for dev.
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 8
@@ -70,6 +55,22 @@ SDL_Rect gGoal_Right;
 
 int main(int argc, char **argv)
 {
+	Ball boll;
+	/*setBallPositionX(boll,470);
+	setBallPositionY(boll,260);
+	setBallDirection(boll,0);
+	setBallSpeed(boll,0);*/
+	SDL_Rect gField;
+	// struct to hold the position and size of the sprite
+	SDL_Rect gBall;
+	SDL_Rect gGoal_Left;
+	SDL_Rect gGoal_Right;
+	//SDL_Rect dstrect;
+
+	//TTF_Font * font = NULL;
+
+
+
 	UDPsocket sd;       /* Socket descriptor */
 	UDPpacket *pRecive;       /* Pointer to packet memory */
 	UDPpacket *pSent;
