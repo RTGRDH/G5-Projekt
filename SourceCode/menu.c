@@ -33,7 +33,7 @@ SDL_Texture *mInputField = NULL;
 
 SDL_Window *connectWindow = NULL;
 TTF_Font *font = NULL;
-char inputText[16] = "";
+char inputText[30] = "";
 SDL_Color fontColor={0,0,0}, backgroundColor={255,255,255};
 
 /*
@@ -63,6 +63,9 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
         mPlayButton = SDL_CreateTextureFromSurface(renderer, sPlayButton);
         mExitButton = SDL_CreateTextureFromSurface(renderer, sExitButton);
         mMenuBackground = SDL_CreateTextureFromSurface(renderer, sMenuBackground);
+        SDL_FreeSurface(sPlayButton);
+        SDL_FreeSurface(sExitButton);
+        SDL_FreeSurface(sMenuBackground);
         //Background link:
        // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
@@ -96,7 +99,6 @@ bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, con
                    {
                        running = false;
                        cleanUpInit();
-                       //flag = temp(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                        if(!connectionScene(window,renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
                        {
                            initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
@@ -136,21 +138,24 @@ void displayMenu(SDL_Renderer* renderer)
     SDL_RenderPresent(renderer);
 }
 /*
- Clean up-method for menu init.
+ Clean up-method for menu init. Removes resources.
  */
 void cleanUpInit()
 {
-    SDL_FreeSurface(sPlayButton);
-    SDL_FreeSurface(sExitButton);
-    SDL_FreeSurface(sMenuBackground);
-    mPlayButton = NULL;
-    mExitButton = NULL;
-    sMenuBackground = NULL;
     SDL_DestroyTexture(mPlayButton);
     SDL_DestroyTexture(mExitButton);
     SDL_DestroyTexture(mMenuBackground);
+}
+/*
+ Clean up-method for connection scene. Removes resources.
+ */
+void cleanUpConnectionScene()
+{
+    strcpy(inputText, "");
+    SDL_DestroyTexture(mIpLabel);
+    SDL_DestroyTexture(mInputField);
+    TTF_CloseFont(font);
     TTF_Quit();
-    //TTF_CloseFont(font);
 }
 /*
  Inits content to be shown such as buttons, texts and background image.
@@ -169,27 +174,36 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
     
     char labelText[30] = "Enter IP-address:";
     sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
-    sInputField =TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
     
     mIpLabel = SDL_CreateTextureFromSurface(renderer, sIpLabel);
-    mInputField = SDL_CreateTextureFromSurface(renderer, sInputField);
     
     SDL_QueryTexture(mIpLabel, NULL, NULL, &ipLabelRect.w, &ipLabelRect.h);
-    SDL_QueryTexture(mInputField, NULL, NULL, &ipInputRect.w, &ipInputRect.h);
     
     ipLabelRect.h = ipLabelRect.h; ipLabelRect.w = ipLabelRect.w;
     ipLabelRect.x = WINDOW_WIDTH/2-ipLabelRect.w/2; ipLabelRect.y = WINDOW_HEIGTH/4;
-    
-    ipInputRect.h = ipInputRect.h; ipInputRect.w = ipInputRect.w;
-    ipInputRect.x = WINDOW_WIDTH/2-ipInputRect.w/2; ipInputRect.y = WINDOW_HEIGTH/3;
+
     if(mInputField == NULL)
     {
-        printf("%s",SDL_GetError());
+        printf("Could not create Input field, SDL_ Error: %s",SDL_GetError());
     }
     if(mIpLabel == NULL)
     {
-        printf("%s",SDL_GetError());
+        printf("Could not create Label, SDL_ Error: %s",SDL_GetError());
     }
+    SDL_FreeSurface(sIpLabel);
+}
+/*
+ Method for init and updating IP-input field
+ */
+void updateText(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+{
+    SDL_DestroyTexture(mInputField);
+    sInputField =TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
+    mInputField = SDL_CreateTextureFromSurface(renderer, sInputField);
+    SDL_QueryTexture(mInputField, NULL, NULL, &ipInputRect.w, &ipInputRect.h);
+    ipInputRect.h = ipInputRect.h; ipInputRect.w = ipInputRect.w;
+    ipInputRect.x = WINDOW_WIDTH/2-ipInputRect.w/2; ipInputRect.y = WINDOW_HEIGTH/3;
+    SDL_FreeSurface(sInputField);
 }
 /*
  Displays content on the connection scene.
@@ -232,12 +246,14 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                 case SDL_QUIT:
                     running = false;
                     flag = false;
+                    cleanUpConnectionScene();
                     break;
                 case SDL_MOUSEBUTTONDOWN:
                     if(mouseX >= gCancelButton.x && mouseX <= gCancelButton.x+gCancelButton.w && mouseY >= gCancelButton.y && mouseY <= gCancelButton.y + gCancelButton.h)//Checks if mouse pointer coordination is within the button
                     {
                         running = false;
                         flag = false;
+                        cleanUpConnectionScene();
                         //menu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                     }
                     if(mouseX >= gContinueButton.x && mouseX <= gContinueButton.x+gContinueButton.w && mouseY >= gContinueButton.y && mouseY <= gContinueButton.y + gContinueButton.h)//Checks if mouse pointer coordination is within the button
@@ -245,6 +261,7 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         //if(inmatningen är rätt och server finns)
                         running = false;
                         flag = true;
+                        cleanUpConnectionScene();
                     }
                     case SDL_KEYDOWN:
                     switch(event.key.keysym.scancode)
@@ -270,11 +287,12 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         case SDL_SCANCODE_9:inputText[ipLength]='9'; ipLength++;
                             break;
                         case SDL_SCANCODE_BACKSPACE:
-                            if(ipLength != 0 && ipLength <= 16)
+                            if(ipLength != 0 || ipLength == 16)
                             {
                                 inputText[ipLength]=' ';
                                 inputText[ipLength-1]=' ';
                                 ipLength--;
+                                printf("Backspace");
                             }
                             break;
                         case SDL_SCANCODE_PERIOD:
@@ -293,11 +311,11 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         strcpy(inputText,SDL_GetClipboardText());
                         ipLength = strlen(inputText);
                     }
-                    if(ipLength<16)
+                    if(ipLength <= 16)
                     {
-                        printf("%s\n",inputText);
-                        printf("%d",ipLength);
-                        sInputField = TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
+                        printf("IP: %s\n",inputText);
+                        printf("Length: %d\n",ipLength);
+                        updateText(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                     }
                     default:
                     break;
