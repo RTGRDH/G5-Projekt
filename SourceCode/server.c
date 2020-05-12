@@ -281,17 +281,10 @@ void clients_null(Clients c[])
 		c[i].IP=0;
 		c[i].port=0;
 		//c[i].player=NULL;
-		switch(i)
-		{
-			case '1': c[i].player = createPlayer(50, 50); setPlayerDirection(c[i].player, 45); setPlayerSpeed(c[i].player, 0);
-			break;
-			case '2': c[i].player = createPlayer(880, 50); setPlayerDirection(c[i].player, 315); setPlayerSpeed(c[i].player, 0);
-			break;
-			case '3': c[i].player = createPlayer(50, 450); setPlayerDirection(c[i].player, 135); setPlayerSpeed(c[i].player, 0);
-			break;
-			case '0': c[i].player = createPlayer(880, 450); setPlayerDirection(c[i].player, 225); setPlayerSpeed(c[i].player, 0);
-			break;
-		}
+			c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
+			c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
+			c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
+			c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
 	}
 }
 
@@ -345,7 +338,7 @@ void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDP
 			sent->address.host = c[i].IP;	/* Set the destination host */	
 			sent->address.port = c[i].port;
 			printf("Bil 1: %.1f,%.1f,%.1f, Bil 2: %.1f,%.1f,%.1f, Bil3:  %.1f,%.1f,%.1f, Bil 4: %.1f,%.1f,%.1f, Boll:  %.1f, %.1f\n", p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
-			sprintf((char *)sent->data, "%d%d%d%d%d%d%d%d%d%d%d%d%d%d\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
+			sprintf((char *)sent->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
 			sent->len = strlen((char *)sent->data) + 1;
 			SDLNet_UDP_Send(sd2, -1, sent);	
 }
