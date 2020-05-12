@@ -320,20 +320,20 @@ void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2,
 void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
 {
             float p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY;
-            p1X = (int)getPlayerPositionX(c[0].player);
-            p1Y = (int)getPlayerPositionY(c[0].player);
-            p1D = (int)getPlayerDirection(c[0].player);
-            p2X = (int)getPlayerPositionX(c[1].player);
-            p2Y = (int)getPlayerPositionY(c[1].player);
-            p2D = (int)getPlayerDirection(c[1].player);
-            p3X = (int)getPlayerPositionX(c[2].player);
-            p3Y = (int)getPlayerPositionY(c[2].player);
-            p3D = (int)getPlayerDirection(c[2].player);
-            p4X = (int)getPlayerPositionX(c[3].player);
-            p4Y = (int)getPlayerPositionY(c[3].player);
-            p4D = (int)getPlayerDirection(c[3].player);
-            bX = (int)getBallPositionX(b);
-            bY = (int)getBallPositionY(b);
+            p1X = getPlayerPositionX(c[0].player);
+            p1Y = getPlayerPositionY(c[0].player);
+            p1D = getPlayerDirection(c[0].player);
+            p2X = getPlayerPositionX(c[1].player);
+            p2Y = getPlayerPositionY(c[1].player);
+            p2D = getPlayerDirection(c[1].player);
+            p3X = getPlayerPositionX(c[2].player);
+            p3Y = getPlayerPositionY(c[2].player);
+            p3D = getPlayerDirection(c[2].player);
+            p4X = getPlayerPositionX(c[3].player);
+            p4Y = getPlayerPositionY(c[3].player);
+            p4D = getPlayerDirection(c[3].player);
+            bX = getBallPositionX(b);
+            bY = getBallPositionY(b);
             printf("Send to Client %d \n", i+1);
             sent->address.host = c[i].IP;    /* Set the destination host */
             sent->address.port = c[i].port;
