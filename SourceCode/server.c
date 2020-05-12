@@ -200,7 +200,7 @@ int main(int argc, char **argv)
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
                 for(i=0; i<*pClientCount; i++)
                 {
-                    //updatePlayerPosition(client[i].player, 0);
+                    updatePlayerPosition(client[i].player, 0);
                     printf("crashsite 3\n");
                     if(distanceBallPlayer(boll,client[i].player)<27)
                     {
