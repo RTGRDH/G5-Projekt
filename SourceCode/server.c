@@ -237,6 +237,7 @@ int main(int argc, char **argv)
 				   printf("har ocksa");
 			}
 
+	
 			for(int i=0; i<=*pClientCount; i++)
 			{
 				if(pRecive->address.port == client[i].port)
