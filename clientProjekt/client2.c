@@ -301,15 +301,19 @@ int main(int argc, char * argv[])
 
             gPlayer.y = y1;
             gPlayer.x = x1;
+            setPlayerDirection(player, d1);
 
             gPlayer2.y = y2;
             gPlayer2.x = x2;
+            setPlayerDirection(player, d2);
 
             gPlayer3.y = y3;
             gPlayer3.x = x3;
+            setPlayerDirection(player, d3);
 
             gPlayer4.y = y4;
             gPlayer4.x = x4;
+            setPlayerDirection(player, d4);
 
             printf("Incoming x1: %f, y1: %f d1:%f \n x2: %f y2: %f d2: %f \n x3: %f, y3: %f d3:%f \n x4: %f y4: %f d4: %f \n bollx: %f bolly: %f\n",x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally);
         }
@@ -384,22 +388,22 @@ bool initMedia()
     gPlayer.x = getPlayerPositionX(player);
     gPlayer.y = getPlayerPositionY(player);
     gPlayer.h = getPlayerHeight();
-    gPlayer.w =getPlayerWidth();
+    gPlayer.w = getPlayerWidth();
 
     gPlayer2.x = getPlayerPositionX(player2);
     gPlayer2.y = getPlayerPositionY(player2);
     gPlayer2.h = getPlayerHeight();
-    gPlayer2.w =getPlayerWidth();
+    gPlayer2.w = getPlayerWidth();
 
     gPlayer3.x = getPlayerPositionX(player3);
     gPlayer3.y = getPlayerPositionY(player3);
     gPlayer3.h = getPlayerHeight();
-    gPlayer3.w =getPlayerWidth();
+    gPlayer3.w = getPlayerWidth();
 
     gPlayer4.x = getPlayerPositionX(player4);
     gPlayer4.y = getPlayerPositionY(player4);
     gPlayer4.h = getPlayerHeight();
-    gPlayer4.w =getPlayerWidth();
+    gPlayer4.w = getPlayerWidth();
 
     gBall.x = getBallPositionX(b);
     gBall.y = getBallPositionY(b);

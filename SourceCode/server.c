@@ -50,7 +50,7 @@ float distanceBallPlayer(Ball boll, Player p);
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 8
 #define TURNING_SPEED 10
-#define ACCELERATION 0.1
+#define ACCELERATION 1
 
 
 int main(int argc, char **argv)
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
                         printf("\nmovement: %d,", movement);
                         printf("client[tmpClient].player: %.0f", getPlayerPositionX(client[tmpClient].player));
                         printf("\n\n\nCLIENT[TMPCLIENT] FUNGERAR\n\n\n\n");
-                        changePlayerDirection(client[tmpClient].player, (float) TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
+                        changePlayerDirection(client[tmpClient].player, (float) TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
                         printf("\nturned left");
                     }
                     printf("\npast left turn");
@@ -200,7 +200,9 @@ int main(int argc, char **argv)
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
                 for(i=0; i<*pClientCount; i++)
                 {
-                    updatePlayerPosition(client[i].player, 0);
+					printf("going to updatePlayerPosition");
+					printf("player speed:%.0f, player direction:%.0f player coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
+                    updatePlayerPosition(client[i].player, 1);
                     printf("crashsite 3\n");
                     if(distanceBallPlayer(boll,client[i].player)<27)
                     {
