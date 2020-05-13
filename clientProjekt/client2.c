@@ -11,6 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
+#include "menu.h"
 
 #define SIZE 4
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
@@ -123,6 +124,10 @@ int main(int argc, char * argv[])
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
+        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        {
+            running = false;
+        }
     }
     //Init backround here
     if(!initPlayField())
@@ -335,8 +340,6 @@ int main(int argc, char * argv[])
         
         SDL_Delay(1000/50);
     }
-    SDL_FreeSurface(imageSurface);
-    imageSurface = NULL;
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(mField);
     SDL_DestroyTexture(mPlayer);
@@ -376,8 +379,13 @@ bool initMedia()
     mPlayer4 = SDL_CreateTextureFromSurface(renderer,sPlayer4);
 
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
-
-
+    
+    SDL_FreeSurface(sPlayer);
+    SDL_FreeSurface(sPlayer2);
+    SDL_FreeSurface(sPlayer3);
+    SDL_FreeSurface(sPlayer4);
+    SDL_FreeSurface(sBall);
+    
     player = createPlayer(50, 50);                                                                        //EV ska detta vara i server?? Vid ny klient
     player2 = createPlayer(880, 50);
     player3 = createPlayer(50, 450);                                                                        //EV ska detta vara i server?? Vid ny klient
@@ -410,12 +418,6 @@ bool initMedia()
     gBall.h = getBallHeight();
     gBall.w = getBallWidth();
 
-    if(NULL == imageSurface)
-    {
-        printf("\nCould not load image. Error: %s",SDL_GetError());
-        printf("\n");
-        flag = false;
-    }
     return flag;
 }
 /**
@@ -432,14 +434,16 @@ bool initPlayField()
         flag = false;
     }
     imageSurface = IMG_Load("images/SoccerField.png");
-    
-    mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
-
     sGoal_Left = IMG_Load("images/Goal_Left.png");
     sGoal_Right = IMG_Load("images/Goal_Right.png");
+
     mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
     mGoal_Left = SDL_CreateTextureFromSurface(renderer, sGoal_Left);
     mGoal_Right = SDL_CreateTextureFromSurface(renderer, sGoal_Right);
+    
+    SDL_FreeSurface(imageSurface);
+    SDL_FreeSurface(sGoal_Left);
+    SDL_FreeSurface(sGoal_Right);
     //Left goal rect init position and define width and heigth
     gGoal_Left.h=370;
     gGoal_Left.w = 50;
