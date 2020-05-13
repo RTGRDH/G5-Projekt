@@ -24,12 +24,18 @@ SDL_Rect ipInputRect;
 
 SDL_Surface *sPlayButton = NULL;
 SDL_Surface *sExitButton = NULL;
+SDL_Surface *sContinueButton = NULL;
+SDL_Surface *sCancelButton = NULL;
+SDL_Surface *sConnectionSceneSurface = NULL;
 SDL_Surface *sMenuBackground = NULL;
 SDL_Surface *sIpLabel = NULL;
 SDL_Surface *sInputField = NULL;
 
 SDL_Texture *mPlayButton = NULL;
 SDL_Texture *mExitButton = NULL;
+SDL_Texture *mContinueButton = NULL;
+SDL_Texture *mCancelButton = NULL;
+SDL_Texture *mConnectionSceneTexture = NULL;
 SDL_Texture *mMenuBackground = NULL;
 SDL_Texture *mIpLabel = NULL;
 SDL_Texture *mInputField = NULL;
@@ -156,6 +162,9 @@ void cleanUpConnectionScene()
 {
     SDL_DestroyTexture(mIpLabel);
     SDL_DestroyTexture(mInputField);
+    SDL_DestroyTexture(mContinueButton);
+    SDL_DestroyTexture(mCancelButton);
+    SDL_DestroyTexture(mConnectionSceneTexture);
     TTF_CloseFont(font);
     TTF_Quit();
 }
@@ -174,7 +183,25 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
     gContinueButton.h = 100; gContinueButton.w = 300;
     gContinueButton.x = WINDOW_WIDTH/2+gContinueButton.w/4; gContinueButton.y = WINDOW_HEIGTH-130;
-    
+    if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
+    {
+        printf("\nCould not initialize SDL_Image. Error: %s",SDL_GetError());
+        printf("\n");
+    }
+    else
+    {
+        sContinueButton = IMG_Load("images/Continue_Button.png");
+        sCancelButton = IMG_Load("images/Cancel_Button.png");
+        sConnectionSceneSurface = IMG_Load("images/Menu_Background.png");
+        mContinueButton = SDL_CreateTextureFromSurface(renderer, sContinueButton);
+        mCancelButton = SDL_CreateTextureFromSurface(renderer, sCancelButton);
+        mConnectionSceneTexture = SDL_CreateTextureFromSurface(renderer, sConnectionSceneSurface);
+        SDL_FreeSurface(sContinueButton);
+        SDL_FreeSurface(sCancelButton);
+        SDL_FreeSurface(sConnectionSceneSurface);
+        //Background link:
+       // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
+    }
     char labelText[30] = "Enter IP-address:";
     sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
     
@@ -214,17 +241,12 @@ void updateText(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_
 void DisplayConnectionScene(SDL_Renderer* renderer)
 {
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 0);
-    SDL_RenderFillRect(renderer, &gCancelButton);
-    SDL_RenderDrawRect(renderer, &gCancelButton);
-    
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 0);
-    SDL_RenderFillRect(renderer, &gContinueButton);
-    SDL_RenderDrawRect(renderer, &gContinueButton);
-
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_RenderCopy(renderer, mConnectionSceneTexture, NULL, &gMenuBackground);
+    SDL_RenderCopy(renderer, mContinueButton, NULL, &gContinueButton);
+    SDL_RenderCopy(renderer, mCancelButton, NULL, &gCancelButton);
     SDL_RenderCopy(renderer, mIpLabel, NULL, &ipLabelRect);
     SDL_RenderCopy(renderer, mInputField, NULL, &ipInputRect);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
     SDL_RenderPresent(renderer);
 }
 /*
@@ -244,6 +266,7 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
         while(SDL_PollEvent(&event))
         {
             DisplayConnectionScene(renderer);
+            updateText(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
             switch (event.type)
             {
                 case SDL_QUIT:
@@ -257,11 +280,9 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         running = false;
                         flag = false;
                         cleanUpConnectionScene();
-                        //menu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                     }
                     if(mouseX >= gContinueButton.x && mouseX <= gContinueButton.x+gContinueButton.w && mouseY >= gContinueButton.y && mouseY <= gContinueButton.y + gContinueButton.h)//Checks if mouse pointer coordination is within the button
                     {
-                        //if(inmatningen är rätt och server finns)
                         running = false;
                         flag = true;
                         cleanUpConnectionScene();
@@ -312,12 +333,6 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                     {
                         strcpy(inputText,SDL_GetClipboardText());
                         ipLength = strlen(inputText);
-                    }
-                    if(ipLength < 31)
-                    {
-                        //printf("IP: %s\n",getIP());
-                        //printf("Length: %d\n",ipLength);
-                        updateText(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                     }
                     default:
                     break;

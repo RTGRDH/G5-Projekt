@@ -72,7 +72,14 @@ int main(int argc, char * argv[])
     int loop=0;
     //Player players[SIZE]={0};
     //int nrOfPlayers=0;
-
+    if(init())
+    {
+        printf("Initialize window and renderer successful.\n");
+        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        {
+            running = false;
+        }
+    }
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
@@ -86,11 +93,10 @@ int main(int argc, char * argv[])
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
-
     //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
-	if (SDLNet_ResolveHost(&saddr, "127.0.0.1", 2000) == -1) 
+	if (SDLNet_ResolveHost(&saddr, getIP(), 2000) == -1)
 	{
-		fprintf(stderr, "SDLNet_ResolveHost(127.0.0.1 2000): %s\n", SDLNet_GetError());
+		fprintf(stderr, "SDLNet_ResolveHost(%s :2000): %s\n",getIP(), SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
@@ -120,15 +126,6 @@ int main(int argc, char * argv[])
     //    }
     //}
     
-
-    if(init())
-    {
-        printf("Initialize window and renderer successful.\n");
-        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
-        {
-            running = false;
-        }
-    }
     //Init backround here
     if(!initPlayField())
     {
