@@ -11,6 +11,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <string.h>
 SDL_Rect gPlayButton;
 SDL_Rect gExitButton;
 SDL_Rect gMenuBackground;

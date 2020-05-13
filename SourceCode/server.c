@@ -55,7 +55,7 @@ float distanceBallPlayer(Ball boll, Player p);
 
 int main(int argc, char **argv)
 {
-    Ball boll = createBall(0,0);
+    Ball boll = createBall(470,260);
     /*setBallPositionX(boll,470);
     setBallPositionY(boll,260);
     setBallDirection(boll,0);
@@ -132,20 +132,20 @@ int main(int argc, char **argv)
 
             if((*pClientCount)==4)
             {
-                printf("movement: %d\n",movement);
+//                printf("movement: %d\n",movement);
                 for(i=0; i<4; i++)
                 {
-                    printf("inne i lopen %d, tmp:%d\n", i, tmpClient);
+//                    printf("inne i lopen %d, tmp:%d\n", i, tmpClient);
                     if(pRecive->address.port==client[i].port)
                     {
                         tmpClient=i;
-                        printf("inne i if %d, %d \n", i, tmpClient);
+//                        printf("inne i if %d, %d \n", i, tmpClient);
                     }
                     //else movement5?
                 }
                 if(pRecive->address.port == client[tmpClient].port)
                 {
-                    printf("crashsite 1: tmp %d  mov %d", tmpClient, movement);
+//                    printf("crashsite 1: tmp %d  mov %d", tmpClient, movement);
                        
 //-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
                     //skelettkod:
@@ -156,54 +156,58 @@ int main(int argc, char **argv)
 
                     if (movement == 1 || movement == 4 || movement==7)
                     {
-                        printf("\ngonna turn left(1,4,7)");
-                        printf("\nmovement: %d,", movement);
-                        printf("client[tmpClient].player: %.0f", getPlayerPositionX(client[tmpClient].player));
-                        printf("\n\n\nCLIENT[TMPCLIENT] FUNGERAR\n\n\n\n");
+//                        printf("\ngonna turn left(1,4,7)");
+//                        printf("\nmovement: %d,", movement);
+//                        printf("client[tmpClient].player: %.0f", getPlayerPositionX(client[tmpClient].player));
+//                        printf("\n\n\nCLIENT[TMPCLIENT] FUNGERAR\n\n\n\n");
                         changePlayerDirection(client[tmpClient].player, (float) TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
-                        printf("\nturned left");
+//                        printf("\nturned left");
                     }
-                    printf("\npast left turn");
+//                    printf("\npast left turn");
 
                     if (movement == 3 || movement == 6 || movement == 9)
                     {
-                        printf("\ngonna turn right(3,6,9)");
-                        printf("\n %d", movement);
+//                        printf("\ngonna turn right(3,6,9)");
+//                        printf("\n %d", movement);
                         changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
-                    printf("\nturned right");
+//                    printf("\nturned right");
                     }
-                    printf("\npast right turn");
+//                    printf("\npast right turn");
 
                     if (1 <= movement && movement <= 3)
                     {
-                        printf("\ngonna accelerate(1,2,3)");
-                        printf("\n %d", movement);
+//                        printf("\ngonna accelerate(1,2,3)");
+//                        printf("\n %d", movement);
                         changePlayerSpeed(client[tmpClient].player, ACCELERATION);
-                        printf("\naccelerated");
+//                        printf("\naccelerated");
                     }
-                    printf("\npast acceleration");
+//                    printf("\npast acceleration");
 
                     if (7 <= movement && movement <= 9)
                     {
-                        printf("\ngonna brake(7,8,9)");
-                        printf("\n %d", movement);
+//                        printf("\ngonna brake(7,8,9)");
+//                        printf("\n %d", movement);
                         changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
-                        printf("\nbraked");
+//                        printf("\nbraked");
                     }
-                    printf("\npast braking");
+//                    printf("\npast braking");
                     movement = 5;         //reset the movement variable to base case
                     //updatePlayerPosition(client[tmpClient].player, 0);
                     speedLimit(client[tmpClient].player);        //this crashes the server for some reason
                     //printf("crashsite 2.2");
                 }
-                printf("crashsite 2\n");
+//                printf("crashsite 2\n");
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
+				printf("\nStart");
                 for(i=0; i<*pClientCount; i++)
                 {
-					printf("going to updatePlayerPosition");
-					printf("player speed:%.0f, player direction:%.0f player coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
+					printf("\ngoing to updatePlayerPosition player %d\n", i+1);
+					printf("speed:%.0f, direction:%.0f coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
                     updatePlayerPosition(client[i].player, 1);
-                    printf("crashsite 3\n");
+					colissionDetectionPlayerArena(client[i].player);
+					printf("did updatePlayerPosition player %d\n", i+1);
+					printf("speed:%.0f, direction:%.0f coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
+//                    printf("crashsite 3\n");
                     if(distanceBallPlayer(boll,client[i].player)<27)
                     {
                         setBallDirection(boll,angleBallPlayer(boll,client[i].player));
@@ -211,7 +215,11 @@ int main(int argc, char **argv)
                     }
                 }
                 //collision detection between players and players
+				
+				printf("Ball position on server before update: (%.0f,%.0f)\n", getBallPositionX(boll),getBallPositionY(boll));
                 updateBallPosition(boll,1);
+				colissionDetectionBallArena(boll);
+				printf("Ball position on server after update: (%.0f,%.0f)\n", getBallPositionX(boll),getBallPositionY(boll));
                 
                 if(ballRightGoalCollision(&gBall))
                 {
@@ -236,7 +244,7 @@ int main(int argc, char **argv)
                     client[i].gPlayer.x=getPlayerPositionX(client[i].player);
                 }
                 
-                   printf("har ocksa");
+//                   printf("har ocksa");
             }
 
             for(int i=0; i<=*pClientCount; i++)
@@ -244,7 +252,7 @@ int main(int argc, char **argv)
                 if(pRecive->address.port == client[i].port)
                 {
                     sscanf((char * )pRecive->data, "%d \n", &movement);
-                    printf("incomming %d\n",movement);
+//                    printf("incomming %d\n",movement);
                     if((*pClientCount)==4)
                     {
                         clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
@@ -268,7 +276,7 @@ int main(int argc, char **argv)
         }
     }
  
-    printf("kracha inte");
+//    printf("kracha inte");
     /* Clean and exit */
     SDLNet_FreePacket(pSent);
     SDLNet_FreePacket(pRecive);
@@ -336,10 +344,10 @@ void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDP
             p4D = getPlayerDirection(c[3].player);
             bX = getBallPositionX(b);
             bY = getBallPositionY(b);
-            printf("Send to Client %d \n", i+1);
+            printf("\nSend to Client %d \n", i+1);
             sent->address.host = c[i].IP;    /* Set the destination host */
             sent->address.port = c[i].port;
-            printf("Bil 1: %.1f,%.1f,%.1f, Bil 2: %.1f,%.1f,%.1f, Bil3:  %.1f,%.1f,%.1f, Bil 4: %.1f,%.1f,%.1f, Boll:  %.1f, %.1f\n", p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
+            printf("clientPos_send data\nBil1: (%.0f,%.0f),%.0f, \nBil2: (%.0f,%.0f),%.0f, \nBil3: (%.0f,%.0f),%.0f, \nBil4: (%.0f,%.0f),%.0f, \nBoll: (%.0f,%.0f)\nEnd loop\n", p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
             sprintf((char *)sent->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
             sent->len = strlen((char *)sent->data) + 1;
             SDLNet_UDP_Send(sd2, -1, sent);
