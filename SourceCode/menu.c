@@ -12,6 +12,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 #include <string.h>
+#define PUBLIC
+#define PRIVATE static
 SDL_Rect gPlayButton;
 SDL_Rect gExitButton;
 SDL_Rect gMenuBackground;
@@ -34,7 +36,7 @@ SDL_Texture *mInputField = NULL;
 
 SDL_Window *connectWindow = NULL;
 TTF_Font *font = NULL;
-char inputText[30] = "";
+PRIVATE char inputText[30] = "";
 SDL_Color fontColor={0,0,0}, backgroundColor={255,255,255};
 
 /*
@@ -75,7 +77,7 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
  Eventhandler for the menu. Calls display menu-method and returns true if player wants to play.
  The flag is sent back to main.
  */
-bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+PUBLIC bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
@@ -152,7 +154,6 @@ void cleanUpInit()
  */
 void cleanUpConnectionScene()
 {
-    strcpy(inputText, "");
     SDL_DestroyTexture(mIpLabel);
     SDL_DestroyTexture(mInputField);
     TTF_CloseFont(font);
@@ -165,8 +166,9 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
 {
     if(TTF_Init() == false)
     {
-        printf("%s",TTF_GetError());
+        printf("%s\n",TTF_GetError());
     }
+    strcpy(inputText, "");
     font = TTF_OpenFont("/Fonts/Arial.ttf", 25);
     gCancelButton.h = 100; gCancelButton.w = 300;
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
@@ -185,11 +187,11 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
 
     if(mInputField == NULL)
     {
-        printf("Could not create Input field, SDL_ Error: %s",SDL_GetError());
+        printf("Could not create Input field, SDL_ Error: %s\n",SDL_GetError());
     }
     if(mIpLabel == NULL)
     {
-        printf("Could not create Label, SDL_ Error: %s",SDL_GetError());
+        printf("Could not create Label, SDL_ Error: %s\n",SDL_GetError());
     }
     SDL_FreeSurface(sIpLabel);
 }
@@ -293,7 +295,6 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                                 inputText[ipLength]=' ';
                                 inputText[ipLength-1]=' ';
                                 ipLength--;
-                                printf("Backspace");
                             }
                             break;
                         case SDL_SCANCODE_PERIOD:
@@ -314,8 +315,8 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                     }
                     if(ipLength < 31)
                     {
-                        printf("IP: %s\n",inputText);
-                        printf("Length: %d\n",ipLength);
+                        //printf("IP: %s\n",getIP());
+                        //printf("Length: %d\n",ipLength);
                         updateText(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                     }
                     default:
@@ -325,5 +326,11 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
         }
     }
         return flag;
-    
+}
+
+PUBLIC const char *getIP()
+{
+    static char IP[30];
+    strcpy(IP, inputText);
+    return IP;
 }
