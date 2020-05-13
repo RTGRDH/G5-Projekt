@@ -260,6 +260,9 @@ int main(int argc, char **argv)
                     //client_send(client, pRecive, pSent, sd, i, pClientCount, a);
                     x=1;
                 }
+            }
+            for(int i=0; i<=*pClientCount; i++)
+            {
                 if(x==0)
                 {
                     if(client[i].IP == 0 && client[i].port == 0)
@@ -329,26 +332,29 @@ void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2,
 
 void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount)
 {
-            float p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY;
-            p1X = getPlayerPositionX(c[0].player);
-            p1Y = getPlayerPositionY(c[0].player);
-            p1D = getPlayerDirection(c[0].player);
-            p2X = getPlayerPositionX(c[1].player);
-            p2Y = getPlayerPositionY(c[1].player);
-            p2D = getPlayerDirection(c[1].player);
-            p3X = getPlayerPositionX(c[2].player);
-            p3Y = getPlayerPositionY(c[2].player);
-            p3D = getPlayerDirection(c[2].player);
-            p4X = getPlayerPositionX(c[3].player);
-            p4Y = getPlayerPositionY(c[3].player);
-            p4D = getPlayerDirection(c[3].player);
-            bX = getBallPositionX(b);
-            bY = getBallPositionY(b);
-            printf("\nSend to Client %d \n", i+1);
-            sent->address.host = c[i].IP;    /* Set the destination host */
-            sent->address.port = c[i].port;
-            printf("clientPos_send data\nBil1: (%.0f,%.0f),%.0f, \nBil2: (%.0f,%.0f),%.0f, \nBil3: (%.0f,%.0f),%.0f, \nBil4: (%.0f,%.0f),%.0f, \nBoll: (%.0f,%.0f)\nEnd loop\n", p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
-            sprintf((char *)sent->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
-            sent->len = strlen((char *)sent->data) + 1;
-            SDLNet_UDP_Send(sd2, -1, sent);
+            for(int j=0; j<*pClientCount;j++)
+            {
+                float p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY;
+                p1X = getPlayerPositionX(c[0].player);
+                p1Y = getPlayerPositionY(c[0].player);
+                p1D = getPlayerDirection(c[0].player);
+                p2X = getPlayerPositionX(c[1].player);
+                p2Y = getPlayerPositionY(c[1].player);
+                p2D = getPlayerDirection(c[1].player);
+                p3X = getPlayerPositionX(c[2].player);
+                p3Y = getPlayerPositionY(c[2].player);
+                p3D = getPlayerDirection(c[2].player);
+                p4X = getPlayerPositionX(c[3].player);
+                p4Y = getPlayerPositionY(c[3].player);
+                p4D = getPlayerDirection(c[3].player);
+                bX = getBallPositionX(b);
+                bY = getBallPositionY(b);
+                printf("\nSend to Client %d \n", i+1);
+                sent->address.host = c[j].IP;    /* Set the destination host */
+                sent->address.port = c[j].port;
+                printf("clientPos_send data\nBil1: (%.0f,%.0f),%.0f, \nBil2: (%.0f,%.0f),%.0f, \nBil3: (%.0f,%.0f),%.0f, \nBil4: (%.0f,%.0f),%.0f, \nBoll: (%.0f,%.0f)\nEnd loop\n", p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
+                sprintf((char *)sent->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",  p1X,p1Y,p1D,p2X,p2Y,p2D,p3X,p3Y,p3D,p4X,p4Y,p4D,bX,bY);
+                sent->len = strlen((char *)sent->data) + 1;
+                SDLNet_UDP_Send(sd2, -1, sent);
+            }
 }
