@@ -31,9 +31,11 @@ typedef struct clients Clients;
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 //server funktioner
 void clients_null(Clients c[]);
+void clients_start(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
 void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount);
+void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll, int* pt1NrOfGoals, int* pt2NrOfGoals);
 //main funktioner
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
@@ -46,20 +48,16 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 
-#define SPEED (75); //75 is optimal, 300 for dev.
+#define SPEED (2); //75 is optimal, 300 for dev.
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 8
-#define TURNING_SPEED 10
-#define ACCELERATION 1
+#define TURNING_SPEED 4
+#define ACCELERATION 0.2
 
 
 int main(int argc, char **argv)
 {
     Ball boll = createBall(470,260);
-    /*setBallPositionX(boll,470);
-    setBallPositionY(boll,260);
-    setBallDirection(boll,0);
-    setBallSpeed(boll,0);*/
     SDL_Rect gField;
     // struct to hold the position and size of the sprite
     SDL_Rect gBall;
@@ -83,10 +81,16 @@ int main(int argc, char **argv)
     };
     clients_null(client);
 
-    int quit, a, b, x;
+    int quit, a, b;
     int clientCount=0;
     int* pClientCount;
+    int t1NrOfGoals=0;
+    int t2NrOfGoals=0;
+    int* pt1NrOfGoals;
+    int* pt2NrOfGoals;
     pClientCount=&clientCount;
+    pt1NrOfGoals=&t1NrOfGoals;
+    pt2NrOfGoals=&t2NrOfGoals;
 
  
     /* Initialize SDL_net */
@@ -109,43 +113,33 @@ int main(int argc, char **argv)
         fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);
     }
-    printf("innan boll");
-     /*setBallPositionX(boll,470);
-    setBallPositionY(boll,260);
-    setBallDirection(boll,0);
-    setBallSpeed(boll,0);*/
-    printf("edter boll");
+    
     /* Main loop */
     quit = 0;
     while (!quit)
     {
+        int slow=0;
         /* Wait a packet. UDP_Recv returns != 0 if a packet is coming */
         if (SDLNet_UDP_Recv(sd, pRecive))
         {
-            //printf("UDP Packet incoming\n");
-            //printf("\tData:    %s\n", (char *)pRecive->data);
-            //printf("\tAddress: %x %x\n", pRecive->address.host, pRecive->address.port);
             int tmpClient=0;
             int i,x=0, movement;
             float tmpMovement;
+        
             sscanf((char * )pRecive->data, "%d \n", &movement);
 
             if((*pClientCount)==4)
             {
-//                printf("movement: %d\n",movement);
                 for(i=0; i<4; i++)
                 {
-//                    printf("inne i lopen %d, tmp:%d\n", i, tmpClient);
                     if(pRecive->address.port==client[i].port)
                     {
                         tmpClient=i;
-//                        printf("inne i if %d, %d \n", i, tmpClient);
                     }
                     //else movement5?
                 }
                 if(pRecive->address.port == client[tmpClient].port)
                 {
-//                    printf("crashsite 1: tmp %d  mov %d", tmpClient, movement);
                        
 //-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
                     //skelettkod:
@@ -156,108 +150,33 @@ int main(int argc, char **argv)
 
                     if (movement == 1 || movement == 4 || movement==7)
                     {
-//                        printf("\ngonna turn left(1,4,7)");
-//                        printf("\nmovement: %d,", movement);
-//                        printf("client[tmpClient].player: %.0f", getPlayerPositionX(client[tmpClient].player));
-//                        printf("\n\n\nCLIENT[TMPCLIENT] FUNGERAR\n\n\n\n");
                         changePlayerDirection(client[tmpClient].player, (float) TURNING_SPEED - getPlayerSpeed(client[tmpClient].player));
-//                        printf("\nturned left");
                     }
-//                    printf("\npast left turn");
-
                     if (movement == 3 || movement == 6 || movement == 9)
                     {
-//                        printf("\ngonna turn right(3,6,9)");
-//                        printf("\n %d", movement);
                         changePlayerDirection(client[tmpClient].player, -TURNING_SPEED + getPlayerSpeed(client[tmpClient].player));
-//                    printf("\nturned right");
                     }
-//                    printf("\npast right turn");
-
                     if (1 <= movement && movement <= 3)
                     {
-//                        printf("\ngonna accelerate(1,2,3)");
-//                        printf("\n %d", movement);
                         changePlayerSpeed(client[tmpClient].player, ACCELERATION);
-//                        printf("\naccelerated");
                     }
-//                    printf("\npast acceleration");
-
                     if (7 <= movement && movement <= 9)
                     {
-//                        printf("\ngonna brake(7,8,9)");
-//                        printf("\n %d", movement);
                         changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
-//                        printf("\nbraked");
                     }
-//                    printf("\npast braking");
                     movement = 5;         //reset the movement variable to base case
-                    //updatePlayerPosition(client[tmpClient].player, 0);
-                    speedLimit(client[tmpClient].player);        //this crashes the server for some reason
-                    //printf("crashsite 2.2");
+                    speedLimit(client[tmpClient].player);   
                 }
-//                printf("crashsite 2\n");
-//-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
-				printf("\nStart");
-                for(i=0; i<*pClientCount; i++)
-                {
-					printf("\ngoing to updatePlayerPosition player %d\n", i+1);
-					printf("speed:%.0f, direction:%.0f coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
-                    updatePlayerPosition(client[i].player, 1);
-					colissionDetectionPlayerArena(client[i].player);
-					printf("did updatePlayerPosition player %d\n", i+1);
-					printf("speed:%.0f, direction:%.0f coords (%.0f,%0.f)\n", getPlayerSpeed(client[i].player), getPlayerDirection(client[i].player), getPlayerPositionX(client[i].player), getPlayerPositionY(client[i].player));
-//                    printf("crashsite 3\n");
-                    if(distanceBallPlayer(boll,client[i].player)<27)
-                    {
-                        setBallDirection(boll,angleBallPlayer(boll,client[i].player));
-                        setBallSpeed(boll, getBallSpeed(boll)*0.7 + getPlayerSpeed(client[i].player)+2);
-                    }
-                }
-                //collision detection between players and players
-				
-				printf("Ball position on server before update: (%.0f,%.0f)\n", getBallPositionX(boll),getBallPositionY(boll));
-                updateBallPosition(boll,1);
-				colissionDetectionBallArena(boll);
-				printf("Ball position on server after update: (%.0f,%.0f)\n", getBallPositionX(boll),getBallPositionY(boll));
-                
-                if(ballRightGoalCollision(&gBall))
-                {
-                    setBallPositionX(boll,470);
-                    setBallPositionY(boll,260);
-                    setBallSpeed(boll,0);
-                //   P1Score++;
-                }
-                else if(ballLeftGoalCollision(&gBall))
-                {
-                    setBallPositionX(boll,470);
-                    setBallPositionY(boll,260);
-                    setBallSpeed(boll,0);
-                }
-                
-                gBall.y = getBallPositionY(boll);
-                   gBall.x = getBallPositionX(boll);
-                
-                for(i=0;i<4;i++)
-                {
-                    client[i].gPlayer.y=getPlayerPositionY(client[i].player);
-                    client[i].gPlayer.x=getPlayerPositionX(client[i].player);
-                }
-                
-//                   printf("har ocksa");
-            }
-
+            }   
             for(int i=0; i<=*pClientCount; i++)
             {
                 if(pRecive->address.port == client[i].port)
                 {
                     sscanf((char * )pRecive->data, "%d \n", &movement);
-//                    printf("incomming %d\n",movement);
                     if((*pClientCount)==4)
                     {
                         clientPos_send(client, boll, pRecive, pSent, sd, i, pClientCount);
                     }
-                    //client_send(client, pRecive, pSent, sd, i, pClientCount, a);
                     x=1;
                 }
             }
@@ -273,10 +192,16 @@ int main(int argc, char **argv)
                     }
                 }
             }
+            if(*pt1NrOfGoals==3 || *pt2NrOfGoals==3)
+            {
+                quit=1;
+            }
             /* Quit if packet contains "quit" */
             if (strcmp((char *)pSent->data, "quit") == 0)
                 quit = 1;
         }
+            gameEngine (client, boll, pClientCount, &gBall, pt1NrOfGoals,pt2NrOfGoals);
+
     }
  
 //    printf("kracha inte");
@@ -293,12 +218,17 @@ void clients_null(Clients c[])
     {
         c[i].IP=0;
         c[i].port=0;
-        //c[i].player=NULL;
-            c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
-            c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
-            c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
-            c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
     }
+    clients_start(c);
+}
+
+void clients_start(Clients c[])
+{
+    c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
+    c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
+    c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
+    c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
+
 }
 
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
@@ -357,4 +287,41 @@ void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDP
                 sent->len = strlen((char *)sent->data) + 1;
                 SDLNet_UDP_Send(sd2, -1, sent);
             }
+}
+void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll, int* pt1NrOfGoals, int* pt2NrOfGoals)
+{
+     for(int i=0; i<*pClientCount; i++)
+                {
+					updatePlayerPosition(c[i].player, 0.5);
+					colissionDetectionPlayerArena(c[i].player);
+                    if(distanceBallPlayer(b,c[i].player)<27)
+                    {
+                        setBallDirection(b,angleBallPlayer(b,c[i].player));
+                        setBallSpeed(b, getBallSpeed(b)*0.7 + getPlayerSpeed(c[i].player)+2);
+                    }
+                }
+                //collision detection between players and players
+                updateBallPosition(b,0.5);
+				colissionDetectionBallArena(b);
+                
+                if(ballRightGoalCollision(gBoll))
+                {
+                    setBallPositionX(b,470);
+                    setBallPositionY(b,260);
+                    setBallSpeed(b,0);
+                    (*pt1NrOfGoals)++;
+                    clients_start(c);
+                }
+                else if(ballLeftGoalCollision(gBoll))
+                {
+                    setBallPositionX(b,470);
+                    setBallPositionY(b,260);
+                    setBallSpeed(b,0);
+                    (*pt2NrOfGoals)++;
+                    clients_start(c);
+                }
+                
+                gBoll->y = getBallPositionY(b);
+                gBoll->x = getBallPositionX(b);
+                
 }

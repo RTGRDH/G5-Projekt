@@ -1,0 +1,169 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		A7F096422469CA0B00B6FB85 /* client.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = client.o; sourceTree = "<group>"; };
+		A7F096432469CA0B00B6FB85 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		A7F096442469CA0B00B6FB85 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		A7F096452469CA0B00B6FB85 /* client2.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = client2.o; sourceTree = "<group>"; };
+		A7F096462469CA0B00B6FB85 /* makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		A7F096472469CA0B00B6FB85 /* ball.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ball.o; sourceTree = "<group>"; };
+		A7F096482469CA0B00B6FB85 /* ball.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ball.h; sourceTree = "<group>"; };
+		A7F096492469CA0B00B6FB85 /* gameLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gameLogic.h; sourceTree = "<group>"; };
+		A7F0964A2469CA0B00B6FB85 /* GameLogic.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = GameLogic.o; sourceTree = "<group>"; };
+		A7F0964B2469CA0B00B6FB85 /* Player.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Player.o; sourceTree = "<group>"; };
+		A7F0964C2469CA0B00B6FB85 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A7F0964D2469CA0B00B6FB85 /* theGame.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = theGame.exe; sourceTree = "<group>"; };
+		A7F0964E2469CA0B00B6FB85 /* client.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
+		A7F0964F2469CA0B00B6FB85 /* gameLogic.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gameLogic.c; sourceTree = "<group>"; };
+		A7F096502469CA0B00B6FB85 /* ball.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ball.c; sourceTree = "<group>"; };
+		A7F096512469CA0B00B6FB85 /* client2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = client2.c; sourceTree = "<group>"; };
+		A7F096522469CA0B00B6FB85 /* Player.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Player.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		A7F0963C2469CA0B00B6FB85 = {
+			isa = PBXGroup;
+			children = (
+				A7F096422469CA0B00B6FB85 /* client.o */,
+				A7F096432469CA0B00B6FB85 /* .DS_Store */,
+				A7F096442469CA0B00B6FB85 /* Images */,
+				A7F096452469CA0B00B6FB85 /* client2.o */,
+				A7F096462469CA0B00B6FB85 /* makefile */,
+				A7F096472469CA0B00B6FB85 /* ball.o */,
+				A7F096482469CA0B00B6FB85 /* ball.h */,
+				A7F096492469CA0B00B6FB85 /* gameLogic.h */,
+				A7F0964A2469CA0B00B6FB85 /* GameLogic.o */,
+				A7F0964B2469CA0B00B6FB85 /* Player.o */,
+				A7F0964C2469CA0B00B6FB85 /* Player.h */,
+				A7F0964D2469CA0B00B6FB85 /* theGame.exe */,
+				A7F0964E2469CA0B00B6FB85 /* client.c */,
+				A7F0964F2469CA0B00B6FB85 /* gameLogic.c */,
+				A7F096502469CA0B00B6FB85 /* ball.c */,
+				A7F096512469CA0B00B6FB85 /* client2.c */,
+				A7F096522469CA0B00B6FB85 /* Player.c */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		A7F096412469CA0B00B6FB85 /* clientProjekt */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = A7F096532469CA0B00B6FB85 /* Build configuration list for PBXLegacyTarget "clientProjekt" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/ernstreutergardh/Documents/GitHub/G5-Projekt/clientProjekt";
+			dependencies = (
+			);
+			name = clientProjekt;
+			passBuildSettingsInEnvironment = 1;
+			productName = clientProjekt;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		A7F0963D2469CA0B00B6FB85 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A7F096402469CA0B00B6FB85 /* Build configuration list for PBXProject "clientProjekt" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A7F0963C2469CA0B00B6FB85;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7F096412469CA0B00B6FB85 /* clientProjekt */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		A7F0963E2469CA0B00B6FB85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		A7F0963F2469CA0B00B6FB85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		A7F096542469CA0B00B6FB85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = clientProjekt;
+			};
+			name = Debug;
+		};
+		A7F096552469CA0B00B6FB85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = clientProjekt;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A7F096402469CA0B00B6FB85 /* Build configuration list for PBXProject "clientProjekt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F0963E2469CA0B00B6FB85 /* Debug */,
+				A7F0963F2469CA0B00B6FB85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A7F096532469CA0B00B6FB85 /* Build configuration list for PBXLegacyTarget "clientProjekt" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F096542469CA0B00B6FB85 /* Debug */,
+				A7F096552469CA0B00B6FB85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A7F0963D2469CA0B00B6FB85 /* Project object */;
+}

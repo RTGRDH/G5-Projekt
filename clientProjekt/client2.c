@@ -11,7 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
-#include "menu.h"
+//#include "menu.h"
 
 #define SIZE 4
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
