@@ -301,17 +301,21 @@ int main(int argc, char * argv[])
 
             gPlayer.y = y1;
             gPlayer.x = x1;
+            setPlayerDirection(player, d1);
 
             gPlayer2.y = y2;
             gPlayer2.x = x2;
+            setPlayerDirection(player2, d2);
 
             gPlayer3.y = y3;
             gPlayer3.x = x3;
+            setPlayerDirection(player3, d3);
 
             gPlayer4.y = y4;
             gPlayer4.x = x4;
+            setPlayerDirection(player4, d4);
 
-            printf("Incoming x1: %f, y1: %f d1:%f \n x2: %f y2: %f d2: %f \n x3: %f, y3: %f d3:%f \n x4: %f y4: %f d4: %f \n bollx: %f bolly: %f\n",x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally);
+            printf("Incoming\n Bil 1: x1:%.0f, y1:%.0f d1:%.0f \n Bil2: x2:%.0f y2:%.0f d2:%.0f \n Bil3: x3:%.0f, y3:%.0f d3:%.0f \n Bil4: x4:%.0f y4:%.0f d4:%.0f \n Boll: x_b:%.0f y_b:%.0f\n",x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally);
         }
         
         
@@ -319,12 +323,12 @@ int main(int argc, char * argv[])
         renderBackground();
      
         SDL_RenderCopy(renderer,mBall,NULL,&gBall);
-        SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, -getPlayerDirection(player), NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, getPlayerDirection(player)-90, NULL, SDL_FLIP_NONE);
 
-        SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, -getPlayerDirection(player2), NULL, SDL_FLIP_NONE);
-        SDL_RenderCopyEx(renderer, mPlayer3, NULL, &gPlayer3, -getPlayerDirection(player3), NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, getPlayerDirection(player2)-90, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer3, NULL, &gPlayer3, getPlayerDirection(player3)-90, NULL, SDL_FLIP_NONE);
 
-        SDL_RenderCopyEx(renderer, mPlayer4, NULL, &gPlayer4, -getPlayerDirection(player4), NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, mPlayer4, NULL, &gPlayer4, getPlayerDirection(player4)-90, NULL, SDL_FLIP_NONE);
         SDL_RenderPresent(renderer);
      // SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
@@ -384,22 +388,22 @@ bool initMedia()
     gPlayer.x = getPlayerPositionX(player);
     gPlayer.y = getPlayerPositionY(player);
     gPlayer.h = getPlayerHeight();
-    gPlayer.w =getPlayerWidth();
+    gPlayer.w = getPlayerWidth();
 
     gPlayer2.x = getPlayerPositionX(player2);
     gPlayer2.y = getPlayerPositionY(player2);
     gPlayer2.h = getPlayerHeight();
-    gPlayer2.w =getPlayerWidth();
+    gPlayer2.w = getPlayerWidth();
 
     gPlayer3.x = getPlayerPositionX(player3);
     gPlayer3.y = getPlayerPositionY(player3);
     gPlayer3.h = getPlayerHeight();
-    gPlayer3.w =getPlayerWidth();
+    gPlayer3.w = getPlayerWidth();
 
     gPlayer4.x = getPlayerPositionX(player4);
     gPlayer4.y = getPlayerPositionY(player4);
     gPlayer4.h = getPlayerHeight();
-    gPlayer4.w =getPlayerWidth();
+    gPlayer4.w = getPlayerWidth();
 
     gBall.x = getBallPositionX(b);
     gBall.y = getBallPositionY(b);
