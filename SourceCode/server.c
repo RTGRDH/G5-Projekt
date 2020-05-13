@@ -31,10 +31,11 @@ typedef struct clients Clients;
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 //server funktioner
 void clients_null(Clients c[]);
+void clients_start(Clients c[]);
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount);
 void client_send(Clients c[], UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount, int a);
 void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDPsocket sd2, int i, int* pClientCount);
-void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll);
+void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll, int* pt1NrOfGoals, int* pt2NrOfGoals);
 //main funktioner
 bool ballRightGoalCollision(SDL_Rect* gBall);
 bool ballLeftGoalCollision(SDL_Rect* gBall);
@@ -80,10 +81,16 @@ int main(int argc, char **argv)
     };
     clients_null(client);
 
-    int quit, a, b, x;
+    int quit, a, b;
     int clientCount=0;
     int* pClientCount;
+    int t1NrOfGoals=0;
+    int t2NrOfGoals=0;
+    int* pt1NrOfGoals;
+    int* pt2NrOfGoals;
     pClientCount=&clientCount;
+    pt1NrOfGoals=&t1NrOfGoals;
+    pt2NrOfGoals=&t2NrOfGoals;
 
  
     /* Initialize SDL_net */
@@ -128,7 +135,6 @@ int main(int argc, char **argv)
                     if(pRecive->address.port==client[i].port)
                     {
                         tmpClient=i;
-
                     }
                     //else movement5?
                 }
@@ -159,7 +165,7 @@ int main(int argc, char **argv)
                         changePlayerSpeed(client[tmpClient].player, -ACCELERATION);
                     }
                     movement = 5;         //reset the movement variable to base case
-                    speedLimit(client[tmpClient].player);        
+                    speedLimit(client[tmpClient].player);   
                 }
             }   
             for(int i=0; i<=*pClientCount; i++)
@@ -186,11 +192,15 @@ int main(int argc, char **argv)
                     }
                 }
             }
+            if(*pt1NrOfGoals==3 || *pt2NrOfGoals==3)
+            {
+                quit=1;
+            }
             /* Quit if packet contains "quit" */
             if (strcmp((char *)pSent->data, "quit") == 0)
                 quit = 1;
         }
-        gameEngine (client, boll, pClientCount, &gBall);
+            gameEngine (client, boll, pClientCount, &gBall, pt1NrOfGoals,pt2NrOfGoals);
 
     }
  
@@ -208,12 +218,17 @@ void clients_null(Clients c[])
     {
         c[i].IP=0;
         c[i].port=0;
-        //c[i].player=NULL;
-            c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
-            c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
-            c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
-            c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
     }
+    clients_start(c);
+}
+
+void clients_start(Clients c[])
+{
+    c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
+    c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
+    c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
+    c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
+
 }
 
 void client_create(Clients c[], UDPpacket *recive, int i, int* pClientCount)
@@ -273,7 +288,7 @@ void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDP
                 SDLNet_UDP_Send(sd2, -1, sent);
             }
 }
-void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll)
+void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll, int* pt1NrOfGoals, int* pt2NrOfGoals)
 {
      for(int i=0; i<*pClientCount; i++)
                 {
@@ -286,7 +301,7 @@ void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll)
                     }
                 }
                 //collision detection between players and players
-                updateBallPosition(b,1);
+                updateBallPosition(b,0.5);
 				colissionDetectionBallArena(b);
                 
                 if(ballRightGoalCollision(gBoll))
@@ -294,13 +309,16 @@ void gameEngine (Clients c[], Ball b, int* pClientCount, SDL_Rect* gBoll)
                     setBallPositionX(b,470);
                     setBallPositionY(b,260);
                     setBallSpeed(b,0);
-                //   P1Score++;
+                    (*pt1NrOfGoals)++;
+                    clients_start(c);
                 }
                 else if(ballLeftGoalCollision(gBoll))
                 {
                     setBallPositionX(b,470);
                     setBallPositionY(b,260);
                     setBallSpeed(b,0);
+                    (*pt2NrOfGoals)++;
+                    clients_start(c);
                 }
                 
                 gBoll->y = getBallPositionY(b);

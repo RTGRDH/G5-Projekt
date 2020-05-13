@@ -11,7 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
-#include "menu.h"
+//#include "menu.h"
 
 #define SIZE 4
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
@@ -124,10 +124,10 @@ int main(int argc, char * argv[])
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
-        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        /*if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
         {
             running = false;
-        }
+        }*/
     }
     //Init backround here
     if(!initPlayField())
