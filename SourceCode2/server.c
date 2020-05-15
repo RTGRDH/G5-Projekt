@@ -251,7 +251,7 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB, int* pt1NrOfGoals, int* pt2N
         setBallPositionY(b,260);
         setBallSpeed(b,0);
         (*pt1NrOfGoals)++;
-        printf("\nBlue team scores! Orange team has %d goals.", *pt1NrOfGoals);
+        printf("\nBlue team scores! Blue team has %d goals.", *pt1NrOfGoals);
         clients_start(c);
     //   P1Score++;
     }
