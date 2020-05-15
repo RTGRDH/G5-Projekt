@@ -6,7 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
- //#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include "Player.h"
 #include <math.h>
 #include "ball.h"
@@ -66,7 +66,6 @@ int main(int argc, char * argv[])
     Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
     Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
     Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
-    Mix_PlayMusic(backgroundSound, -1);   
 
     UDPsocket s;                                                
 	IPaddress saddr;                                            
@@ -175,9 +174,23 @@ int main(int argc, char * argv[])
     bool down = false;
     bool left = false;
     bool right = false;
+    bool musicStart = false;
+    bool musicStop = false;
+    bool musicPlaying = false;
 //------------------------------------------------------SCAN KEYBOARD--------------------------------------------------------------------------
     while(running)
     {
+        if(musicStart == true && musicPlaying == false)
+        {
+            Mix_PlayMusic(backgroundSound, -1);
+            musicPlaying = true;
+        }
+        if(musicStop == true && musicPlaying == true)
+        {
+            Mix_HaltMusic();
+            musicPlaying = false;
+        }
+
         SDL_Delay(14);
     /**
     While loop checking if an event occured.
@@ -219,6 +232,13 @@ int main(int argc, char * argv[])
                         //sendPacket(player,  4, saddr, pSend, s ); 
                         break;
 
+                    case SDL_SCANCODE_M:
+                        musicStart = true;
+                        break;
+                    case SDL_SCANCODE_N:
+                        musicStop = true;
+                        break;
+                        
                    default:
                        break;
                 }
@@ -249,6 +269,11 @@ int main(int argc, char * argv[])
                         right = false;
                         //sendPacket(player, 8, saddr, pSend, s );
                         break;
+
+                    case SDL_SCANCODE_M:
+                        musicStart = false;
+                    case SDL_SCANCODE_N:
+                        musicStop = false;
 
                     default:
                         break;
