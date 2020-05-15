@@ -238,7 +238,7 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_N:
                         musicStop = true;
                         break;
-                        
+
                    default:
                        break;
                 }
@@ -272,8 +272,10 @@ int main(int argc, char * argv[])
 
                     case SDL_SCANCODE_M:
                         musicStart = false;
+                        break;
                     case SDL_SCANCODE_N:
                         musicStop = false;
+                        break;
 
                     default:
                         break;
