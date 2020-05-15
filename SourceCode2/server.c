@@ -131,7 +131,17 @@ int main(int argc, char **argv)
             }
             /* Quit if packet contains "quit" */
             if (strcmp((char *)pSent->data, "quit") == 0)
-                quit = 1;
+                quit = 1;   
+            if(*pt1NrOfGoals==3)
+            {
+                printf("Blue team has won.");
+                quit=1;
+            }
+            if (*pt2NrOfGoals==3)
+            {
+                printf("Orange team has won.");
+                quit=1;
+            }
         }
         if((*pClientCount)==4)
         {
