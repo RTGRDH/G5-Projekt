@@ -39,6 +39,7 @@ float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 void movementDecoder(Clients c[], int tmp, int movement);
 void gameEngine (Clients c[], Ball b, SDL_Rect* gB);
+void clients_start(Clients c[]);
 void INIT_ALL();
 
 #define SPEED (75); //75 is optimal, 300 for dev.
@@ -243,6 +244,7 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
         setBallPositionX(b,470);
         setBallPositionY(b,260);
         setBallSpeed(b,0);
+        clients_start(c);
     //   P1Score++;
     }
     else if(ballLeftGoalCollision(gB))
@@ -250,6 +252,7 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
         setBallPositionX(b,470);
         setBallPositionY(b,260);
         setBallSpeed(b,0);
+        clients_start(c);
     }
                 
     gB->y = getBallPositionY(b);
@@ -259,4 +262,12 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
         c[l].gPlayer->y=getPlayerPositionY(c[l].player);
         c[l].gPlayer->x=getPlayerPositionX(c[l].player);
     }
+}
+
+void clients_start(Clients c[])
+{
+    c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
+    c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
+    c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
+    c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
 }
