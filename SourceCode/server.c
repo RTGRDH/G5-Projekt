@@ -11,20 +11,11 @@
 #include "player.h"
 #include "gameLogic.h"
 
- /*struct players
- {
-     float x;
-     float y;
-     float d;
- };
- typedef struct players Players*/
- 
 struct clients {
     Player player;
     Uint32 IP;
     Uint32 port;
-    SDL_Rect gPlayer;
-    
+    SDL_Rect gPlayer; 
 };
 typedef struct clients Clients;
  
@@ -54,24 +45,10 @@ float distanceBallPlayer(Ball boll, Player p);
 #define TURNING_SPEED 4
 #define ACCELERATION 0.2
 
-
 int main(int argc, char **argv)
 {
-    Ball boll = createBall(470,260);
-    SDL_Rect gField;
-    // struct to hold the position and size of the sprite
-    SDL_Rect gBall;
-    SDL_Rect gGoal_Left;
-    SDL_Rect gGoal_Right;
-    //SDL_Rect dstrect;
-
-    //TTF_Font * font = NULL;
-
-
-
-    UDPsocket sd;       /* Socket descriptor */
-    UDPpacket *pRecive;       /* Pointer to packet memory */
-    UDPpacket *pSent;
+    Ball boll = createBall(470,260);SDL_Rect gField;SDL_Rect gBall;SDL_Rect gGoal_Left;SDL_Rect gGoal_Right;/*SDL_Rect dstrect;*//*TTF_Font * font = NULL;*/
+    UDPsocket sd;/* Socket descriptor */UDPpacket *pRecive;/* Pointer to packet memory */UDPpacket *pSent;
     Clients client[4] =
     {
         {malloc(sizeof(Player)),0,0,0},
@@ -81,9 +58,7 @@ int main(int argc, char **argv)
     };
     clients_null(client);
 
-    int quit, a, b;
-    int clientCount=0;
-    int* pClientCount;
+    int quit, a, b;int clientCount=0;int* pClientCount;
     int t1NrOfGoals=0;
     int t2NrOfGoals=0;
     int* pt1NrOfGoals;
@@ -203,8 +178,7 @@ int main(int argc, char **argv)
             gameEngine (client, boll, pClientCount, &gBall, pt1NrOfGoals,pt2NrOfGoals);
 
     }
- 
-//    printf("kracha inte");
+
     /* Clean and exit */
     SDLNet_FreePacket(pSent);
     SDLNet_FreePacket(pRecive);

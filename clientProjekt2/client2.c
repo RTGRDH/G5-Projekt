@@ -11,6 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
+#include <SDL2/SDL_mixer.h>
 
 #define SIZE 4
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
@@ -61,6 +62,12 @@ SDL_Rect gGoal_Right;
 
 int main(int argc, char * argv[])
 {
+    Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+    Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
+    Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
+    Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
+    Mix_PlayMusic(backgroundSound, -1);   
+
     UDPsocket s;                                                
 	IPaddress saddr;                                            
 	UDPpacket *pSend;                                           
