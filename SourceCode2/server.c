@@ -38,7 +38,7 @@ float yInvertDirection(float direction);
 float angleBallPlayer(Ball boll, Player p);
 float distanceBallPlayer(Ball boll, Player p);
 void movementDecoder(Clients c[], int tmp, int movement);
-void gameEngine (Clients c[], Ball b, SDL_Rect* gB);
+void gameEngine (Clients c[], Ball b, SDL_Rect* gB, int* pt1NrOfGoals, int* pt2NrOfGoals);
 void clients_start(Clients c[]);
 void INIT_ALL();
 
@@ -61,6 +61,12 @@ int main(int argc, char **argv)
     clients_null(client);
     
     int quit,a,b,x,clientCount=0;int* pClientCount; pClientCount=&clientCount;
+    int t1NrOfGoals=0;
+    int t2NrOfGoals=0;
+    int* pt1NrOfGoals;
+    int* pt2NrOfGoals;
+    pt1NrOfGoals=&t1NrOfGoals;
+    pt2NrOfGoals=&t2NrOfGoals;
 
     if (SDLNet_Init() < 0)                                                                  {/* Initialize SDL_net */
         fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
@@ -134,7 +140,7 @@ int main(int argc, char **argv)
                 count = 0;
             }
             count++;
-			gameEngine (client, boll, &gBall);
+			gameEngine (client, boll, &gBall, pt1NrOfGoals,pt2NrOfGoals);
 //            SDL_Delay(30);
         }
     }
@@ -224,7 +230,7 @@ void movementDecoder(Clients c[], int tmp, int movement)
     }
 }
 
-void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
+void gameEngine (Clients c[], Ball b, SDL_Rect* gB, int* pt1NrOfGoals, int* pt2NrOfGoals)
 {
     for(int k=0; k<4; k++)
     {
@@ -244,6 +250,8 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
         setBallPositionX(b,470);
         setBallPositionY(b,260);
         setBallSpeed(b,0);
+        (*pt1NrOfGoals)++;
+        printf("\nBlue team scores! Orange team has %d goals.", *pt1NrOfGoals);
         clients_start(c);
     //   P1Score++;
     }
@@ -252,6 +260,8 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB)
         setBallPositionX(b,470);
         setBallPositionY(b,260);
         setBallSpeed(b,0);
+        (*pt2NrOfGoals)++;
+        printf("\nOrange team scores! Orange team has %d goals.", *pt2NrOfGoals);
         clients_start(c);
     }
                 
