@@ -227,7 +227,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
  */
 void updateText(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
-    SDL_DestroyTexture(mInputField);
+    //SDL_DestroyTexture(mInputField);
     sInputField =TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
     mInputField = SDL_CreateTextureFromSurface(renderer, sInputField);
     SDL_QueryTexture(mInputField, NULL, NULL, &ipInputRect.w, &ipInputRect.h);
@@ -265,8 +265,8 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
         SDL_GetMouseState(&mouseX, &mouseY);
         while(SDL_PollEvent(&event))
         {
-            DisplayConnectionScene(renderer);
             updateText(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
+            DisplayConnectionScene(renderer);
             switch (event.type)
             {
                 case SDL_QUIT:
@@ -287,6 +287,7 @@ bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDO
                         flag = true;
                         cleanUpConnectionScene();
                     }
+                    break;
                     case SDL_KEYDOWN:
                     switch(event.key.keysym.scancode)
                     {

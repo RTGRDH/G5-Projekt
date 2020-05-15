@@ -11,6 +11,7 @@
 #include <math.h>
 #include "ball.h"
 #include "gameLogic.h"
+#include "menu.h"
 #include <SDL2/SDL_mixer.h>
 
 #define SIZE 4
@@ -77,7 +78,14 @@ int main(int argc, char * argv[])
     int loop=0;
     //Player players[SIZE]={0};
     //int nrOfPlayers=0;
-
+    if(init())
+    {
+        printf("Initialize window and renderer successful.\n");
+        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        {
+            running = false;
+        }
+    }
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
@@ -93,9 +101,9 @@ int main(int argc, char * argv[])
 	}
 
     //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
-	if (SDLNet_ResolveHost(&saddr, "127.0.0.1", 2000) == -1) 
+	if (SDLNet_ResolveHost(&saddr, getIP(), 2000) == -1)
 	{
-		fprintf(stderr, "SDLNet_ResolveHost(127.0.0.1 2000): %s\n", SDLNet_GetError());
+		fprintf(stderr, "SDLNet_ResolveHost(%s : 2000): %s\n",getIP() ,SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
@@ -125,11 +133,6 @@ int main(int argc, char * argv[])
     //    }
     //}
     
-
-    if(init())
-    {
-        printf("Initialize window and renderer successful.\n");
-    }
     //Init backround here
     if(!initPlayField())
     {
@@ -516,7 +519,7 @@ bool init()
     bool test = true;
     SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
 //    TTF_Init();
-    window = SDL_CreateWindow("Under production", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
     if(window == NULL)
     {
