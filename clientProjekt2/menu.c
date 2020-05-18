@@ -203,7 +203,12 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
        // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
     char labelText[30] = "Enter IP-address:";
+    printf("%s\n", labelText);
+    printf("before TTF_RenderText_Shaded\n");
+    if(!font)
+        printf("no font");
     sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
+    printf("after TTF_RenderText_Shaded\n");
     
     mIpLabel = SDL_CreateTextureFromSurface(renderer, sIpLabel);
     

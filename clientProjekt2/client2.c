@@ -6,7 +6,7 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
-#include <SDL2/SDL_ttf.h>
+ #include <SDL2/SDL_ttf.h>
 #include "Player.h"
 #include <math.h>
 #include "ball.h"
@@ -15,6 +15,12 @@
 #include <SDL2/SDL_mixer.h>
 
 #define SIZE 4
+#define SPEED (300); //75 is optimal, 300 for dev.
+#define MAX_SPEED_REVERSE -1
+#define MAX_SPEED_FORWARD 6
+#define TURNING_SPEED 10
+#define ACCELERATION 0.2
+
 const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 
 bool init();
@@ -65,8 +71,8 @@ int main(int argc, char * argv[])
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
-    Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
-    Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
+    //Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
+    //Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
 
     UDPsocket s;                                                
 	IPaddress saddr;                                            
@@ -76,16 +82,9 @@ int main(int argc, char * argv[])
     int P1Score = 0;
     int P2Score = 0;
     int loop=0;
-    //Player players[SIZE]={0};
-    //int nrOfPlayers=0;
-    if(init())
-    {
-        printf("Initialize window and renderer successful.\n");
-        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
-        {
-            running = false;
-        }
-    }
+    const int FPS = 30;
+    Uint32 startTime;
+
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
@@ -114,25 +113,15 @@ int main(int argc, char * argv[])
 		exit(EXIT_FAILURE);
 	}
     
-    //while(!loop){                                                                       //Ev loop för att starta kontakt med server och den lägger in klienten i en struct (så klienten får en bil)
-    //    printf("Send packet to connect with serverr\n");
-    //    int startup=1, i, x, y, dir, speed;
-    //    printf("%d\n", startup);
-    //    sprintf((char *)pSend->data, "%d\n", (int)startup);    
-    //    pSend->address.host = saddr.host;	/* Set the destination host */
-	//    pSend->address.port = saddr.port;	/* And destination port */
-	//    pSend->len = strlen((char *)pSend->data) + 1;
-    //    SDLNet_UDP_Send(s, -1, pSend); 
 
-    //    if (SDLNet_UDP_Recv(s, pRecive)){
-    //    sscanf((char * )pRecive->data, "%d %d %d %d %d\n",&i, &x, &y, &dir, &speed);
-	//	printf("Bil %d\n", i);
-		//printf("%d %d %d %d\n", x, y, dir, speed);
-        //player=createPlayer(x, y);
-    //    loop=1;
-    //    }
-    //}
-    
+    if(init())
+    {
+        printf("Initialize window and renderer successful.\n");
+          if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        {
+            running = false;
+        }
+    }
     //Init backround here
     if(!initPlayField())
     {
@@ -168,8 +157,8 @@ int main(int argc, char * argv[])
            
                                                                                   
     setPlayerDirection(player, 45);                                              
-    setPlayerDirection(player2, 315);                                            
-    setPlayerDirection(player3, 135);                                            
+    setPlayerDirection(player2, 135);                                            
+    setPlayerDirection(player3, 315);                                            
     setPlayerDirection(player4, 225);
     
     // keep track of which inputs are given
@@ -180,21 +169,25 @@ int main(int argc, char * argv[])
     bool musicStart = false;
     bool musicStop = false;
     bool musicPlaying = false;
+
 //------------------------------------------------------SCAN KEYBOARD--------------------------------------------------------------------------
     while(running)
     {
-        if(musicStart == true && musicPlaying == false)
-        {
+        startTime = SDL_GetTicks();
+       // SDL_Delay(1000/60);
+       if(musicStart == true && musicPlaying == false)
+       {
             Mix_PlayMusic(backgroundSound, -1);
             musicPlaying = true;
-        }
-        if(musicStop == true && musicPlaying == true)
+       }
+       
+       if(musicStop == true && musicPlaying == true)
         {
             Mix_HaltMusic();
             musicPlaying = false;
         }
 
-        SDL_Delay(14);
+
     /**
     While loop checking if an event occured.
      Code taken from Jonas Willén, SDL_net.zip
@@ -214,27 +207,22 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = true;
-                        //sendPacket( player, 1, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = true;
-                        //sendPacket( player, 2, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = true;
-                        //sendPacket(player, 3, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = true;
-                        //sendPacket(player,  4, saddr, pSend, s ); 
                         break;
-
                     case SDL_SCANCODE_M:
                         musicStart = true;
                         break;
@@ -252,27 +240,24 @@ int main(int argc, char * argv[])
                     case SDL_SCANCODE_W:
                     case SDL_SCANCODE_UP:
                         up = false;
-                        //sendPacket(player, 5, saddr, pSend, s ); 
                         break;
 
                     case SDL_SCANCODE_A:
                     case SDL_SCANCODE_LEFT:
                         left = false;
-                        //sendPacket( player, 6, saddr, pSend, s );
                         break;
 
                     case SDL_SCANCODE_S:
                     case SDL_SCANCODE_DOWN:
                         down = false;
-                        //sendPacket(player, 7, saddr, pSend, s );
                         break;
 
                     case SDL_SCANCODE_D:
                     case SDL_SCANCODE_RIGHT:
                         right = false;
-                        //sendPacket(player, 8, saddr, pSend, s );
                         break;
 
+                    
                     case SDL_SCANCODE_M:
                         musicStart = false;
                         break;
@@ -327,11 +312,11 @@ int main(int argc, char * argv[])
             sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
         }
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
-
         //Recive packet, for now just recive mirroring from server                  //Net
         while (SDLNet_UDP_Recv(s, pRecive)){
-            float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally; 
-            sscanf((char * )pRecive->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally);
+            float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally;
+            float P1Speed,P2Speed,P3Speed,P4Speed;
+            sscanf((char * )pRecive->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally,&P1Speed,&P2Speed,&P3Speed,&P4Speed);
 
             gBall.x=ballx;
             gBall.y=bally;
@@ -339,24 +324,26 @@ int main(int argc, char * argv[])
             gPlayer.y = y1;
             gPlayer.x = x1;
             setPlayerDirection(player, d1);
+            setPlayerSpeed(player,P1Speed);
+
 
             gPlayer2.y = y2;
             gPlayer2.x = x2;
             setPlayerDirection(player2, d2);
+            setPlayerSpeed(player2,P2Speed);
 
             gPlayer3.y = y3;
             gPlayer3.x = x3;
             setPlayerDirection(player3, d3);
-
+            setPlayerSpeed(player3,P3Speed);
+            
             gPlayer4.y = y4;
             gPlayer4.x = x4;
             setPlayerDirection(player4, d4);
+            setPlayerSpeed(player4,P4Speed);
 
-            printf("Incoming\n Bil 1: x1:%.0f, y1:%.0f d1:%.0f \n Bil2: x2:%.0f y2:%.0f d2:%.0f \n Bil3: x3:%.0f, y3:%.0f d3:%.0f \n Bil4: x4:%.0f y4:%.0f d4:%.0f \n Boll: x_b:%.0f y_b:%.0f\n",x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally);
         }
-        
-        
-//        SDL_RenderClear(renderer);
+        SDL_RenderClear(renderer);
         renderBackground();
      
         SDL_RenderCopy(renderer,mBall,NULL,&gBall);
@@ -370,7 +357,10 @@ int main(int argc, char * argv[])
      // SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
         
-        SDL_Delay(1000/50);
+    //    SDL_Delay(1000/60);
+        if(1000/FPS>SDL_GetTicks()-startTime){
+            SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
+        }
     }
     SDL_FreeSurface(imageSurface);
     imageSurface = NULL;
@@ -517,9 +507,9 @@ void renderBackground()
 bool init()
 {
     bool test = true;
-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+    SDL_Init(SDL_INIT_VIDEO);
 //    TTF_Init();
-    window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Not Rocket League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
     if(window == NULL)
     {
@@ -551,14 +541,8 @@ bool init()
 
 void sendPacket(Player p, int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
 {
-   // printf("Player move: %d\n", (int) movement);
-    float positionX, positionY, direction, speed;
-   // positionX=getPlayerPositionX(p);
-    //positionY=getPlayerPositionY(p);
-    //direction=getPlayerDirection(p);
-    //speed=getPlayerSpeed(p);
-    printf("%d \n",movement);//(int)positionX, (int) positionY, (int)direction, (int) speed, movement);
-    sprintf((char *)packet->data, "%d\n",movement);// (int)positionX, (int)positionY, (int)direction, (int)speed, (int)movement);    
+   // printf("%d \n",movement);
+    sprintf((char *)packet->data, "%d\n",movement); 
     packet->address.host = svr.host;	/* Set the destination host */
 	packet->address.port = svr.port;	/* And destination port */
 	packet->len = strlen((char *)packet->data) + 1;
