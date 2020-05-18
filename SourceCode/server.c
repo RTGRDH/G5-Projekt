@@ -161,6 +161,7 @@ int main(int argc, char **argv)
                 {
                     if(client[i].IP == 0 && client[i].port == 0)
                     {
+                        
                         sscanf((char * )pRecive->data, "%d \n", &movement);
                         client_create(client, pRecive, i, pClientCount);
                         break;
