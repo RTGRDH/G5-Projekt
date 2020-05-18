@@ -178,7 +178,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
         printf("%s\n",TTF_GetError());
     }
     strcpy(inputText, "");
-    font = TTF_OpenFont("/Fonts/Arial.ttf", 25);
+    font = TTF_OpenFont("Images/arial.ttf", 25);
     gCancelButton.h = 100; gCancelButton.w = 300;
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
     gContinueButton.h = 100; gContinueButton.w = 300;
@@ -203,7 +203,12 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
        // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
     char labelText[30] = "Enter IP-address:";
+    printf("%s\n", labelText);
+    printf("before TTF_RenderText_Shaded\n");
+    if(!font)
+        printf("no font");
     sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
+    printf("after TTF_RenderText_Shaded\n");
     
     mIpLabel = SDL_CreateTextureFromSurface(renderer, sIpLabel);
     

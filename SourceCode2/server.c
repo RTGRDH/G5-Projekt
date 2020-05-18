@@ -50,9 +50,14 @@ void INIT_ALL();
 
 int main(int argc, char **argv)
 {
-    Ball boll = createBall(470,260); 
+    if (SDLNet_Init() < 0){                                                                 /* Initialize SDL_net */
+        fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
+        exit(EXIT_FAILURE);}
+    Ball boll = createBall(470,260);
     SDL_Rect gField; SDL_Rect gBall; SDL_Rect gGoal_Left; SDL_Rect gGoal_Right;
     /*SDL_Rect dstrect;*//*TTF_Font * font = NULL;*/
+    IPaddress serverIP;
+    SDLNet_ResolveHost(&serverIP, NULL, 2000);
     UDPsocket sd;/* Socket descriptor */UDPpacket *pRecive;/* Pointer to packet memory */UDPpacket *pSent;
     Clients client[4] ={    {malloc(sizeof(Player)),0,0,SDL_malloc(sizeof(SDL_Rect))},
                             {malloc(sizeof(Player)),0,0,SDL_malloc(sizeof(SDL_Rect))},
@@ -68,10 +73,7 @@ int main(int argc, char **argv)
     pt1NrOfGoals=&t1NrOfGoals;
     pt2NrOfGoals=&t2NrOfGoals;
 
-    if (SDLNet_Init() < 0)                                                                  {/* Initialize SDL_net */
-        fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-        exit(EXIT_FAILURE);}
-    if (!(sd = SDLNet_UDP_Open(2000))){                                                      /* Open a socket */
+    if (!(sd = SDLNet_UDP_Open(2000))){                                                     /* Open a socket */
         fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);}
     if (!((pSent = SDLNet_AllocPacket(512))&&(pRecive = SDLNet_AllocPacket(512)))){         /* Make space for the packet */
@@ -287,7 +289,7 @@ void gameEngine (Clients c[], Ball b, SDL_Rect* gB, int* pt1NrOfGoals, int* pt2N
 void clients_start(Clients c[])
 {
     c[0].player = createPlayer(50, 50); setPlayerDirection(c[0].player, 45); setPlayerSpeed(c[0].player, 0);
-    c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 315); setPlayerSpeed(c[1].player, 0);
-    c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 135); setPlayerSpeed(c[2].player, 0);
+    c[1].player = createPlayer(880, 50); setPlayerDirection(c[1].player, 135); setPlayerSpeed(c[1].player, 0);
+    c[2].player = createPlayer(50, 450); setPlayerDirection(c[2].player, 315); setPlayerSpeed(c[2].player, 0);
     c[3].player = createPlayer(880, 450); setPlayerDirection(c[3].player, 225); setPlayerSpeed(c[3].player, 0);
 }
