@@ -509,7 +509,7 @@ bool init()
     bool test = true;
     SDL_Init(SDL_INIT_VIDEO);
 //    TTF_Init();
-    window = SDL_CreateWindow("Not Rocket League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
     if(window == NULL)
     {
