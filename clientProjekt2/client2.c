@@ -362,8 +362,6 @@ int main(int argc, char * argv[])
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
         }
     }
-    SDL_FreeSurface(imageSurface);
-    imageSurface = NULL;
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(mField);
     SDL_DestroyTexture(mPlayer);
@@ -392,7 +390,12 @@ bool initMedia()
     sPlayer3 = IMG_Load("images/Car3.png");
     sPlayer4 = IMG_Load("images/Car4.png");
     sBall = IMG_Load("images/SoccerBall.png");
- 
+     if(NULL == imageSurface)
+     {
+         printf("\nCould not load image. Error: %s",SDL_GetError());
+         printf("\n");
+         flag = false;
+     }
     
     mPlayer = SDL_CreateTextureFromSurface(renderer, sPlayer);
 
@@ -403,6 +406,12 @@ bool initMedia()
     mPlayer4 = SDL_CreateTextureFromSurface(renderer,sPlayer4);
 
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
+    
+    SDL_FreeSurface(sPlayer);
+    SDL_FreeSurface(sPlayer2);
+    SDL_FreeSurface(sPlayer3);
+    SDL_FreeSurface(sPlayer4);
+    SDL_FreeSurface(sBall);
 
 
     player = createPlayer(50, 50);                                                                        //EV ska detta vara i server?? Vid ny klient
@@ -437,12 +446,6 @@ bool initMedia()
     gBall.h = getBallHeight();
     gBall.w = getBallWidth();
 
-    if(NULL == imageSurface)
-    {
-        printf("\nCould not load image. Error: %s",SDL_GetError());
-        printf("\n");
-        flag = false;
-    }
     return flag;
 }
 /**
@@ -459,14 +462,17 @@ bool initPlayField()
         flag = false;
     }
     imageSurface = IMG_Load("images/SoccerField.png");
-    
-    mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
-
     sGoal_Left = IMG_Load("images/Goal_Left.png");
     sGoal_Right = IMG_Load("images/Goal_Right.png");
+    
     mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
     mGoal_Left = SDL_CreateTextureFromSurface(renderer, sGoal_Left);
     mGoal_Right = SDL_CreateTextureFromSurface(renderer, sGoal_Right);
+    
+    SDL_FreeSurface(imageSurface);
+    SDL_FreeSurface(sGoal_Left);
+    SDL_FreeSurface(sGoal_Right);
+
     //Left goal rect init position and define width and heigth
     gGoal_Left.h=370;
     gGoal_Left.w = 50;
