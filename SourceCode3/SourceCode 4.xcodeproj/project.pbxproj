@@ -1,0 +1,228 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		A7175F0A246ABAD4005B5028 /* theServer.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = theServer.exe; sourceTree = "<group>"; };
+		A7175F0B246ABAD4005B5028 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		A7175F0C246ABAD4005B5028 /* run.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = run.exe; sourceTree = "<group>"; };
+		A7175F0D246ABAD4005B5028 /* menu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = menu.c; sourceTree = "<group>"; };
+		A7175F0E246ABAD4005B5028 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		A7175F0F246ABAD4005B5028 /* makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		A7175F10246ABAD4005B5028 /* backgroundSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = backgroundSound.wav; sourceTree = "<group>"; };
+		A7175F11246ABAD4005B5028 /* ball.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ball.o; sourceTree = "<group>"; };
+		A7175F12246ABAD4005B5028 /* ball.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ball.h; sourceTree = "<group>"; };
+		A7175F13246ABAD4005B5028 /* gameLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gameLogic.h; sourceTree = "<group>"; };
+		A7175F14246ABAD4005B5028 /* GameLogic.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = GameLogic.o; sourceTree = "<group>"; };
+		A7175F15246ABAD4005B5028 /* Player.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Player.o; sourceTree = "<group>"; };
+		A7175F16246ABAD4005B5028 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A7175F17246ABAD4005B5028 /* SourceCode.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SourceCode.xcodeproj; sourceTree = "<group>"; };
+		A7175F1A246ABAD4005B5028 /* theGame.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = theGame.exe; sourceTree = "<group>"; };
+		A7175F1B246ABAD4005B5028 /* server.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
+		A7175F1C246ABAD4005B5028 /* bounce2.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bounce2.ogg; sourceTree = "<group>"; };
+		A7175F1D246ABAD4005B5028 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A7175F1E246ABAD4005B5028 /* bounce1.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bounce1.ogg; sourceTree = "<group>"; };
+		A7175F1F246ABAD4005B5028 /* menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
+		A7175F20246ABAD4005B5028 /* SourceCode 3.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "SourceCode 3.xcodeproj"; sourceTree = "<group>"; };
+		A7175F23246ABAD4005B5028 /* gameLogic.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gameLogic.c; sourceTree = "<group>"; };
+		A7175F24246ABAD4005B5028 /* ball.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ball.c; sourceTree = "<group>"; };
+		A7175F25246ABAD4005B5028 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		A7175F26246ABAD4005B5028 /* server.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = server.o; sourceTree = "<group>"; };
+		A7175F27246ABAD4005B5028 /* Victory!.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Victory!.wav"; sourceTree = "<group>"; };
+		A7175F28246ABAD4005B5028 /* git */ = {isa = PBXFileReference; lastKnownFileType = text; path = git; sourceTree = "<group>"; };
+		A7175F29246ABAD4005B5028 /* SourceCode 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "SourceCode 2.xcodeproj"; sourceTree = "<group>"; };
+		A7175F2C246ABAD4005B5028 /* Player.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Player.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		A7175F04246ABAD4005B5028 = {
+			isa = PBXGroup;
+			children = (
+				A7175F0A246ABAD4005B5028 /* theServer.exe */,
+				A7175F0B246ABAD4005B5028 /* .DS_Store */,
+				A7175F0C246ABAD4005B5028 /* run.exe */,
+				A7175F0D246ABAD4005B5028 /* menu.c */,
+				A7175F0E246ABAD4005B5028 /* Images */,
+				A7175F0F246ABAD4005B5028 /* makefile */,
+				A7175F10246ABAD4005B5028 /* backgroundSound.wav */,
+				A7175F11246ABAD4005B5028 /* ball.o */,
+				A7175F12246ABAD4005B5028 /* ball.h */,
+				A7175F13246ABAD4005B5028 /* gameLogic.h */,
+				A7175F14246ABAD4005B5028 /* GameLogic.o */,
+				A7175F15246ABAD4005B5028 /* Player.o */,
+				A7175F16246ABAD4005B5028 /* Player.h */,
+				A7175F17246ABAD4005B5028 /* SourceCode.xcodeproj */,
+				A7175F1A246ABAD4005B5028 /* theGame.exe */,
+				A7175F1B246ABAD4005B5028 /* server.c */,
+				A7175F1C246ABAD4005B5028 /* bounce2.ogg */,
+				A7175F1D246ABAD4005B5028 /* main.c */,
+				A7175F1E246ABAD4005B5028 /* bounce1.ogg */,
+				A7175F1F246ABAD4005B5028 /* menu.h */,
+				A7175F20246ABAD4005B5028 /* SourceCode 3.xcodeproj */,
+				A7175F23246ABAD4005B5028 /* gameLogic.c */,
+				A7175F24246ABAD4005B5028 /* ball.c */,
+				A7175F25246ABAD4005B5028 /* Fonts */,
+				A7175F26246ABAD4005B5028 /* server.o */,
+				A7175F27246ABAD4005B5028 /* Victory!.wav */,
+				A7175F28246ABAD4005B5028 /* git */,
+				A7175F29246ABAD4005B5028 /* SourceCode 2.xcodeproj */,
+				A7175F2C246ABAD4005B5028 /* Player.c */,
+			);
+			sourceTree = "<group>";
+		};
+		A7175F18246ABAD4005B5028 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7175F21246ABAD4005B5028 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7175F2A246ABAD4005B5028 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		A7175F09246ABAD4005B5028 /* SourceCode */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = A7175F33246ABAD4005B5028 /* Build configuration list for PBXLegacyTarget "SourceCode" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/ernstreutergardh/Documents/GitHub/G5-Projekt/SourceCode";
+			dependencies = (
+			);
+			name = SourceCode;
+			passBuildSettingsInEnvironment = 1;
+			productName = SourceCode;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		A7175F05246ABAD4005B5028 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A7175F08246ABAD4005B5028 /* Build configuration list for PBXProject "SourceCode 4" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A7175F04246ABAD4005B5028;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A7175F2A246ABAD4005B5028 /* Products */;
+					ProjectRef = A7175F29246ABAD4005B5028 /* SourceCode 2.xcodeproj */;
+				},
+				{
+					ProductGroup = A7175F21246ABAD4005B5028 /* Products */;
+					ProjectRef = A7175F20246ABAD4005B5028 /* SourceCode 3.xcodeproj */;
+				},
+				{
+					ProductGroup = A7175F18246ABAD4005B5028 /* Products */;
+					ProjectRef = A7175F17246ABAD4005B5028 /* SourceCode.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				A7175F09246ABAD4005B5028 /* SourceCode */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		A7175F06246ABAD4005B5028 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		A7175F07246ABAD4005B5028 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		A7175F34246ABAD4005B5028 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Debug;
+		};
+		A7175F35246ABAD4005B5028 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A7175F08246ABAD4005B5028 /* Build configuration list for PBXProject "SourceCode 4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7175F06246ABAD4005B5028 /* Debug */,
+				A7175F07246ABAD4005B5028 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A7175F33246ABAD4005B5028 /* Build configuration list for PBXLegacyTarget "SourceCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7175F34246ABAD4005B5028 /* Debug */,
+				A7175F35246ABAD4005B5028 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A7175F05246ABAD4005B5028 /* Project object */;
+}

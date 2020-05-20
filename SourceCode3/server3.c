@@ -81,6 +81,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);}
     printf("Waiting for clients\n");
     /* Main loop */
+
     quit = 0;
     int count = 0;
     while (!quit)
@@ -89,9 +90,9 @@ int main(int argc, char **argv)
         /* Wait a packet. UDP_Recv returns != 0 if a packet is coming */
         while (SDLNet_UDP_Recv(sd, pRecive))
         {
-            int tmpClient=0;
+            int tmpClient=4;
             int i,x=0, movement;
-            sscanf((char * )pRecive->data, "%d \n", &movement);
+            sscanf((char * )pRecive->data, "%d\n", &movement);
 
             if((*pClientCount)==4)
             {
@@ -102,14 +103,27 @@ int main(int argc, char **argv)
                         tmpClient=i;
                     }
                 }
+
+                if(tmpClient==4){
+                    /*Send packet to client: game full*/
+                    int fullt=1;
+                    sscanf((char * )pRecive->data, "%d\n", &fullt);
+                    pSent->address.host = pRecive->address.host;
+                    pSent->address.port = pRecive->address.port;
+                    sprintf((char *)pSent->data, "%d\n", fullt);
+                    pSent->len = strlen((char *)pSent->data) + 1;
+                    SDLNet_UDP_Send(sd, -1, pSent);
+                }
+                else{
 //-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
                 //skelettkod:
                 //if 1: left + gas        ||    if 2: gas        ||    if 3: right + gas
                 //if 4: left            ||    if 5: no send    ||    if 6: right
                 //if 7: left + brake    ||    if 7: brake        ||    if 9: right + brake
                 //hypotetisk kod:
-                movementDecoder(client, tmpClient, movement);
-                speedLimit(client[tmpClient].player);
+                    movementDecoder(client, tmpClient, movement);
+                    speedLimit(client[tmpClient].player);
+                }
 //-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
             }
 
@@ -117,7 +131,7 @@ int main(int argc, char **argv)
             {
                 if(pRecive->address.port == client[m].port)
                 {
-                    sscanf((char * )pRecive->data, "%d \n", &movement);
+                    //sscanf((char * )pRecive->data, "%d \n", &movement);
                     
                     x=1;
                 }
@@ -125,9 +139,21 @@ int main(int argc, char **argv)
                 {
                     if(client[m].IP == 0 && client[m].port == 0)
                     {
-                        sscanf((char * )pRecive->data, "%d \n", &movement);
+                        //if(*pClientCount>=4){
+                         //   printf("Client denied\n");
+                        //    break;
+                        //}
+                        sscanf((char * )pRecive->data, "%d\n", &movement);
                         client_create(client, pRecive, m, pClientCount);
+                        /*Send packet to client: game on*/
+                        int ok=1;
+                        pSent->address.host = pRecive->address.host;
+                        pSent->address.port = pRecive->address.port;
+                        sprintf((char *)pSent->data, "%d\n", ok);
+                        pSent->len = strlen((char *)pSent->data) + 1;
+                        SDLNet_UDP_Send(sd, -1, pSent);
                         break;
+
                     }
                 }
             }
@@ -157,15 +183,6 @@ int main(int argc, char **argv)
         }
     }
     /* Clean and exit */
-    free(boll);
-    free(client[0].player);
-    free(client[1].player);
-    free(client[2].player);
-    free(client[3].player);
-    SDL_free(client[0].gPlayer);
-    SDL_free(client[1].gPlayer);
-    SDL_free(client[2].gPlayer);
-    SDL_free(client[3].gPlayer);
     SDLNet_FreePacket(pSent);
     SDLNet_FreePacket(pRecive);
     SDLNet_Quit();

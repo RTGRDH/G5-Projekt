@@ -71,6 +71,8 @@ int main(int argc, char * argv[])
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
+    //Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
+    //Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
 
     UDPsocket s;                                                
 	IPaddress saddr;                                            
@@ -110,16 +112,44 @@ int main(int argc, char * argv[])
 		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
-    
 
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
-          if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
         {
             running = false;
         }
+        else
+        {
+            //Connect to server
+            int startsignal=5; 
+            //printf("Sänder: %d \n",startsignal);
+            sprintf((char *)pSend->data, "%d\n",startsignal); 
+            pSend->address.host = saddr.host;	/* Set the destination host */
+	        pSend->address.port = saddr.port;	/* And destination port */
+	        pSend->len = strlen((char *)pSend->data) + 1;
+            SDLNet_UDP_Send(s, -1, pSend);
+        }
     }
+    //Waiting for serverrespons
+    int start=0;
+    while(start!=5){
+        if(SDLNet_UDP_Recv(s, pRecive)){
+            int full;
+            sscanf((char * )pRecive->data,"%d\n", &full);
+            //printf("%d\n", full);
+            if(full==5){
+                running=false;
+                break;
+            }
+            else{
+                start=5;
+            }
+        }
+    }
+        
+
     //Init backround here
     if(!initPlayField())
     {
@@ -360,17 +390,13 @@ int main(int argc, char * argv[])
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
         }
     }
+    SDL_FreeSurface(imageSurface);
+    imageSurface = NULL;
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(mField);
     SDL_DestroyTexture(mPlayer);
     SDL_DestroyTexture(mBall);
     SDL_DestroyRenderer(renderer);
-    Mix_FreeMusic(backgroundSound);
-    free(player);
-    free(player2);
-    free(player3);
-    free(player4);
-    free(b);
    // TTF_Quit();
     SDL_Quit();
     return 0;
@@ -394,12 +420,7 @@ bool initMedia()
     sPlayer3 = IMG_Load("images/Car3.png");
     sPlayer4 = IMG_Load("images/Car4.png");
     sBall = IMG_Load("images/SoccerBall.png");
-     if(NULL == imageSurface)
-     {
-         printf("\nCould not load image. Error: %s",SDL_GetError());
-         printf("\n");
-         flag = false;
-     }
+ 
     
     mPlayer = SDL_CreateTextureFromSurface(renderer, sPlayer);
 
@@ -410,12 +431,6 @@ bool initMedia()
     mPlayer4 = SDL_CreateTextureFromSurface(renderer,sPlayer4);
 
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
-    
-    SDL_FreeSurface(sPlayer);
-    SDL_FreeSurface(sPlayer2);
-    SDL_FreeSurface(sPlayer3);
-    SDL_FreeSurface(sPlayer4);
-    SDL_FreeSurface(sBall);
 
 
     player = createPlayer(50, 50);                                                                        //EV ska detta vara i server?? Vid ny klient
@@ -450,6 +465,12 @@ bool initMedia()
     gBall.h = getBallHeight();
     gBall.w = getBallWidth();
 
+    if(NULL == imageSurface)
+    {
+        printf("\nCould not load image. Error: %s",SDL_GetError());
+        printf("\n");
+        flag = false;
+    }
     return flag;
 }
 /**
@@ -466,17 +487,14 @@ bool initPlayField()
         flag = false;
     }
     imageSurface = IMG_Load("images/SoccerField.png");
+    
+    mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
+
     sGoal_Left = IMG_Load("images/Goal_Left.png");
     sGoal_Right = IMG_Load("images/Goal_Right.png");
-    
     mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
     mGoal_Left = SDL_CreateTextureFromSurface(renderer, sGoal_Left);
     mGoal_Right = SDL_CreateTextureFromSurface(renderer, sGoal_Right);
-    
-    SDL_FreeSurface(imageSurface);
-    SDL_FreeSurface(sGoal_Left);
-    SDL_FreeSurface(sGoal_Right);
-
     //Left goal rect init position and define width and heigth
     gGoal_Left.h=370;
     gGoal_Left.w = 50;
@@ -519,7 +537,7 @@ bool init()
     bool test = true;
     SDL_Init(SDL_INIT_VIDEO);
 //    TTF_Init();
-    window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+    window = SDL_CreateWindow("Not Rocket League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
     if(window == NULL)
     {
