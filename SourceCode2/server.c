@@ -157,6 +157,15 @@ int main(int argc, char **argv)
         }
     }
     /* Clean and exit */
+    free(boll);
+    free(client[0].player);
+    free(client[1].player);
+    free(client[2].player);
+    free(client[3].player);
+    SDL_free(client[0].gPlayer);
+    SDL_free(client[1].gPlayer);
+    SDL_free(client[2].gPlayer);
+    SDL_free(client[3].gPlayer);
     SDLNet_FreePacket(pSent);
     SDLNet_FreePacket(pRecive);
     SDLNet_Quit();

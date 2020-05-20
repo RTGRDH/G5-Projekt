@@ -71,8 +71,6 @@ int main(int argc, char * argv[])
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
-    //Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
-    //Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
 
     UDPsocket s;                                                
 	IPaddress saddr;                                            
@@ -367,6 +365,12 @@ int main(int argc, char * argv[])
     SDL_DestroyTexture(mPlayer);
     SDL_DestroyTexture(mBall);
     SDL_DestroyRenderer(renderer);
+    Mix_FreeMusic(backgroundSound);
+    free(player);
+    free(player2);
+    free(player3);
+    free(player4);
+    free(b);
    // TTF_Quit();
     SDL_Quit();
     return 0;
