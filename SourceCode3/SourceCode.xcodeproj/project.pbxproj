@@ -1,0 +1,153 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		A76DCA542452EA0800C99578 /* makefile.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.mk; sourceTree = "<group>"; };
+		A76DCA552452EA0800C99578 /* run.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = run.exe; sourceTree = "<group>"; };
+		A76DCA562452EA0800C99578 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		A76DCA572452EA0800C99578 /* ball.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ball.h; sourceTree = "<group>"; };
+		A76DCA582452EA0800C99578 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A76DCA592452EA0800C99578 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A76DCA5A2452EA0800C99578 /* ball.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ball.c; sourceTree = "<group>"; };
+		A76DCA5B2452EA0800C99578 /* git */ = {isa = PBXFileReference; lastKnownFileType = text; path = git; sourceTree = "<group>"; };
+		A76DCA5C2452EA0800C99578 /* Player.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Player.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		A76DCA4E2452EA0800C99578 = {
+			isa = PBXGroup;
+			children = (
+				A76DCA542452EA0800C99578 /* makefile.mk */,
+				A76DCA552452EA0800C99578 /* run.exe */,
+				A76DCA562452EA0800C99578 /* Images */,
+				A76DCA572452EA0800C99578 /* ball.h */,
+				A76DCA582452EA0800C99578 /* Player.h */,
+				A76DCA592452EA0800C99578 /* main.c */,
+				A76DCA5A2452EA0800C99578 /* ball.c */,
+				A76DCA5B2452EA0800C99578 /* git */,
+				A76DCA5C2452EA0800C99578 /* Player.c */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		A76DCA532452EA0800C99578 /* SourceCode */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = A76DCA5D2452EA0800C99578 /* Build configuration list for PBXLegacyTarget "SourceCode" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/ernstreutergardh/Documents/GitHub/G5-Projekt/SourceCode";
+			dependencies = (
+			);
+			name = SourceCode;
+			passBuildSettingsInEnvironment = 1;
+			productName = SourceCode;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		A76DCA4F2452EA0800C99578 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A76DCA522452EA0800C99578 /* Build configuration list for PBXProject "SourceCode" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A76DCA4E2452EA0800C99578;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A76DCA532452EA0800C99578 /* SourceCode */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		A76DCA502452EA0800C99578 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		A76DCA512452EA0800C99578 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		A76DCA5E2452EA0800C99578 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Debug;
+		};
+		A76DCA5F2452EA0800C99578 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A76DCA522452EA0800C99578 /* Build configuration list for PBXProject "SourceCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A76DCA502452EA0800C99578 /* Debug */,
+				A76DCA512452EA0800C99578 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A76DCA5D2452EA0800C99578 /* Build configuration list for PBXLegacyTarget "SourceCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A76DCA5E2452EA0800C99578 /* Debug */,
+				A76DCA5F2452EA0800C99578 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A76DCA4F2452EA0800C99578 /* Project object */;
+}

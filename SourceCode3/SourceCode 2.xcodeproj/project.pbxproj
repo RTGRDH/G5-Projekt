@@ -1,0 +1,202 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXFileReference section */
+		A7F0967C2469CA2700B6FB85 /* theServer.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = theServer.exe; sourceTree = "<group>"; };
+		A7F0967D2469CA2700B6FB85 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		A7F0967E2469CA2700B6FB85 /* run.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = run.exe; sourceTree = "<group>"; };
+		A7F0967F2469CA2700B6FB85 /* menu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = menu.c; sourceTree = "<group>"; };
+		A7F096802469CA2700B6FB85 /* Images */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Images; sourceTree = "<group>"; };
+		A7F096812469CA2700B6FB85 /* makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		A7F096822469CA2700B6FB85 /* backgroundSound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = backgroundSound.wav; sourceTree = "<group>"; };
+		A7F096832469CA2700B6FB85 /* ball.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = ball.o; sourceTree = "<group>"; };
+		A7F096842469CA2700B6FB85 /* ball.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ball.h; sourceTree = "<group>"; };
+		A7F096852469CA2700B6FB85 /* gameLogic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = gameLogic.h; sourceTree = "<group>"; };
+		A7F096862469CA2700B6FB85 /* GameLogic.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = GameLogic.o; sourceTree = "<group>"; };
+		A7F096872469CA2700B6FB85 /* Player.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = Player.o; sourceTree = "<group>"; };
+		A7F096882469CA2700B6FB85 /* Player.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
+		A7F096892469CA2700B6FB85 /* SourceCode.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = SourceCode.xcodeproj; sourceTree = "<group>"; };
+		A7F0968C2469CA2700B6FB85 /* theGame.exe */ = {isa = PBXFileReference; lastKnownFileType = file; path = theGame.exe; sourceTree = "<group>"; };
+		A7F0968D2469CA2700B6FB85 /* server.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
+		A7F0968E2469CA2700B6FB85 /* bounce2.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bounce2.ogg; sourceTree = "<group>"; };
+		A7F0968F2469CA2700B6FB85 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		A7F096902469CA2700B6FB85 /* bounce1.ogg */ = {isa = PBXFileReference; lastKnownFileType = file; path = bounce1.ogg; sourceTree = "<group>"; };
+		A7F096912469CA2700B6FB85 /* menu.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = menu.h; sourceTree = "<group>"; };
+		A7F096922469CA2700B6FB85 /* gameLogic.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = gameLogic.c; sourceTree = "<group>"; };
+		A7F096932469CA2700B6FB85 /* ball.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ball.c; sourceTree = "<group>"; };
+		A7F096942469CA2700B6FB85 /* Fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Fonts; sourceTree = "<group>"; };
+		A7F096952469CA2700B6FB85 /* server.o */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.objfile"; path = server.o; sourceTree = "<group>"; };
+		A7F096962469CA2700B6FB85 /* Victory!.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "Victory!.wav"; sourceTree = "<group>"; };
+		A7F096972469CA2700B6FB85 /* git */ = {isa = PBXFileReference; lastKnownFileType = text; path = git; sourceTree = "<group>"; };
+		A7F096982469CA2700B6FB85 /* Player.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = Player.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		A7F096762469CA2700B6FB85 = {
+			isa = PBXGroup;
+			children = (
+				A7F0967C2469CA2700B6FB85 /* theServer.exe */,
+				A7F0967D2469CA2700B6FB85 /* .DS_Store */,
+				A7F0967E2469CA2700B6FB85 /* run.exe */,
+				A7F0967F2469CA2700B6FB85 /* menu.c */,
+				A7F096802469CA2700B6FB85 /* Images */,
+				A7F096812469CA2700B6FB85 /* makefile */,
+				A7F096822469CA2700B6FB85 /* backgroundSound.wav */,
+				A7F096832469CA2700B6FB85 /* ball.o */,
+				A7F096842469CA2700B6FB85 /* ball.h */,
+				A7F096852469CA2700B6FB85 /* gameLogic.h */,
+				A7F096862469CA2700B6FB85 /* GameLogic.o */,
+				A7F096872469CA2700B6FB85 /* Player.o */,
+				A7F096882469CA2700B6FB85 /* Player.h */,
+				A7F096892469CA2700B6FB85 /* SourceCode.xcodeproj */,
+				A7F0968C2469CA2700B6FB85 /* theGame.exe */,
+				A7F0968D2469CA2700B6FB85 /* server.c */,
+				A7F0968E2469CA2700B6FB85 /* bounce2.ogg */,
+				A7F0968F2469CA2700B6FB85 /* main.c */,
+				A7F096902469CA2700B6FB85 /* bounce1.ogg */,
+				A7F096912469CA2700B6FB85 /* menu.h */,
+				A7F096922469CA2700B6FB85 /* gameLogic.c */,
+				A7F096932469CA2700B6FB85 /* ball.c */,
+				A7F096942469CA2700B6FB85 /* Fonts */,
+				A7F096952469CA2700B6FB85 /* server.o */,
+				A7F096962469CA2700B6FB85 /* Victory!.wav */,
+				A7F096972469CA2700B6FB85 /* git */,
+				A7F096982469CA2700B6FB85 /* Player.c */,
+			);
+			sourceTree = "<group>";
+		};
+		A7F0968A2469CA2700B6FB85 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		A7F0967B2469CA2700B6FB85 /* SourceCode */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = A7F0969A2469CA2700B6FB85 /* Build configuration list for PBXLegacyTarget "SourceCode" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = "/Users/ernstreutergardh/Documents/GitHub/G5-Projekt/SourceCode";
+			dependencies = (
+			);
+			name = SourceCode;
+			passBuildSettingsInEnvironment = 1;
+			productName = SourceCode;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		A7F096772469CA2700B6FB85 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = A7F0967A2469CA2700B6FB85 /* Build configuration list for PBXProject "SourceCode 2" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A7F096762469CA2700B6FB85;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A7F0968A2469CA2700B6FB85 /* Products */;
+					ProjectRef = A7F096892469CA2700B6FB85 /* SourceCode.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				A7F0967B2469CA2700B6FB85 /* SourceCode */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		A7F096782469CA2700B6FB85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		A7F096792469CA2700B6FB85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		A7F0969B2469CA2700B6FB85 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Debug;
+		};
+		A7F0969C2469CA2700B6FB85 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = SourceCode;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A7F0967A2469CA2700B6FB85 /* Build configuration list for PBXProject "SourceCode 2" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F096782469CA2700B6FB85 /* Debug */,
+				A7F096792469CA2700B6FB85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A7F0969A2469CA2700B6FB85 /* Build configuration list for PBXLegacyTarget "SourceCode" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A7F0969B2469CA2700B6FB85 /* Debug */,
+				A7F0969C2469CA2700B6FB85 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A7F096772469CA2700B6FB85 /* Project object */;
+}
