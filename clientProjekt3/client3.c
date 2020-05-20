@@ -122,8 +122,9 @@ int main(int argc, char * argv[])
         }
         else
         {
-            int startsignal=5;
-            printf("Sänder: %d \n",startsignal);
+            //Connect to server
+            int startsignal=5; 
+            //printf("Sänder: %d \n",startsignal);
             sprintf((char *)pSend->data, "%d\n",startsignal); 
             pSend->address.host = saddr.host;	/* Set the destination host */
 	        pSend->address.port = saddr.port;	/* And destination port */
@@ -131,12 +132,13 @@ int main(int argc, char * argv[])
             SDLNet_UDP_Send(s, -1, pSend);
         }
     }
+    //Waiting for serverrespons
     int start=0;
     while(start!=5){
         if(SDLNet_UDP_Recv(s, pRecive)){
             int full;
             sscanf((char * )pRecive->data,"%d\n", &full);
-            printf("%d\n", full);
+            //printf("%d\n", full);
             if(full==5){
                 running=false;
                 break;

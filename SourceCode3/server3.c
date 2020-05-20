@@ -81,17 +81,7 @@ int main(int argc, char **argv)
         exit(EXIT_FAILURE);}
     printf("Waiting for clients\n");
     /* Main loop */
-    /*if(*pClientCount==4){
-        float full=1;
-            for(int i=0;i<4;i++){
-            sprintf((char *)pSent->data, "%f\n", full);
-            //sent->len = strlen((char *)sent->data) + 1;
-            pSent->address.host = pRecive->address.host;   // Set the destination host
-            pSent->address.port = pRecive->address.port;
-            pSent->len = strlen((char *)pSent->data) + 1;
-            SDLNet_UDP_Send(sd, -1, pSent);
-        }
-    }*/
+
     quit = 0;
     int count = 0;
     while (!quit)
@@ -113,16 +103,12 @@ int main(int argc, char **argv)
                         tmpClient=i;
                     }
                 }
-                printf("tmpClient: %d\n", tmpClient);
+
                 if(tmpClient==4){
+                    /*Send packet to client: game full*/
                     int fullt=1;
-                    //for(int i=0;i<4;i++){
-                    printf("Fullt: %d\n", fullt);
-                        //sprintf((char *)pSent->data, "%d\n", fullt);
-                        //sent->len = strlen((char *)sent->data) + 1;
                     sscanf((char * )pRecive->data, "%d\n", &fullt);
-                    printf("Inscannad: %d\n", fullt);
-                    pSent->address.host = pRecive->address.host;    /* Set the destination host */
+                    pSent->address.host = pRecive->address.host;
                     pSent->address.port = pRecive->address.port;
                     sprintf((char *)pSent->data, "%d\n", fullt);
                     pSent->len = strlen((char *)pSent->data) + 1;
@@ -159,13 +145,9 @@ int main(int argc, char **argv)
                         //}
                         sscanf((char * )pRecive->data, "%d\n", &movement);
                         client_create(client, pRecive, m, pClientCount);
+                        /*Send packet to client: game on*/
                         int ok=1;
-                        printf("Finns plats: %d\n", ok);
-                        //sprintf((char *)pSent->data, "%d\n", fullt);
-                        //sent->len = strlen((char *)sent->data) + 1;
-                        //sscanf((char * )pRecive->data, "%d\n", &fullt);
-                        //printf("Inscannad: %d\n", fullt);
-                        pSent->address.host = pRecive->address.host; ;    /* Set the destination host */
+                        pSent->address.host = pRecive->address.host;
                         pSent->address.port = pRecive->address.port;
                         sprintf((char *)pSent->data, "%d\n", ok);
                         pSent->len = strlen((char *)pSent->data) + 1;
