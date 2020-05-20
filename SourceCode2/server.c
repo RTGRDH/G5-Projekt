@@ -48,7 +48,7 @@ void INIT_ALL();
 #define TURNING_SPEED 15
 #define ACCELERATION 0.5
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
     if (SDLNet_Init() < 0){                                                                 /* Initialize SDL_net */
         fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
@@ -125,6 +125,7 @@ int main(int argc, char **argv)
                 {
                     if(client[m].IP == 0 && client[m].port == 0)
                     {
+                        
                         
                         sscanf((char * )pRecive->data, "%d \n", &movement);
                         client_create(client, pRecive, m, pClientCount);
