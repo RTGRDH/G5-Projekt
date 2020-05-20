@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <stdbool.h>
-#include <stdlib.h>                                      
-#include <string.h>                                         
+#include <stdlib.h>
+#include <string.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
@@ -15,7 +15,6 @@
 #include <SDL2/SDL_mixer.h>
 
 #define SIZE 4
-#define SPEED (300); //75 is optimal, 300 for dev.
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 6
 #define TURNING_SPEED 10
@@ -27,10 +26,13 @@ bool init();
 void renderBackground();
 bool initPlayField();
 bool initMedia();
-void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);   
+void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);
+void Quit();
+
 
 SDL_Window *window = NULL;
 SDL_Renderer* renderer = NULL;
+
 SDL_Surface *imageSurface =  NULL;
 SDL_Surface *sPlayer = NULL;
 SDL_Surface *sPlayer2 = NULL;
@@ -67,99 +69,69 @@ SDL_Rect gBall;
 SDL_Rect gGoal_Left;
 SDL_Rect gGoal_Right;
 
+TTF_Font *fontClient = NULL;
+SDL_Rect dstrect;
+SDL_Color color = {0,0,0};
+
+
 int main(int argc, char * argv[])
 {
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
     Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
-    //Mix_Chunk *score = Mix_LoadWAV("Victory!.wav");
-    //Mix_Chunk *kick = Mix_LoadWAV("bounce2.ogg");
 
-    UDPsocket s;                                                
-	IPaddress saddr;                                            
-	UDPpacket *pSend;                                           
-    UDPpacket *pRecive;                                        
+    UDPsocket s;
+    IPaddress saddr;
+    UDPpacket *pSend;
+    UDPpacket *pRecive;
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
     int loop=0;
     const int FPS = 30;
     Uint32 startTime;
+    char inputText[40] = "";
+    
 
-    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
-    if (SDLNet_Init() < 0)            
-	{
-		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
+    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c
+    if (SDLNet_Init() < 0)
+    {
+        fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
+        exit(EXIT_FAILURE);
+    }
 
-    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     
-    if (!(s = SDLNet_UDP_Open(0)))                                          
-	{
-		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
+    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c
+    if (!(s = SDLNet_UDP_Open(0)))
+    {
+        fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
+        exit(EXIT_FAILURE);
+    }
 
-    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
-	if (SDLNet_ResolveHost(&saddr, getIP(), 2000) == -1)
-	{
-		fprintf(stderr, "SDLNet_ResolveHost(%s : 2000): %s\n",getIP() ,SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
+    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c
+    if (SDLNet_ResolveHost(&saddr, getIP(), 2000) == -1)
+    {
+        fprintf(stderr, "SDLNet_ResolveHost(%s : 2000): %s\n",getIP() ,SDLNet_GetError());
+        exit(EXIT_FAILURE);
+    }
 
     //Check if it's possible to allocate memory for send and recive packetsJonas Willén movingTwoMenWithUDP.c //Net
-    if (!((pSend = SDLNet_AllocPacket(512))&& (pRecive = SDLNet_AllocPacket(512)))) 
-	{                                                                               
-		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
-		exit(EXIT_FAILURE);
-	}
-
+    if (!((pSend = SDLNet_AllocPacket(512))&& (pRecive = SDLNet_AllocPacket(512))))
+    {
+        fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
+        exit(EXIT_FAILURE);
+    }
+    
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
-        if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+          if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
         {
             running = false;
         }
-        else
-        {
-            //Connect to server
-            int startsignal=5; 
-            //printf("Sänder: %d \n",startsignal);
-            sprintf((char *)pSend->data, "%d\n",startsignal); 
-            pSend->address.host = saddr.host;	/* Set the destination host */
-	        pSend->address.port = saddr.port;	/* And destination port */
-	        pSend->len = strlen((char *)pSend->data) + 1;
-            SDLNet_UDP_Send(s, -1, pSend);
-        }
     }
-    //Waiting for serverrespons
-    int start=0;
-    while(start!=5){
-        if(SDLNet_UDP_Recv(s, pRecive)){
-            int full;
-            sscanf((char * )pRecive->data,"%d\n", &full);
-            //printf("%d\n", full);
-            if(full==5){
-                running=false;
-                break;
-            }
-            else{
-                start=5;
-            }
-        }
-    }
-        
-
     //Init backround here
     if(!initPlayField())
     {
-        SDL_FreeSurface(imageSurface);
-        imageSurface = NULL;
-        SDL_DestroyWindow(window);
-        SDL_DestroyTexture(mField);
-        SDL_DestroyTexture(mPlayer);
-        SDL_DestroyRenderer(renderer);
-        SDL_Quit();
+        Quit();
         return 1;
     }
     else
@@ -169,24 +141,17 @@ int main(int argc, char * argv[])
     //Init other graphical media.
     if(!initMedia())
     {
-        SDL_FreeSurface(imageSurface);
-        imageSurface = NULL;
-        SDL_DestroyWindow(window);
-        SDL_DestroyTexture(mField);
-        SDL_DestroyTexture(mPlayer);
-        SDL_DestroyRenderer(renderer);
-        SDL_Quit();
+        Quit();
         return 1;
     }
     else
     {
         printf("Initialize media successful.\n");
     }
-           
-                                                                                  
-    setPlayerDirection(player, 45);                                              
-    setPlayerDirection(player2, 135);                                            
-    setPlayerDirection(player3, 315);                                            
+                                                                          
+    setPlayerDirection(player, 45);
+    setPlayerDirection(player2, 135);
+    setPlayerDirection(player3, 315);
     setPlayerDirection(player4, 225);
     
     // keep track of which inputs are given
@@ -202,14 +167,14 @@ int main(int argc, char * argv[])
     while(running)
     {
         startTime = SDL_GetTicks();
-       // SDL_Delay(1000/60);
-       if(musicStart == true && musicPlaying == false)
-       {
+
+        if(musicStart == true && musicPlaying == false)
+        {
             Mix_PlayMusic(backgroundSound, -1);
             musicPlaying = true;
-       }
+        }
        
-       if(musicStop == true && musicPlaying == true)
+        if(musicStop == true && musicPlaying == true)
         {
             Mix_HaltMusic();
             musicPlaying = false;
@@ -337,14 +302,14 @@ int main(int argc, char * argv[])
         if (accelerate == -1 && turn == -1)
             movementCodedInOneVariable = 9;
         if(movementCodedInOneVariable!=5){
-            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
+            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s );
         }
 //------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
         //Recive packet, for now just recive mirroring from server                  //Net
-        while (SDLNet_UDP_Recv(s, pRecive)){
-            float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4, y4, d4, ballx, bally;
+       while (SDLNet_UDP_Recv(s, pRecive)){
+            float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4,y4,d4, ballx, bally;
             float P1Speed,P2Speed,P3Speed,P4Speed;
-            sscanf((char * )pRecive->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally,&P1Speed,&P2Speed,&P3Speed,&P4Speed);
+            sscanf((char * )pRecive->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally,&P1Speed,&P2Speed,&P3Speed,&P4Speed,&P1Score,&P2Score);
 
             gBall.x=ballx;
             gBall.y=bally;
@@ -370,7 +335,33 @@ int main(int argc, char * argv[])
             setPlayerDirection(player4, d4);
             setPlayerSpeed(player4,P4Speed);
 
+
         }
+
+        sprintf(inputText,"%d-%d",P1Score,P2Score);
+
+        if(P1Score==3)
+        {
+            sprintf(inputText,"Blaa laget vann.Grattis!");
+        }
+        else if(P2Score==3)
+        {
+            sprintf(inputText,"Oranga laget vann.Grattis!");
+        }
+
+        fontClient = TTF_OpenFont("Images/arial.ttf", 40);
+
+        surface = TTF_RenderText_Solid(fontClient,
+        inputText, color);
+        texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+        SDL_QueryTexture(texture, NULL, NULL, &dstrect.w, &dstrect.h);
+    
+        dstrect.h = dstrect.h;
+        dstrect.w = dstrect.w;
+        dstrect.x = 50;
+        dstrect.y = 5;
+
         SDL_RenderClear(renderer);
         renderBackground();
      
@@ -382,23 +373,16 @@ int main(int argc, char * argv[])
 
         SDL_RenderCopyEx(renderer, mPlayer4, NULL, &gPlayer4, getPlayerDirection(player4)-90, NULL, SDL_FLIP_NONE);
         SDL_RenderPresent(renderer);
-     // SDL_RenderCopy(renderer, texture, NULL, &dstrect);
+        SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
         
-    //    SDL_Delay(1000/60);
         if(1000/FPS>SDL_GetTicks()-startTime){
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
         }
     }
-    SDL_FreeSurface(imageSurface);
-    imageSurface = NULL;
-    SDL_DestroyWindow(window);
-    SDL_DestroyTexture(mField);
-    SDL_DestroyTexture(mPlayer);
-    SDL_DestroyTexture(mBall);
-    SDL_DestroyRenderer(renderer);
-   // TTF_Quit();
-    SDL_Quit();
+
+    Mix_FreeMusic(backgroundSound);
+    Quit();
     return 0;
 }
 
@@ -420,7 +404,12 @@ bool initMedia()
     sPlayer3 = IMG_Load("images/Car3.png");
     sPlayer4 = IMG_Load("images/Car4.png");
     sBall = IMG_Load("images/SoccerBall.png");
- 
+     if(NULL == imageSurface)
+     {
+         printf("\nCould not load image. Error: %s",SDL_GetError());
+         printf("\n");
+         flag = false;
+     }
     
     mPlayer = SDL_CreateTextureFromSurface(renderer, sPlayer);
 
@@ -432,10 +421,9 @@ bool initMedia()
 
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
 
-
-    player = createPlayer(50, 50);                                                                        //EV ska detta vara i server?? Vid ny klient
+    player = createPlayer(50, 50);
     player2 = createPlayer(880, 50);
-    player3 = createPlayer(50, 450);                                                                        //EV ska detta vara i server?? Vid ny klient
+    player3 = createPlayer(50, 450);
     player4 = createPlayer(880, 450);
 
     b = createBall(470,260);
@@ -465,12 +453,6 @@ bool initMedia()
     gBall.h = getBallHeight();
     gBall.w = getBallWidth();
 
-    if(NULL == imageSurface)
-    {
-        printf("\nCould not load image. Error: %s",SDL_GetError());
-        printf("\n");
-        flag = false;
-    }
     return flag;
 }
 /**
@@ -487,14 +469,17 @@ bool initPlayField()
         flag = false;
     }
     imageSurface = IMG_Load("images/SoccerField.png");
-    
-    mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
-
     sGoal_Left = IMG_Load("images/Goal_Left.png");
     sGoal_Right = IMG_Load("images/Goal_Right.png");
+    
     mField = SDL_CreateTextureFromSurface(renderer, imageSurface);
     mGoal_Left = SDL_CreateTextureFromSurface(renderer, sGoal_Left);
     mGoal_Right = SDL_CreateTextureFromSurface(renderer, sGoal_Right);
+    
+    SDL_FreeSurface(imageSurface);
+    SDL_FreeSurface(sGoal_Left);
+    SDL_FreeSurface(sGoal_Right);
+
     //Left goal rect init position and define width and heigth
     gGoal_Left.h=370;
     gGoal_Left.w = 50;
@@ -536,8 +521,8 @@ bool init()
 {
     bool test = true;
     SDL_Init(SDL_INIT_VIDEO);
-//    TTF_Init();
-    window = SDL_CreateWindow("Not Rocket League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
+    TTF_Init();
+    window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
     if(window == NULL)
     {
@@ -546,18 +531,6 @@ bool init()
         test = false;
     }
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  //  font = TTF_OpenFont("Images/arial.ttf", 60);
-  //  SDL_Color color = { 144, 77, 255,255 };
-  //  surface = TTF_RenderText_Solid(font,
-    //    "Välkommen", color);
-
-  //  texture = SDL_CreateTextureFromSurface(renderer, surface);
-
-  //  int texW = 50;
-  //  int texH = 50;
-  //  SDL_QueryTexture(texture, NULL, NULL, &texW, &texH);
-  //  SDL_Rect dstrect = { 0, 0, texW, texH };
-
     if(renderer == NULL)
     {
         printf("Could not create renderer. Error: %s",SDL_GetError());
@@ -569,10 +542,44 @@ bool init()
 
 void sendPacket(Player p, int movement, IPaddress svr, UDPpacket *packet, UDPsocket s)
 {
-   // printf("%d \n",movement);
-    sprintf((char *)packet->data, "%d\n",movement); 
-    packet->address.host = svr.host;	/* Set the destination host */
-	packet->address.port = svr.port;	/* And destination port */
-	packet->len = strlen((char *)packet->data) + 1;
+    sprintf((char *)packet->data, "%d\n",movement);
+    packet->address.host = svr.host;    /* Set the destination host */
+    packet->address.port = svr.port;    /* And destination port */
+    packet->len = strlen((char *)packet->data) + 1;
     SDLNet_UDP_Send(s, -1, packet);
+}
+
+void Quit()
+{
+    SDL_DestroyWindow(window);
+    SDL_DestroyTexture(mField);
+    SDL_DestroyTexture(mPlayer);
+    SDL_DestroyTexture(mPlayer2);
+    SDL_DestroyTexture(mPlayer3);
+    SDL_DestroyTexture(mPlayer4);
+    SDL_DestroyTexture(mBall);
+    SDL_DestroyTexture(mGoal_Left);
+    SDL_DestroyTexture(mGoal_Right);
+    SDL_DestroyTexture(texture);
+    SDL_DestroyRenderer(renderer);
+    SDL_FreeSurface(sPlayer);
+    SDL_FreeSurface(sPlayer2);
+    SDL_FreeSurface(sPlayer3);
+    SDL_FreeSurface(sPlayer4);
+    SDL_FreeSurface(sBall);
+    SDL_FreeSurface(imageSurface);
+    SDL_FreeSurface(surface);
+    SDL_FreeSurface(sGoal_Left);
+    SDL_FreeSurface(sGoal_Right);
+    Mix_Quit();
+    free(player);
+    free(player2);
+    free(player3);
+    free(player4);
+    free(b);
+    TTF_Quit();
+    SDLNet_Quit();
+    IMG_Quit();
+    SDL_Quit();
+
 }

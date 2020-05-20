@@ -20,22 +20,275 @@
 #define M_PI acos(-1.0)
 #endif
 
-bool PlayerBallCollision(SDL_Rect* gPlayer, SDL_Rect* gBall){
-    if(gPlayer ->y >= gBall ->y  + gBall ->h)
-        return 0;
-    if(gPlayer->x >= gBall ->x + gBall->w)
-        return 0;
-    if(gPlayer->y + gPlayer->h <= gBall->y)
-        return 0;
-    if(gPlayer ->x + gPlayer->w <= gBall->x)
-        return 0;
-    return 1;
+
+bool PlayerCollision(Player player, Player player2)
+{
+    if(distancePlayerPlayer(player,player2)<27)
+    {
+        if(getPlayerDirection(player) >=40 && getPlayerDirection(player) <=140 ||
+        getPlayerDirection(player2) >=40 && getPlayerDirection(player2) <=140 )
+        {
+            if(getPlayerDirection(player2) >=0 && getPlayerDirection(player2) <=30
+            || getPlayerDirection(player2) >=330 && getPlayerDirection(player2)<=360
+            
+            || getPlayerDirection(player) >=0 && getPlayerDirection(player) <=30
+            || getPlayerDirection(player) >=330 && getPlayerDirection(player)<=360)
+            {
+                if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player)-getPlayerDirection(player2));
+                    setPlayerDirection(player,getPlayerDirection(player)-180);
+                    return 1;
+
+                }
+                else if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                {
+                    setPlayerDirection(player,getPlayerDirection(player2)-getPlayerDirection(player));
+                    setPlayerDirection(player2,getPlayerDirection(player)-180);
+                    return 1;
+
+                }
+                    
+            }
+            else if(getPlayerDirection(player2) >=180 && getPlayerDirection(player2) <=210
+                    || getPlayerDirection(player2) >=150 && getPlayerDirection(player2)<=180
+
+                    || getPlayerDirection(player) >=180 && getPlayerDirection(player) <=210
+                    || getPlayerDirection(player) >=150 && getPlayerDirection(player)<=180)
+                    {
+                        if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                        {
+                            setPlayerDirection(player2,getPlayerDirection(player2)-getPlayerDirection(player));
+                            setPlayerDirection(player,getPlayerDirection(player)-180);
+                            return 1;
+                        }
+                        else if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                        {
+                            setPlayerDirection(player,getPlayerDirection(player)-getPlayerDirection(player2));
+                            setPlayerDirection(player2,getPlayerDirection(player)-180);
+                            return 1;
+
+                        }
+                    }
+        }
+        if(getPlayerDirection(player) >=220 && getPlayerDirection(player) <=320
+            || getPlayerDirection(player2) >=220 && getPlayerDirection(player2) <=320)
+            {
+                if(getPlayerDirection(player2) >=0 && getPlayerDirection(player2) <=30
+                || getPlayerDirection(player2) >=330 && getPlayerDirection(player2)<=360
+
+                || getPlayerDirection(player) >=0 && getPlayerDirection(player) <=30
+                || getPlayerDirection(player) >=330 && getPlayerDirection(player)<=360)
+                {
+                    if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                    {
+                        setPlayerDirection(player2,getPlayerDirection(player)+getPlayerDirection(player2));
+                        setPlayerDirection(player,getPlayerDirection(player)-180);
+                        return 1;
+
+                    }
+                    else if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                    {
+                        setPlayerDirection(player,getPlayerDirection(player2)+getPlayerDirection(player));
+                        setPlayerDirection(player2,getPlayerDirection(player2)-180);
+                        return 1;
+
+                    }
+
+                    
+                }
+                else if(getPlayerDirection(player2) >=180 && getPlayerDirection(player2) <=210
+                    || getPlayerDirection(player2) >=150 && getPlayerDirection(player2)<=180
+
+                    || getPlayerDirection(player) >=180 && getPlayerDirection(player) <=210
+                    || getPlayerDirection(player) >=150 && getPlayerDirection(player)<=180)
+                    {
+                        if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                        {
+                            setPlayerDirection(player,-getPlayerDirection(player));
+                            setPlayerDirection(player2,getPlayerDirection(player2)+90);
+                            return 1;
+                        }
+                        else if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                        {
+                            setPlayerDirection(player2,-getPlayerDirection(player2));
+                            setPlayerDirection(player,getPlayerDirection(player)+90);
+                            return 1;
+                        
+                        }
+                    }
+
+            }
+            
+        if(getPlayerDirection(player) >=220 && getPlayerDirection(player) <=320 &&
+            getPlayerDirection(player2) >=40 && getPlayerDirection(player2) <=140 ||
+
+            getPlayerDirection(player2) >=220 && getPlayerDirection(player2) <=320 &&
+            getPlayerDirection(player) >=40 && getPlayerDirection(player) <=140 )
+            {
+                if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2)-180);
+                    setPlayerDirection(player,getPlayerDirection(player)+180);
+                    return 1;
+                        
+                }
+                else if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2)+180);
+                    setPlayerDirection(player,getPlayerDirection(player)-180);
+                    return 1;
+                }
+                
+                
+            }
+                
+        if(getPlayerDirection(player) >=220 && getPlayerDirection(player) <=320 &&
+            getPlayerDirection(player2) >=220 && getPlayerDirection(player2) <=320)
+            {
+                if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2)-180);
+                    setPlayerDirection(player,getPlayerDirection(player));
+                    return 1;
+                }
+                else if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2));
+                    setPlayerDirection(player,getPlayerDirection(player)-180);
+                    return 1;
+                }
+            }
+            else if(getPlayerDirection(player) >=40 && getPlayerDirection(player) <=140 &&
+            getPlayerDirection(player2) >=40 && getPlayerDirection(player2) <=140 )
+            {
+                if(getPlayerPositionY(player2) > getPlayerPositionY(player))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2));
+                    setPlayerDirection(player,getPlayerDirection(player)+180);
+                    return 1;
+                }
+
+                else if(getPlayerPositionY(player) > getPlayerPositionY(player2))
+                {
+                    setPlayerDirection(player2,getPlayerDirection(player2)+180);
+                    setPlayerDirection(player,getPlayerDirection(player));
+                    return 1;
+                }
+            }
+         
+        if(getPlayerDirection(player) >= 0 && getPlayerDirection(player) < 40 ||
+            getPlayerDirection(player) >= 330 && getPlayerDirection(player) <= 360 )
+            {
+                if(getPlayerDirection(player2) >= 0 && getPlayerDirection(player2) < 40 ||
+                getPlayerDirection(player2) >330 && getPlayerDirection(player2) <=360)
+                {
+                    if(getPlayerPositionX(player)<getPlayerPositionX(player2))
+                    {
+                        setPlayerDirection(player,getPlayerDirection(player)+180);
+                        setPlayerDirection(player2,getPlayerDirection(player2));
+                        return 1;
+
+                    }
+                    else if(getPlayerPositionX(player)>getPlayerPositionX(player2))
+                    {
+                        setPlayerDirection(player2,getPlayerDirection(player2)+180);
+                        setPlayerDirection(player,getPlayerDirection(player));
+                        return 1;
+
+                    }
+                }
+            }
+            
+        if(getPlayerDirection(player2) >=180 && getPlayerDirection(player2) <=210 ||
+            getPlayerDirection(player2) >=150 && getPlayerDirection(player2) <=180 ||
+
+            getPlayerDirection(player) >=180 && getPlayerDirection(player) <=210  ||
+            getPlayerDirection(player) >=150 && getPlayerDirection(player) <=180)
+            {
+                if(getPlayerDirection(player) >=0  && getPlayerDirection(player) <= 30 ||
+                getPlayerDirection(player) >= 330 && getPlayerDirection(player) <=360  ||
+
+                getPlayerDirection(player2) >=0 && getPlayerDirection(player2) <=30 ||
+                getPlayerDirection(player2) >=330 && getPlayerDirection(player2) <=360 )
+                {
+                    if(getPlayerPositionX(player)<getPlayerPositionX(player2))
+                    {
+                        setPlayerDirection(player,getPlayerDirection(player)+180);
+                        setPlayerDirection(player2,getPlayerDirection(player2)-180);
+                        return 1;
+
+                    }
+                    else if(getPlayerPositionX(player)>getPlayerPositionX(player2))
+                    {
+                        setPlayerDirection(player2,getPlayerDirection(player2)+180);
+                        setPlayerDirection(player,getPlayerDirection(player)-180);
+                        return 1;
+
+                    }
+                }
+            }
+                 
+ 
+        if(getPlayerDirection(player) >=150  && getPlayerDirection(player) <= 180 ||
+            getPlayerDirection(player) >= 180 && getPlayerDirection(player) <=210  )
+            {
+                if(getPlayerDirection(player2) >=180 && getPlayerDirection(player2) <=210
+                || getPlayerDirection(player2) >=150 && getPlayerDirection(player2) <=180)
+                {
+                    if(getPlayerPositionX(player2)>getPlayerPositionX(player))
+                    {
+                        setPlayerDirection(player,getPlayerDirection(player));
+                        setPlayerDirection(player2,getPlayerDirection(player2)-180);
+                        return 1;
+
+                    }
+                    else if(getPlayerPositionX(player2)<getPlayerPositionX(player))
+                    {
+                        setPlayerDirection(player,getPlayerDirection(player)-180);
+                        setPlayerDirection(player2,getPlayerDirection(player2));
+                        return 1;
+
+                    }
+                }
+              
+            }
+
+    setPlayerDirection(player,getPlayerDirection(player)-180);
+    setPlayerDirection(player2,getPlayerDirection(player2)-180);
+    }
+
+    return 0;
 
 }
 
 
+bool BallRightPostCollision(SDL_Rect* gBall){
+  if(gBall->x >900){
+        if(gBall ->y > 395 && gBall->y < 450){
+             return 1;
+        }else if(gBall ->y > 60 && gBall->y < 125){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+bool BallLeftPostCollision(SDL_Rect* gBall){
+    if(gBall->x <45){
+          if(gBall ->y > 395 && gBall->y < 450){
+             return 1;
+        }else if(gBall ->y > 60 && gBall->y < 125){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+
+
 bool ballRightGoalCollision(SDL_Rect* gBall){
-    if(gBall->x >910){
+    if(gBall->x > 920 ){
         if(gBall ->y > 120 && gBall->y < 395){
              return 1;
         }
@@ -45,7 +298,7 @@ bool ballRightGoalCollision(SDL_Rect* gBall){
 }
 
 bool ballLeftGoalCollision(SDL_Rect* gBall){
-    if(gBall->x <5){
+    if(gBall->x < 20 ){
         if(gBall ->y > 120 && gBall->y < 395){
              return 1;
         }
@@ -78,32 +331,48 @@ float distanceBallPlayer(Ball b, Player p)
     return distance;
 }
 
+float distancePlayerPlayer(Player p1, Player p2)
+{
+    float squared_X_distance, squared_Y_distance, squared_hypotenuse, distance;
+
+    squared_X_distance = pow((getPlayerPositionX(p1) + getPlayerWidth()/2) - (getPlayerPositionX(p2) + getPlayerWidth()/2), 2);
+    squared_Y_distance = pow((getPlayerPositionY(p1) + getPlayerHeight()/2) - (getPlayerPositionY(p2) + getPlayerHeight()/2), 2);
+    
+    squared_hypotenuse = squared_X_distance + squared_Y_distance;
+    //hypotenuse IS the distance
+    distance = sqrt(squared_hypotenuse);
+    
+    return distance;
+}
+
 float angleBallPlayer(Ball b, Player p)
 {
     float x_distance, y_distance, direction;
 
-    x_distance = (getBallPositionX(b) - getBallWidth()/2) - (getPlayerPositionX(p) - getPlayerWidth()/2);
+    x_distance = (getBallPositionX(b) + getBallWidth()/2) - (getPlayerPositionX(p) + getPlayerWidth()/2);
     y_distance = (getBallPositionY(b) + getBallHeight()/2) - (getPlayerPositionY(p) + getPlayerHeight()/2);
 
     if (x_distance == 0)
     {
         if (y_distance > 0)
-            return 0;
+            return 90;
         else
-            return 180;
+            return -90;
     }
     else
     {
-    if (x_distance >= 0)
+    if (x_distance > 0)
         {
-            direction = -atan(y_distance/x_distance)*180/M_PI+90;
+            direction = atan(y_distance/x_distance)*180/M_PI;
             return direction;
         }
         else
         {
-            direction = atan(y_distance/x_distance)*180/M_PI + 270;
+            direction = atan(y_distance/x_distance)*180/M_PI +180;
             return direction;
         }
+        direction = atan(y_distance/x_distance)*180/M_PI;
+        return direction;
     }
 }
 
@@ -118,7 +387,7 @@ void colissionDetectionPlayerArena(Player p)    //keeping the abstract version o
     if (getPlayerPositionY(p) < 0)
     {
         setPlayerPositionY(p, 0);
-       setPlayerSpeed(p, getPlayerSpeed(p)*slow);
+        setPlayerSpeed(p, getPlayerSpeed(p)*slow);
     }
     if (getPlayerPositionX(p) > WINDOW_WIDTH - getPlayerHeight())
     {
@@ -163,11 +432,11 @@ void colissionDetectionBallArena(Ball b)
 
 float yInvertDirection(float direction)
 {
-    direction = -direction + 180;
+    direction = -direction;
     return direction;
 }
 float xInvertDirection(float direction)
 {
-    direction = -direction;
+    direction = -direction + 180;
     return direction;
 }
