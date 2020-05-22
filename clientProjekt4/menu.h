@@ -13,13 +13,13 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 void initMenu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
-bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void displayMenu(SDL_Renderer* renderer);
 void cleanUpInit();
 void cleanUpConnectionScene();
 void DisplayConnectionScene(SDL_Renderer* renderer);
 void updateText(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
-bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
+bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH);
 const char *getIP();
 #endif /* menu_h */

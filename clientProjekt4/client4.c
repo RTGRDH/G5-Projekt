@@ -92,7 +92,15 @@ int main(int argc, char * argv[])
     Uint32 startTime;
     char inputText[40] = "";
     
-
+    if(init())
+    {
+        printf("Initialize window and renderer successful.\n");
+          if(!menu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+        {
+            running = false;
+            Quit();
+        }
+    }
     //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
@@ -120,15 +128,6 @@ int main(int argc, char * argv[])
 		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
-    
-    if(init())
-    {
-        printf("Initialize window and renderer successful.\n");
-          if(!menu(window, renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
-        {
-            running = false;
-        }
-    }      
     //Init backround here
     if(!initPlayField())
     {
@@ -350,7 +349,7 @@ int main(int argc, char * argv[])
             sprintf(inputText,"Oranga laget vann.Grattis!");
         }
 
-        fontClient = TTF_OpenFont("fonts/arial.ttf", 40);
+        fontClient = TTF_OpenFont("Fonts/arial.ttf", 40);
 
         surface = TTF_RenderText_Solid(fontClient,
         inputText, color);

@@ -39,8 +39,6 @@ SDL_Texture *mConnectionSceneTexture = NULL;
 SDL_Texture *mMenuBackground = NULL;
 SDL_Texture *mIpLabel = NULL;
 SDL_Texture *mInputField = NULL;
-
-SDL_Window *connectWindow = NULL;
 TTF_Font *font = NULL;
 PRIVATE char inputText[30] = "";
 SDL_Color fontColor={0,0,0}, backgroundColor={255,255,255};
@@ -83,7 +81,7 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
  Eventhandler for the menu. Calls display menu-method and returns true if player wants to play.
  The flag is sent back to main.
  */
-PUBLIC bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+PUBLIC bool menu(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
@@ -108,7 +106,7 @@ PUBLIC bool menu(SDL_Window *window, SDL_Renderer* renderer,const int WINDOW_WID
                    {
                        running = false;
                        cleanUpInit();
-                       if(!connectionScene(window,renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
+                       if(!connectionScene(renderer, WINDOW_WIDTH, WINDOW_HEIGTH))
                        {
                            initMenu(renderer, WINDOW_WIDTH, WINDOW_HEIGTH);
                            running = true;
@@ -178,7 +176,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
         printf("%s\n",TTF_GetError());
     }
     strcpy(inputText, "");
-    font = TTF_OpenFont("font/arial.ttf", 25);
+    font = TTF_OpenFont("Fonts/Arial.ttf", 25);
     gCancelButton.h = 100; gCancelButton.w = 300;
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
     gContinueButton.h = 100; gContinueButton.w = 300;
@@ -203,12 +201,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
        // http://blog.anytimefitness.com/develop-soccer-strength-like-world-cup-athlete/
     }
     char labelText[30] = "Enter IP-address:";
-    printf("%s\n", labelText);
-    printf("before TTF_RenderText_Shaded\n");
-    if(!font)
-        printf("no font");
     sIpLabel = TTF_RenderText_Shaded(font,labelText,fontColor,backgroundColor);
-    printf("after TTF_RenderText_Shaded\n");
     
     mIpLabel = SDL_CreateTextureFromSurface(renderer, sIpLabel);
     
@@ -257,7 +250,7 @@ void DisplayConnectionScene(SDL_Renderer* renderer)
 /*
  Eventhandler that takes input to the connection scene. Also calls Display-method.
  */
-bool connectionScene(SDL_Window *window, SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
+bool connectionScene(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
     initConnectionScene(renderer,WINDOW_WIDTH, WINDOW_HEIGTH);
     SDL_Event event;
