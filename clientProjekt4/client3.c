@@ -349,7 +349,7 @@ int main(int argc, char * argv[])
             sprintf(inputText,"Oranga laget vann.Grattis!");
         }
 
-        fontClient = TTF_OpenFont("Images/arial.ttf", 40);
+        fontClient = TTF_OpenFont("fonts/arial.ttf", 40);
 
         surface = TTF_RenderText_Solid(fontClient,
         inputText, color);
@@ -562,15 +562,6 @@ void Quit()
     SDL_DestroyTexture(mGoal_Right);
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
-    SDL_FreeSurface(sPlayer);
-    SDL_FreeSurface(sPlayer2);
-    SDL_FreeSurface(sPlayer3);
-    SDL_FreeSurface(sPlayer4);
-    SDL_FreeSurface(sBall);
-    SDL_FreeSurface(imageSurface);
-    SDL_FreeSurface(surface);
-    SDL_FreeSurface(sGoal_Left);
-    SDL_FreeSurface(sGoal_Right);
     Mix_Quit();
     free(player);
     free(player2);
