@@ -64,9 +64,9 @@ void initMenu(SDL_Renderer* renderer, const int WINDOW_WIDTH, const int WINDOW_H
     }
     else
     {
-        sPlayButton = IMG_Load("images/Play_Button.png");
-        sExitButton = IMG_Load("images/Exit_Button.png");
-        sMenuBackground = IMG_Load("images/Menu_Background.png");
+        sPlayButton = IMG_Load("Images/Play_Button.png");
+        sExitButton = IMG_Load("Images/Exit_Button.png");
+        sMenuBackground = IMG_Load("Images/Menu_Background.png");
         mPlayButton = SDL_CreateTextureFromSurface(renderer, sPlayButton);
         mExitButton = SDL_CreateTextureFromSurface(renderer, sExitButton);
         mMenuBackground = SDL_CreateTextureFromSurface(renderer, sMenuBackground);
