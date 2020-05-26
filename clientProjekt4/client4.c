@@ -1,20 +1,19 @@
 #include <stdio.h>
-#include <SDL2/SDL.h>
 #include <stdbool.h>
 #include <stdlib.h>                                      
 #include <string.h>                                         
+#include <math.h>
+#include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_net.h>
- #include <SDL2/SDL_ttf.h>
-#include "Player.h"
-#include <math.h>
-#include "ball.h"
-#include "gameLogic.h"
-#include "menu.h"
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_mixer.h>
+#include "Player.h"
+#include "ball.h"
+#include "menu.h"
+#include "gameLogic.h"
 
-#define SIZE 4
 #define MAX_SPEED_REVERSE -1
 #define MAX_SPEED_FORWARD 6
 #define TURNING_SPEED 10
@@ -25,7 +24,7 @@ const int WINDOW_WIDTH = 960, WINDOW_HEIGTH = 540;
 bool init();
 void renderBackground();
 bool initPlayField();
-bool initMedia();
+bool initMedia(Player player, Player player2, Player player3, Player player4, Ball b);
 void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);
 void reciveData(UDPpacket *packet, Player p1, Player p2, Player p3, Player p4, int *Score1, int *Score2);
 void Quit();   
@@ -54,14 +53,7 @@ SDL_Texture *mGoal_Left = NULL;
 SDL_Texture *mGoal_Right = NULL;
 SDL_Texture *texture = NULL;
 
-Player player = NULL;
-Player player2 = NULL;
-Player player3 = NULL;
-Player player4 = NULL;
-Ball b = NULL;
 SDL_Rect gField;
-
-// struct to hold the position and size of the sprite
 SDL_Rect gPlayer;
 SDL_Rect gPlayer2;
 SDL_Rect gPlayer3;
@@ -77,8 +69,14 @@ SDL_Color color = {0,0,0};
 
 int main(int argc, char * argv[])
 {
+    Player player = NULL;
+    Player player2 = NULL;
+    Player player3 = NULL;
+    Player player4 = NULL;
+    Ball b = NULL;
+
     Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
-    Mix_Music *backgroundSound = Mix_LoadMUS("backgroundSound.wav");
+    Mix_Music *backgroundSound = Mix_LoadMUS("Sounds/backgroundSound.wav");
     //https://opengameart.org/
 
     UDPsocket s;                                                
@@ -92,7 +90,7 @@ int main(int argc, char * argv[])
     const int FPS = 30;
     Uint32 startTime;
     char inputText[40] = "";
-    
+    //Init SDL and start menu
     if(init())
     {
         printf("Initialize window and renderer successful.\n");
@@ -102,28 +100,28 @@ int main(int argc, char * argv[])
             Quit();
         }
     }
-    //Check if SDL_net is initialized, Jonas Willén movingTwoMenWithUDP.c 
+    //Check if SDL_net is initialized. Inspired by Jonas Willén movingTwoMenWithUDP.c 
     if (SDLNet_Init() < 0)            
 	{
 		fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Check if random port is open,  Jonas Willén movingTwoMenWithUDP.c     
+    //Check if random port is open. Inspired by Jonas Willén movingTwoMenWithUDP.c     
     if (!(s = SDLNet_UDP_Open(0)))                                          
 	{
 		fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Resolve servername, Jonas Willén movingTwoMenWithUDP.c      
+    //Resolve servername. Inspired by Jonas Willén movingTwoMenWithUDP.c      
 	if (SDLNet_ResolveHost(&saddr, getIP(), 2000) == -1)
 	{
 		fprintf(stderr, "SDLNet_ResolveHost(%s : 2000): %s\n",getIP() ,SDLNet_GetError());
 		exit(EXIT_FAILURE);
 	}
 
-    //Check if it's possible to allocate memory for send and recive packetsJonas Willén movingTwoMenWithUDP.c //Net
+    //Check if it's possible to allocate memory for send and recive packets. Inspired by Jonas Willén movingTwoMenWithUDP.c //Net
     if (!((pSend = SDLNet_AllocPacket(512))&& (pRecive = SDLNet_AllocPacket(512)))) 
 	{                                                                               
 		fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
@@ -140,8 +138,18 @@ int main(int argc, char * argv[])
         printf("Initialize playfield successful.\n");
     }
     //Init other graphical media.
-    if(!initMedia())
+    player = createPlayer(50, 50);                                                                        
+    player2 = createPlayer(880, 50);
+    player3 = createPlayer(50, 450);                                                                        
+    player4 = createPlayer(880, 450);
+    b = createBall(470,260);
+    if(!initMedia(player, player2, player3, player4, b))
     {
+        free(player);
+        free(player2);
+        free(player3);
+        free(player4);
+        free(b);
         Quit();
         return 1;
     }
@@ -149,12 +157,12 @@ int main(int argc, char * argv[])
     {
         printf("Initialize media successful.\n");
     }
-                                                                          
+                                                              
     setPlayerDirection(player, 45);                                              
     setPlayerDirection(player2, 135);                                            
     setPlayerDirection(player3, 315);                                            
     setPlayerDirection(player4, 225);
-    
+
     // keep track of which inputs are given
     bool up = false;
     bool down = false;
@@ -169,12 +177,13 @@ int main(int argc, char * argv[])
     {
         startTime = SDL_GetTicks();
 
+        //Audio control - Only start music if not already playing.
         if(musicStart == true && musicPlaying == false)
         {
             Mix_PlayMusic(backgroundSound, -1);
             musicPlaying = true;
         }
-       
+        
         if(musicStop == true && musicPlaying == true)
         {
             Mix_HaltMusic();
@@ -182,10 +191,8 @@ int main(int argc, char * argv[])
         }
 
 
-    /**
-    While loop checking if an event occured.
-     Code taken from Jonas Willén, SDL_net.zip
-     */
+        //While loop checking if an event occured.
+        //Code inspired by Jonas Willén, SDL_net.zip
      
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -268,7 +275,7 @@ int main(int argc, char * argv[])
            
         }
         int turn, accelerate;
-        
+        //logic for handling conflicting input
         if (up && !down)
             accelerate = 1;
         if (up && down || !up && !down)
@@ -282,7 +289,7 @@ int main(int argc, char * argv[])
             turn = 0;
         if (!left && right)
             turn = -1;
-
+        //logic for coding two three-choice variables into one nine-choice variable
         int movementCodedInOneVariable;
         if (accelerate == 1 && turn == 1)
             movementCodedInOneVariable = 1;
@@ -293,7 +300,7 @@ int main(int argc, char * argv[])
         if (accelerate == 0 && turn == 1)
             movementCodedInOneVariable =4;
         if (accelerate == 0 && turn == 0)
-            movementCodedInOneVariable = 5;
+            movementCodedInOneVariable = 5;     //5 is in the middle row in the middle column, so do nothing
         if (accelerate == 0 && turn == -1)
             movementCodedInOneVariable = 6;
         if (accelerate == -1 && turn == 1)
@@ -302,18 +309,16 @@ int main(int argc, char * argv[])
             movementCodedInOneVariable = 8;
         if (accelerate == -1 && turn == -1)
             movementCodedInOneVariable = 9;
-        if(movementCodedInOneVariable!=5){
-            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s ); 
+        if(movementCodedInOneVariable!=5){      //if movement variable is not 5, send packet
+            sendPacket(player, movementCodedInOneVariable, saddr, pSend, s );
         }
-//------------------------------------------------------FORWARD LOGICAL OBJECTS TO GRAPHICAL OBJECTS--------------------------------------------------------------------------
-        //Recive packet, put incoming data in graficvariables to visualize players and balls new location and update scoreboard
-       while (SDLNet_UDP_Recv(s, pRecive)){
+
+        //Recive packet, put incoming data in graphic variables to visualize players and balls new location and update scoreboard
+        while (SDLNet_UDP_Recv(s, pRecive)){
             reciveData(pRecive, player, player2,player3, player4, &P1Score, &P2Score);
         }
-
-
+        //print gametext string
         sprintf(inputText,"%d-%d",P1Score,P2Score);
-
         if(P1Score==3)
         {
             sprintf(inputText,"Blaa laget vann.Grattis!");
@@ -323,8 +328,8 @@ int main(int argc, char * argv[])
             sprintf(inputText,"Oranga laget vann.Grattis!");
         }
 
+        //render gametext string
         fontClient = TTF_OpenFont("Images/arial.ttf", 40);
-
         surface = TTF_RenderText_Solid(fontClient,
         inputText, color);
         texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -336,26 +341,31 @@ int main(int argc, char * argv[])
         dstrect.x = 50;
         dstrect.y = 5;
 
+        //render game
         SDL_RenderClear(renderer);
         renderBackground();
      
         SDL_RenderCopy(renderer,mBall,NULL,&gBall);
         SDL_RenderCopyEx(renderer, mPlayer, NULL, &gPlayer, getPlayerDirection(player)-90, NULL, SDL_FLIP_NONE);
-
         SDL_RenderCopyEx(renderer, mPlayer2, NULL, &gPlayer2, getPlayerDirection(player2)-90, NULL, SDL_FLIP_NONE);
         SDL_RenderCopyEx(renderer, mPlayer3, NULL, &gPlayer3, getPlayerDirection(player3)-90, NULL, SDL_FLIP_NONE);
-
         SDL_RenderCopyEx(renderer, mPlayer4, NULL, &gPlayer4, getPlayerDirection(player4)-90, NULL, SDL_FLIP_NONE);
         SDL_RenderPresent(renderer);
         SDL_RenderCopy(renderer, texture, NULL, &dstrect);
         SDL_RenderPresent(renderer);
         
+        //control FPS
         if(1000/FPS>SDL_GetTicks()-startTime){
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
         }
     }
-
+    //free resources
     Mix_FreeMusic(backgroundSound);
+    free(player);
+    free(player2);
+    free(player3);
+    free(player4);
+    free(b);
     Quit();
     return 0;
 }
@@ -364,7 +374,7 @@ int main(int argc, char * argv[])
 /**
  Init other media
  */
-bool initMedia()
+bool initMedia(Player player, Player player2, Player player3, Player player4, Ball b)
 {
     bool flag = true;
     if(!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
@@ -378,7 +388,7 @@ bool initMedia()
     sPlayer3 = IMG_Load("images/Car3.png"); //Källa: https://www.1001freedownloads.com/free-clipart/pink-racing-car-top-view
     sPlayer4 = IMG_Load("images/Car4.png"); //Källa: https://www.clipart.email/clipart/car-png-clipart-game-297399.html
     sBall = IMG_Load("images/SoccerBall.png");
-     if(NULL == imageSurface)
+     if(imageSurface == NULL)
      {
          printf("\nCould not load image. Error: %s",SDL_GetError());
          printf("\n");
@@ -386,21 +396,11 @@ bool initMedia()
      }
     
     mPlayer = SDL_CreateTextureFromSurface(renderer, sPlayer);
-
     mPlayer2 = SDL_CreateTextureFromSurface(renderer,sPlayer2);
-
     mPlayer3 = SDL_CreateTextureFromSurface(renderer, sPlayer3);
-
     mPlayer4 = SDL_CreateTextureFromSurface(renderer,sPlayer4);
-
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
 
-    player = createPlayer(50, 50);                                                                        
-    player2 = createPlayer(880, 50);
-    player3 = createPlayer(50, 450);                                                                        
-    player4 = createPlayer(880, 450);
-
-    b = createBall(470,260);
 
     gPlayer.x = getPlayerPositionX(player);
     gPlayer.y = getPlayerPositionY(player);
@@ -467,7 +467,7 @@ bool initPlayField()
     gGoal_Right.y = WINDOW_HEIGTH/2 - gGoal_Left.h/2;
 
     gField.x = 0; gField.y = 0; gField.h = WINDOW_HEIGTH; gField.w = WINDOW_WIDTH;
-    if(NULL == imageSurface)
+    if(imageSurface == NULL)
     {
         printf("\nCould not load image. Error: %s",SDL_GetError());
         printf("\n");
@@ -486,7 +486,7 @@ void renderBackground()
 }
 
 /**
- Init code taken from Jonas Willén.
+ Init code inspired by Jonas Willén.
  Creates window and a renderer.
  Gets windowSurface from window to present background (play field).
  Returns false if init failed.
@@ -494,7 +494,7 @@ void renderBackground()
 bool init()
 {
     bool test = true;
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO);
     TTF_Init();
     window = SDL_CreateWindow("Not Rocket_League", SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGTH, SDL_WINDOW_SHOWN);
       
@@ -577,11 +577,6 @@ void Quit()
     SDL_DestroyTexture(texture);
     SDL_DestroyRenderer(renderer);
     Mix_Quit();
-    free(player);
-    free(player2);
-    free(player3);
-    free(player4);
-    free(b);
     TTF_Quit();
     SDLNet_Quit();
     IMG_Quit();

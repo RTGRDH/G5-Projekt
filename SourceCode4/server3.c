@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_net.h>
-#include <math.h>
 #include "ball.h"
 #include "player.h"
 #include "gameLogic.h"
@@ -74,13 +74,13 @@ int main(int argc, char **argv)
     pt1NrOfGoals=&t1NrOfGoals;
     pt2NrOfGoals=&t2NrOfGoals;
 
-    if (SDLNet_Init() < 0){/* Initialize SDL_net */
+    if (SDLNet_Init() < 0){// Initialize SDL_net. Inspired by Jonas Willén.
         fprintf(stderr, "SDLNet_Init: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);}
-    if (!(sd = SDLNet_UDP_Open(2000))){                                                      /* Open a socket */
+    if (!(sd = SDLNet_UDP_Open(2000))){// Open a socket. Inspired by Jonas Willén.
         fprintf(stderr, "SDLNet_UDP_Open: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);}
-    if (!((pSent = SDLNet_AllocPacket(512))&&(pRecive = SDLNet_AllocPacket(512)))){         /* Make space for the packet */
+    if (!((pSent = SDLNet_AllocPacket(512))&&(pRecive = SDLNet_AllocPacket(512)))){// Make space for the packet. Inspired by Jonas Willén.
         fprintf(stderr, "SDLNet_AllocPacket: %s\n", SDLNet_GetError());
         exit(EXIT_FAILURE);}
 
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     while (!quit)
     {
        startTime = SDL_GetTicks();
-        /* Wait a packet. UDP_Recv returns != 0 if a packet is coming */
+        /* Creates up to four players if not already four players, else decodes the package information to adjust speed and angle of that clients player */
         while (SDLNet_UDP_Recv(sd, pRecive))
         {
             int tmpClient=0;
@@ -107,17 +107,11 @@ int main(int argc, char **argv)
                         tmpClient=i;
                     }
                 }
-//-----------------------------------------------------READ FROM CLIENT---------------------------------------------------------------
-                //skelettkod:
-                //if 1: left + gas        ||    if 2: gas        ||    if 3: right + gas
-                //if 4: left            ||    if 5: no send    ||    if 6: right
-                //if 7: left + brake    ||    if 7: brake        ||    if 9: right + brake
                 movementDecoder(client, tmpClient, movement);
                 speedLimit(client[tmpClient].player);
-//-----------------------------------------------------UPDATE ON SERVER-------------------------------------------------------------------
             }
 
-       for(int m=0; m<=*pClientCount; m++)
+            for(int m=0; m<=*pClientCount; m++)
             {
                 if(pRecive->address.port == client[m].port)
                 {
@@ -156,13 +150,13 @@ int main(int argc, char **argv)
         if((*pClientCount)==4)
         {
             if (count == 2){
-                clientPos_send(client, boll, pRecive, pSent, sd, 1, pClientCount,pt1NrOfGoals,pt2NrOfGoals);
+                clientPos_send(client, boll, pRecive, pSent, sd, 1, pClientCount,pt1NrOfGoals,pt2NrOfGoals); //Send poisitions and angles of objects every third cycle
                 count = 0;
             }
             count++;
-			gameEngine (client, boll, &gBall, pt1NrOfGoals,pt2NrOfGoals);
+			gameEngine (client, boll, &gBall, pt1NrOfGoals,pt2NrOfGoals); //Calculate coordinates based on speeds, angles, collision detections, and goal detection
         }
-
+        //Control FPS
         if(1000/FPS>SDL_GetTicks()-startTime){
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
         }
@@ -226,7 +220,6 @@ void clientPos_send(Clients c[], Ball b, UDPpacket *recive, UDPpacket *sent, UDP
     sent->address.port = c[2].port;
     SDLNet_UDP_Send(sd2, -1, sent);
                 
-
     sent->address.host = c[3].IP;    /* Set the destination host */
     sent->address.port = c[3].port;
     SDLNet_UDP_Send(sd2, -1, sent);
