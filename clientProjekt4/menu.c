@@ -225,7 +225,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
  */
 void updateText(SDL_Renderer* renderer,const int WINDOW_WIDTH, const int WINDOW_HEIGTH)
 {
-    //SDL_DestroyTexture(mInputField);
+    SDL_DestroyTexture(mInputField);
     sInputField =TTF_RenderText_Shaded(font,inputText,fontColor,backgroundColor);
     mInputField = SDL_CreateTextureFromSurface(renderer, sInputField);
     SDL_QueryTexture(mInputField, NULL, NULL, &ipInputRect.w, &ipInputRect.h);
