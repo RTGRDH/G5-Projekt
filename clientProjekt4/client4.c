@@ -353,7 +353,6 @@ int main(int argc, char * argv[])
         }
 
         //render gametext string
-        /*
         SDL_DestroyTexture(texture);
         surface = TTF_RenderText_Solid(fontClient,inputText, color);
         texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -363,7 +362,6 @@ int main(int argc, char * argv[])
         dstrect.w = dstrect.w;
         dstrect.x = 50;
         dstrect.y = 5;
-         */
         //render game
         SDL_RenderClear(renderer);
         renderBackground();
