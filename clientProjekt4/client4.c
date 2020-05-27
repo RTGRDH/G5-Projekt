@@ -344,17 +344,16 @@ int main(int argc, char * argv[])
         if(P1Score==3)
         {
             sprintf(inputText,"Blue team wins.");
-            SDL_Delay(5000);
             running = false;
         }
         else if(P2Score==3)
         {
             sprintf(inputText,"Orange team wins.");
-            SDL_Delay(5000);
             running = false;
         }
 
         //render gametext string
+        /*
         SDL_DestroyTexture(texture);
         surface = TTF_RenderText_Solid(fontClient,inputText, color);
         texture = SDL_CreateTextureFromSurface(renderer, surface);
@@ -364,6 +363,7 @@ int main(int argc, char * argv[])
         dstrect.w = dstrect.w;
         dstrect.x = 50;
         dstrect.y = 5;
+         */
         //render game
         SDL_RenderClear(renderer);
         renderBackground();
@@ -380,6 +380,10 @@ int main(int argc, char * argv[])
         //control FPS
         if(1000/FPS>SDL_GetTicks()-startTime){
             SDL_Delay(1000/FPS-(SDL_GetTicks()-startTime));
+        }
+        if(running == false) //Delay to show results and then shut down.
+        {
+            SDL_Delay(5000);
         }
     }
     //free resources
