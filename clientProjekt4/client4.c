@@ -343,11 +343,15 @@ int main(int argc, char * argv[])
         sprintf(inputText,"%d-%d",P1Score,P2Score);
         if(P1Score==3)
         {
-            sprintf(inputText,"Blaa laget vann.Grattis!");
+            sprintf(inputText,"Blue team wins.");
+            SDL_Delay(5000);
+            running = false;
         }
         else if(P2Score==3)
         {
-            sprintf(inputText,"Oranga laget vann.Grattis!");
+            sprintf(inputText,"Orange team wins.");
+            SDL_Delay(5000);
+            running = false;
         }
 
         //render gametext string
