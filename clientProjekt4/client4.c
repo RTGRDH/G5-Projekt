@@ -26,7 +26,6 @@ void renderBackground();
 bool initPlayField();
 bool initMedia(Player player, Player player2, Player player3, Player player4, Ball b);
 void sendPacket(Player p,  int movement, IPaddress svr, UDPpacket *packet, UDPsocket s);
-void reciveData(UDPpacket *packet, Player p1, Player p2, Player p3, Player p4, int *Score1, int *Score2);
 void Quit();   
 
 
@@ -313,7 +312,32 @@ int main(int argc, char * argv[])
 
         //Recive packet, put incoming data in graphic variables to visualize players and balls new location and update scoreboard
         while (SDLNet_UDP_Recv(s, pRecive)){
-            reciveData(pRecive, player, player2,player3, player4, &P1Score, &P2Score);
+            float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4,y4,d4, ballx, bally;
+            float P1Speed,P2Speed,P3Speed,P4Speed;
+            sscanf((char * )pRecive->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally,&P1Speed,&P2Speed,&P3Speed,&P4Speed,&P1Score,&P2Score);
+
+            gBall.x=ballx;
+            gBall.y=bally;
+
+            gPlayer.y = y1;
+            gPlayer.x = x1;
+            setPlayerDirection(player, d1);
+            setPlayerSpeed(player,P1Speed);
+
+            gPlayer2.y = y2;
+            gPlayer2.x = x2;
+            setPlayerDirection(player2, d2);
+            setPlayerSpeed(player2,P2Speed);
+
+            gPlayer3.y = y3;
+            gPlayer3.x = x3;
+            setPlayerDirection(player3, d3);
+            setPlayerSpeed(player3,P3Speed);
+            
+            gPlayer4.y = y4;
+            gPlayer4.x = x4;
+            setPlayerDirection(player4, d4);
+            setPlayerSpeed(player4,P4Speed);
         }
         //print gametext string
         sprintf(inputText,"%d-%d",P1Score,P2Score);
@@ -522,46 +546,6 @@ void sendPacket(Player p, int movement, IPaddress svr, UDPpacket *packet, UDPsoc
 	packet->address.port = svr.port;	/* And destination port */
 	packet->len = strlen((char *)packet->data) + 1;
     SDLNet_UDP_Send(s, -1, packet);
-}
-
-void reciveData(UDPpacket *packet, Player p1, Player p2, Player p3, Player p4, int *Score1, int *Score2)
-{
-    float x1, y1, d1, x2, y2, d2, x3, y3, d3, x4,y4,d4, ballx, bally;
-    float P1Speed,P2Speed,P3Speed,P4Speed;
-    int S1,S2;
-
-    sscanf((char * )packet->data, "%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%d,%d",&x1, &y1, &d1, &x2, &y2, &d2, &x3, &y3, &d3, &x4, &y4, &d4, &ballx, &bally,&P1Speed,&P2Speed,&P3Speed,&P4Speed,&S1,&S2);
-
-    if(S1>0){
-        (*Score1)=S1;
-    }
-    if(S2>0){
-        (*Score2)=S2;
-    }
-    gBall.x=ballx;
-    gBall.y=bally;
-
-    gPlayer.y = y1;
-    gPlayer.x = x1;
-    setPlayerDirection(p1, d1);
-    setPlayerSpeed(p1,P1Speed);
-
-
-    gPlayer2.y = y2;
-    gPlayer2.x = x2;
-    setPlayerDirection(p2, d2);
-    setPlayerSpeed(p2,P2Speed);
-
-    gPlayer3.y = y3;
-    gPlayer3.x = x3;
-    setPlayerDirection(p3, d3);
-    setPlayerSpeed(p3,P3Speed);
-            
-    gPlayer4.y = y4;
-    gPlayer4.x = x4;
-    setPlayerDirection(p4, d4);
-    setPlayerSpeed(p4,P4Speed);
-
 }
 
 void Quit()
