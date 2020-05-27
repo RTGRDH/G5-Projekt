@@ -65,7 +65,7 @@ SDL_Rect gGoal_Right;
 TTF_Font *fontClient = NULL;
 SDL_Rect dstrect;
 SDL_Color color = {0,0,0};
-
+char inputText[40] = "";
 
 int main(int argc, char * argv[])
 {
@@ -86,10 +86,8 @@ int main(int argc, char * argv[])
     bool running = true;
     int P1Score = 0;
     int P2Score = 0;
-    int loop=0;
     const int FPS = 30;
     Uint32 startTime;
-    char inputText[40] = "";
     //Init SDL and start menu
     if(init())
     {
@@ -330,18 +328,14 @@ int main(int argc, char * argv[])
 
         //render gametext string
         SDL_DestroyTexture(texture);
-        fontClient = TTF_OpenFont("Images/arial.ttf", 40);
-        surface = TTF_RenderText_Solid(fontClient,
-        inputText, color);
+        surface = TTF_RenderText_Solid(fontClient,inputText, color);
         texture = SDL_CreateTextureFromSurface(renderer, surface);
-
+        SDL_FreeSurface(surface);
         SDL_QueryTexture(texture, NULL, NULL, &dstrect.w, &dstrect.h);
-    
-        dstrect.h = dstrect.h; 
+        dstrect.h = dstrect.h;
         dstrect.w = dstrect.w;
         dstrect.x = 50;
         dstrect.y = 5;
-
         //render game
         SDL_RenderClear(renderer);
         renderBackground();
@@ -432,7 +426,8 @@ bool initMedia(Player player, Player player2, Player player3, Player player4, Ba
     gBall.y = getBallPositionY(b);
     gBall.h = getBallHeight();
     gBall.w = getBallWidth();
-
+    
+    fontClient = TTF_OpenFont("Images/arial.ttf", 40);
     return flag;
 }
 /**
