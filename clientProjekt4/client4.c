@@ -329,6 +329,7 @@ int main(int argc, char * argv[])
         }
 
         //render gametext string
+        SDL_DestroyTexture(texture);
         fontClient = TTF_OpenFont("Images/arial.ttf", 40);
         surface = TTF_RenderText_Solid(fontClient,
         inputText, color);
@@ -400,7 +401,12 @@ bool initMedia(Player player, Player player2, Player player3, Player player4, Ba
     mPlayer3 = SDL_CreateTextureFromSurface(renderer, sPlayer3);
     mPlayer4 = SDL_CreateTextureFromSurface(renderer,sPlayer4);
     mBall = SDL_CreateTextureFromSurface(renderer,sBall);
-
+    
+    SDL_FreeSurface(sPlayer);
+    SDL_FreeSurface(sPlayer2);
+    SDL_FreeSurface(sPlayer3);
+    SDL_FreeSurface(sPlayer4);
+    SDL_FreeSurface(sBall);
 
     gPlayer.x = getPlayerPositionX(player);
     gPlayer.y = getPlayerPositionY(player);

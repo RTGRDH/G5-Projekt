@@ -176,7 +176,7 @@ void initConnectionScene(SDL_Renderer *renderer,const int WINDOW_WIDTH, const in
         printf("%s\n",TTF_GetError());
     }
     strcpy(inputText, "");
-    font = TTF_OpenFont("Fonts/Arial.ttf", 25);
+    font = TTF_OpenFont("images/Arial.ttf", 25);
     gCancelButton.h = 100; gCancelButton.w = 300;
     gCancelButton.x = WINDOW_WIDTH/4-gCancelButton.w/2; gCancelButton.y = WINDOW_HEIGTH-130;
     gContinueButton.h = 100; gContinueButton.w = 300;
